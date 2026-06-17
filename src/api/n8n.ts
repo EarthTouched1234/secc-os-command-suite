@@ -30,7 +30,11 @@ export interface SystemExecution extends ExecutionSummary {
   workflowName?: string
 }
 
-const N8N = '/n8n'
+// Dev: Vite proxy at /n8n strips the prefix and adds the API key server-side.
+// Production (GitHub Pages): Cloudflare Worker proxy handles auth + CORS.
+const N8N = import.meta.env.PROD
+  ? 'https://secc-os-n8n-proxy.earthtouched1234.workers.dev'
+  : '/n8n'
 const CC_INTAKE_WF = import.meta.env.VITE_CC_INTAKE_WORKFLOW_ID || 'OQeDlPmsb8gape73'
 
 const WORKFLOW_NAMES: Record<string, string> = {
