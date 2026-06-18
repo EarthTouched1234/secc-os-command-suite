@@ -34,7 +34,7 @@ export default function App() {
   const syncLabel = lastUpdated ? lastUpdated.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'pending'
 
   return (
-    <div className="cc-root">
+    <div className="cc-root" data-tab={activeTab}>
       <header className="cc-header">
         <div className="cc-title">
           <span className="cc-mark">HORHANiS</span>
