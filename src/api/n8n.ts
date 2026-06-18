@@ -42,7 +42,7 @@ const CHAT_URL = import.meta.env.PROD
   : '/chat/webhook/horhanis-conversation'
 
 const DISPATCH_URL = import.meta.env.PROD
-  ? 'https://sunnicommandcenter.app.n8n.cloud/webhook/horhanis/dispatch'
+  ? 'https://secc-os-n8n-proxy.earthtouched1234.workers.dev/webhook/horhanis/dispatch'
   : '/dispatch/webhook/horhanis/dispatch'
 const CC_INTAKE_WF = import.meta.env.VITE_CC_INTAKE_WORKFLOW_ID || 'OQeDlPmsb8gape73'
 
