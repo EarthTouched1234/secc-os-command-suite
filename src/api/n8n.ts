@@ -36,14 +36,23 @@ const N8N = import.meta.env.PROD
   ? 'https://secc-os-n8n-proxy.earthtouched1234.workers.dev'
   : '/n8n'
 
-// Webhook base — dev uses Vite proxy prefix, prod uses direct URL with NO extra prefix
+// Conversation: direct n8n URL in prod (no auth needed), Vite proxy in dev
 const CHAT_URL = import.meta.env.PROD
   ? 'https://sunnicommandcenter.app.n8n.cloud/webhook/horhanis-conversation'
   : '/chat/webhook/horhanis-conversation'
 
-const DISPATCH_URL = import.meta.env.PROD
-  ? 'https://secc-os-n8n-proxy.earthtouched1234.workers.dev/webhook/horhanis/dispatch'
-  : '/dispatch/webhook/horhanis/dispatch'
+// Dispatch: Agent Sandbox in prod (no auth, proven CORS), Vite proxy in dev
+const AGENT_SANDBOX_URL = 'https://sunnicommandcenter.app.n8n.cloud/webhook/secc-os/agent'
+const DISPATCH_URL = '/dispatch/webhook/horhanis/dispatch' // dev only
+
+// Map context to agent for Agent Sandbox routing
+const CONTEXT_TO_AGENT: Record<string, string> = {
+  LIFE:    'horhanis',
+  COMMAND: 'ciro',
+  WORK:    'horhanis',
+  SCHOOL:  'ciro',
+  CONTENT: 'tito',
+}
 const CC_INTAKE_WF = import.meta.env.VITE_CC_INTAKE_WORKFLOW_ID || 'OQeDlPmsb8gape73'
 
 const WORKFLOW_NAMES: Record<string, string> = {
@@ -117,7 +126,25 @@ export async function dispatch(
   intent?: string,
   context?: string,
   council?: string[],
+  sessionId?: string,
 ): Promise<unknown> {
+  if (import.meta.env.PROD) {
+    // Agent Sandbox — no auth, CORS open, all agents available
+    const agent = CONTEXT_TO_AGENT[context || 'LIFE'] || 'horhanis'
+    const res = await fetch(AGENT_SANDBOX_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: command,
+        agent,
+        sessionId: sessionId || `cc-${Date.now()}`,
+        operator: 'SunNi',
+      }),
+    })
+    if (!res.ok) throw new Error(`Agent failed: ${res.status}`)
+    return res.json()
+  }
+  // Dev: use Vite proxy (adds x-horhanis-key server-side)
   const res = await fetch(DISPATCH_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -125,9 +152,9 @@ export async function dispatch(
       command,
       source: 'CommanderConsole',
       operator: 'SunNi',
-      ...(intent   ? { intent }   : {}),
-      ...(context  ? { context }  : {}),
-      ...(council  ? { council }  : {}),
+      ...(intent  ? { intent }  : {}),
+      ...(context ? { context } : {}),
+      ...(council ? { council } : {}),
     }),
   })
   if (!res.ok) throw new Error(`Dispatch failed: ${res.status}`)

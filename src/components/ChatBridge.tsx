@@ -251,7 +251,7 @@ export function ChatBridge() {
         }])
         if (voiceOn) speak(res.reply)
       } else {
-        const raw = await dispatch(text, ctx.primaryRoute, sendContext, ctx.council) as DispatchResult
+        const raw = await dispatch(text, ctx.primaryRoute, sendContext, ctx.council, sid) as DispatchResult
         const replyText = extractDispatchText(raw)
 
         // Read authoritative context from response if classifier detected one
