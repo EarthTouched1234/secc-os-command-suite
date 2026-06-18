@@ -30,14 +30,20 @@ export interface SystemExecution extends ExecutionSummary {
   workflowName?: string
 }
 
-// Dev: Vite proxy at /n8n|/chat|/dispatch — strips prefix, adds auth headers.
-// Production (GitHub Pages): absolute n8n URLs (webhooks allow CORS; REST API uses CF Worker).
+// Dev: Vite proxies /n8n, /chat, /dispatch — strips prefix, adds auth headers.
+// Production: CF Worker for REST API; direct n8n for public webhooks (no key needed).
 const N8N = import.meta.env.PROD
   ? 'https://secc-os-n8n-proxy.earthtouched1234.workers.dev'
   : '/n8n'
-const N8N_BASE = import.meta.env.PROD
-  ? 'https://sunnicommandcenter.app.n8n.cloud'
-  : ''
+
+// Webhook base — dev uses Vite proxy prefix, prod uses direct URL with NO extra prefix
+const CHAT_URL = import.meta.env.PROD
+  ? 'https://sunnicommandcenter.app.n8n.cloud/webhook/horhanis-conversation'
+  : '/chat/webhook/horhanis-conversation'
+
+const DISPATCH_URL = import.meta.env.PROD
+  ? 'https://sunnicommandcenter.app.n8n.cloud/webhook/horhanis/dispatch'
+  : '/dispatch/webhook/horhanis/dispatch'
 const CC_INTAKE_WF = import.meta.env.VITE_CC_INTAKE_WORKFLOW_ID || 'OQeDlPmsb8gape73'
 
 const WORKFLOW_NAMES: Record<string, string> = {
@@ -97,7 +103,7 @@ export async function fetchSystemExecutions(limit = 30): Promise<SystemExecution
 }
 
 export async function chat(message: string, sessionId: string): Promise<{ reply: string; sessionId: string; turnNumber: number }> {
-  const res = await fetch(`${N8N_BASE}/chat/webhook/horhanis-conversation`, {
+  const res = await fetch(CHAT_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ message, sessionId, operator: 'SunNi' }),
@@ -112,7 +118,7 @@ export async function dispatch(
   context?: string,
   council?: string[],
 ): Promise<unknown> {
-  const res = await fetch(`${N8N_BASE}/dispatch/webhook/horhanis/dispatch`, {
+  const res = await fetch(DISPATCH_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({

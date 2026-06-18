@@ -199,7 +199,8 @@ export function ChatBridge() {
     setActiveContext(key)
     setActionLevel(ctx.defaultAction)
     setSuggestedContext(null)
-    if (!auto) {
+    // Only log a system message when switching TO a different context
+    if (!auto && key !== activeContext) {
       setMessages(prev => [...prev, {
         role: 'system',
         text: `${ctx.emoji} Context → ${key} | ${ctx.defaultAction.toUpperCase()} | Council: ${ctx.council.join(', ')}`,
