@@ -173,8 +173,32 @@ export function ChatBridge() {
   const [suggestedContext, setSuggestedContext] = useState<ContextKey | null>(null)
   const [actionLevel, setActionLevel] = useState<ActionLevel>('dispatch')
   const [sid] = useState(sessionId)
+  const [copied, setCopied] = useState<number | null>(null)
   const bottomRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+
+  function copyText(text: string, idx: number) {
+    navigator.clipboard.writeText(text).then(() => {
+      setCopied(idx)
+      setTimeout(() => setCopied(null), 1800)
+    })
+  }
+
+  function saveToDoc(text: string, ts: string) {
+    const STORAGE_KEY = 'secc_documents'
+    const existing = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]')
+    const title = text.slice(0, 52).replace(/\n/g, ' ').trim() + (text.length > 52 ? '…' : '')
+    const now = new Date().toISOString()
+    const doc = {
+      id: `doc-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+      title,
+      body: text,
+      tags: ['HORHANiS', 'ChatBridge'],
+      createdAt: ts || now,
+      updatedAt: now,
+    }
+    localStorage.setItem(STORAGE_KEY, JSON.stringify([doc, ...existing]))
+  }
 
   useEffect(() => {
     window.speechSynthesis?.getVoices()
@@ -373,14 +397,48 @@ export function ChatBridge() {
               )}
               {m.role === 'horhanis' && <span className="cb-who">HORHANiS{m.turn ? ` #${m.turn}` : ''} &gt;</span>}
               {m.role === 'system'   && <span className="cb-who">SYSTEM &gt;</span>}
-              <span className="cb-text">{m.text}</span>
-              {m.routeKey && (
-                <span className="cb-route-tag" style={mc ? { color: mc.color, borderColor: mc.color+'55', background: mc.color+'11' } : undefined}>
-                  {m.routeKey}
-                </span>
-              )}
-              {m.role === 'horhanis' && (
-                <button className="cb-speak-btn" onClick={() => speak(m.text)} title="Speak">▶</button>
+
+              {m.role === 'horhanis' ? (
+                <div className="cb-horhanis-body">
+                  <span className="cb-text">{m.text}</span>
+                  {m.routeKey && (
+                    <span className="cb-route-tag" style={mc ? { color: mc.color, borderColor: mc.color+'55', background: mc.color+'11' } : undefined}>
+                      {m.routeKey}
+                    </span>
+                  )}
+                  <div className="cb-actions">
+                    <button
+                      className={`cb-action-btn${copied === i ? ' cb-action-copied' : ''}`}
+                      onClick={e => { e.stopPropagation(); copyText(m.text, i) }}
+                      title="Copy response"
+                    >
+                      {copied === i ? '✓ copied' : '⎘ copy'}
+                    </button>
+                    <button
+                      className="cb-action-btn"
+                      onClick={e => { e.stopPropagation(); speak(m.text) }}
+                      title="Read aloud"
+                    >
+                      ▶ audio
+                    </button>
+                    <button
+                      className="cb-action-btn"
+                      onClick={e => { e.stopPropagation(); saveToDoc(m.text, m.ts) }}
+                      title="Save to Documents"
+                    >
+                      ⊕ save
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <span className="cb-text">{m.text}</span>
+                  {m.routeKey && (
+                    <span className="cb-route-tag" style={mc ? { color: mc.color, borderColor: mc.color+'55', background: mc.color+'11' } : undefined}>
+                      {m.routeKey}
+                    </span>
+                  )}
+                </>
               )}
             </div>
           )

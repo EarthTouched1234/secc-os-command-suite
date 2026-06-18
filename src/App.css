@@ -1852,3 +1852,56 @@ button, input { font: inherit; }
 [data-tab="ChatBridge"] .cb-ts {
   font-size: 10px;
 }
+
+/* ── ChatBridge response connector ───────────────────────────────────────── */
+.cb-horhanis-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.cb-actions {
+  display: flex;
+  gap: 6px;
+  opacity: 0;
+  transition: opacity .2s;
+  padding-top: 2px;
+}
+
+.cb-line:hover .cb-actions,
+.cb-line:focus-within .cb-actions {
+  opacity: 1;
+}
+
+/* Always visible on touch devices */
+@media (hover: none) {
+  .cb-actions { opacity: 1; }
+}
+
+.cb-action-btn {
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 3px 9px;
+  font: inherit;
+  font-size: 11px;
+  color: var(--soft);
+  cursor: pointer;
+  letter-spacing: .02em;
+  transition: color .12s, border-color .12s, background .12s;
+  flex-shrink: 0;
+}
+
+.cb-action-btn:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+  background: rgba(244,201,93,.08);
+}
+
+.cb-action-btn.cb-action-copied {
+  border-color: var(--green);
+  color: var(--green);
+  background: rgba(48,209,88,.08);
+}
