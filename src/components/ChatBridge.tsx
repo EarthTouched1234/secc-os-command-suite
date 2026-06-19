@@ -89,6 +89,14 @@ const ACTION_COLORS: Record<ActionLevel, string> = {
 
 const ACTION_LEVELS: ActionLevel[] = ['conversation', 'guidance', 'dispatch', 'governance']
 
+const CONTEXT_TO_AGENT: Record<ContextKey, string> = {
+  LIFE:    'HORHANiS',
+  WORK:    'HORHANiS',
+  COMMAND: 'CiRO',
+  SCHOOL:  'CiRO',
+  CONTENT: 'TiTO',
+}
+
 // ── Helpers ────────────────────────────────────────────────
 interface Message {
   role: 'user' | 'horhanis' | 'system'
@@ -174,6 +182,8 @@ export function ChatBridge() {
   const [actionLevel, setActionLevel] = useState<ActionLevel>('dispatch')
   const [sid] = useState(sessionId)
   const [copied, setCopied] = useState<number | null>(null)
+  const [elapsed, setElapsed] = useState(0)
+  const elapsedRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const bottomRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -261,10 +271,13 @@ export function ChatBridge() {
       context: sendContext,
     }])
     setThinking(true)
+    setElapsed(0)
+    elapsedRef.current = setInterval(() => setElapsed(s => s + 1), 1000)
 
     try {
       if (actionLevel === 'conversation' || ctx.defaultAction === 'conversation') {
-        const res = await chat(text, sid)
+        // Unified: routes through Agent Sandbox with correct agent per context
+        const res = await chat(text, sid, sendContext)
         setMessages(prev => [...prev, {
           role: 'horhanis',
           text: res.reply,
@@ -295,14 +308,20 @@ export function ChatBridge() {
         }])
         if (voiceOn) speak(replyText)
       }
-    } catch {
+    } catch (err) {
+      const isTimeout = err instanceof Error && err.message.includes('AbortError')
+      const msg = isTimeout
+        ? `Timeout — agent took too long (>55s). n8n may be under load. Wait 15s and retry.`
+        : `Connection error — ${sendContext} unreachable. Check n8n or retry in 10s.`
       setMessages(prev => [...prev, {
         role: 'system',
-        text: `Connection error — ${sendContext} context unreachable.`,
+        text: msg,
         ts: new Date().toISOString(),
       }])
     } finally {
+      if (elapsedRef.current) clearInterval(elapsedRef.current)
       setThinking(false)
+      setElapsed(0)
       inputRef.current?.focus()
     }
   }, [input, thinking, sid, voiceOn, activeContext, suggestedContext, actionLevel])
@@ -446,10 +465,12 @@ export function ChatBridge() {
         {thinking && (
           <div className="cb-line cb-horhanis cb-thinking">
             <span className="cb-ts">[{fmt(new Date().toISOString())}]</span>
-            <span className="cb-who">HORHANiS &gt;</span>
+            <span className="cb-who">
+              {CONTEXT_TO_AGENT[activeContext]?.toUpperCase() || 'HORHANiS'} &gt;
+            </span>
             <span className="cb-text cb-blink">█</span>
             <span className="cb-route-tag" style={{ color: ctx.color, borderColor: ctx.color+'55' }}>
-              {displayContext} · {ctx.council.join(' ')}…
+              {displayContext} · {elapsed}s{elapsed >= 15 ? ' — auto-retry if needed' : ''}
             </span>
           </div>
         )}

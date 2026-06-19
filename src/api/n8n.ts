@@ -36,12 +36,8 @@ const N8N = import.meta.env.PROD
   ? 'https://secc-os-n8n-proxy.earthtouched1234.workers.dev'
   : '/n8n'
 
-// Conversation: direct n8n URL in prod (no auth needed), Vite proxy in dev
-const CHAT_URL = import.meta.env.PROD
-  ? 'https://sunnicommandcenter.app.n8n.cloud/webhook/horhanis-conversation'
-  : '/chat/webhook/horhanis-conversation'
-
-// Dispatch: Agent Sandbox in prod (no auth, proven CORS), Vite proxy in dev
+// All chat/dispatch routes through Agent Sandbox — single proven endpoint, all 6 agents, CORS open.
+// /webhook/horhanis-conversation kept as fallback only (HORHANiS-only, no multi-agent support).
 const AGENT_SANDBOX_URL = 'https://sunnicommandcenter.app.n8n.cloud/webhook/secc-os/agent'
 const DISPATCH_URL = '/dispatch/webhook/horhanis/dispatch' // dev only
 
@@ -52,6 +48,37 @@ const CONTEXT_TO_AGENT: Record<string, string> = {
   WORK:    'horhanis',
   SCHOOL:  'ciro',
   CONTENT: 'tito',
+}
+
+// Fetch with timeout + 1 auto-retry on network/timeout failure.
+// n8n Agent Sandbox can take 15-30s (Notion history load + GPT-4.1 + save turns).
+// 55s matches just under n8n Cloud's 60s webhook limit.
+async function fetchWithRetry(
+  url: string,
+  options: RequestInit,
+  timeoutMs = 55_000,
+): Promise<Response> {
+  const attempt = async (): Promise<Response> => {
+    const controller = new AbortController()
+    const timer = setTimeout(() => controller.abort(), timeoutMs)
+    try {
+      const res = await fetch(url, { ...options, signal: controller.signal })
+      return res
+    } finally {
+      clearTimeout(timer)
+    }
+  }
+
+  try {
+    return await attempt()
+  } catch (err) {
+    // One retry after 3s on abort (timeout) or network error
+    const isRetryable = err instanceof DOMException && err.name === 'AbortError'
+      || err instanceof TypeError // network failure
+    if (!isRetryable) throw err
+    await new Promise(r => setTimeout(r, 3000))
+    return attempt()
+  }
 }
 const CC_INTAKE_WF = import.meta.env.VITE_CC_INTAKE_WORKFLOW_ID || 'OQeDlPmsb8gape73'
 
@@ -111,8 +138,31 @@ export async function fetchSystemExecutions(limit = 30): Promise<SystemExecution
   }))
 }
 
-export async function chat(message: string, sessionId: string): Promise<{ reply: string; sessionId: string; turnNumber: number }> {
-  const res = await fetch(CHAT_URL, {
+// Unified agent call — routes all contexts through Agent Sandbox (supports all 6 agents).
+// `context` maps to the correct agent; `actionLevel` is passed as metadata for logging.
+export async function chat(
+  message: string,
+  sessionId: string,
+  context?: string,
+): Promise<{ reply: string; replyFull?: string; sessionId: string; turnNumber: number }> {
+  if (import.meta.env.PROD) {
+    const agent = CONTEXT_TO_AGENT[context || 'LIFE'] || 'horhanis'
+    const res = await fetchWithRetry(AGENT_SANDBOX_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message, agent, sessionId, operator: 'SunNi' }),
+    })
+    if (!res.ok) throw new Error(`Agent ${agent} failed: ${res.status}`)
+    const data = await res.json()
+    // Agent Sandbox returns { reply, replyFull, sessionId, turnNumber }
+    return {
+      reply: data.replyFull || data.reply || data.response || data.message || JSON.stringify(data),
+      sessionId: data.sessionId || sessionId,
+      turnNumber: data.turnNumber || 1,
+    }
+  }
+  // Dev: Vite proxy
+  const res = await fetchWithRetry('/chat/webhook/horhanis-conversation', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ message, sessionId, operator: 'SunNi' }),
@@ -131,7 +181,7 @@ export async function dispatch(
   if (import.meta.env.PROD) {
     // Agent Sandbox — no auth, CORS open, all agents available
     const agent = CONTEXT_TO_AGENT[context || 'LIFE'] || 'horhanis'
-    const res = await fetch(AGENT_SANDBOX_URL, {
+    const res = await fetchWithRetry(AGENT_SANDBOX_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -145,7 +195,7 @@ export async function dispatch(
     return res.json()
   }
   // Dev: use Vite proxy (adds x-horhanis-key server-side)
-  const res = await fetch(DISPATCH_URL, {
+  const res = await fetchWithRetry(DISPATCH_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
