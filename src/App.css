@@ -1375,6 +1375,28 @@ button, input { font: inherit; }
 }
 .cb-voice-toggle:hover { color: var(--gold); border-color: var(--gold); }
 
+.cb-mode-toggle {
+  border: 1px solid var(--line-bright);
+  background: transparent;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 3px 8px;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+  margin-left: 6px;
+}
+.cb-mode-std {
+  color: var(--blue);
+  border-color: var(--blue);
+}
+.cb-mode-lite {
+  color: #34d399;
+  border-color: #34d399;
+  background: #34d39912;
+}
+.cb-mode-toggle:hover { opacity: 0.8; }
+
 .cb-speak-btn {
   border: none;
   background: transparent;

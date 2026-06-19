@@ -181,6 +181,7 @@ export function ChatBridge() {
   const [suggestedContext, setSuggestedContext] = useState<ContextKey | null>(null)
   const [actionLevel, setActionLevel] = useState<ActionLevel>('dispatch')
   const [sid] = useState(sessionId)
+  const [mode, setMode] = useState<'standard' | 'lite'>('standard')
   const [copied, setCopied] = useState<number | null>(null)
   const [elapsed, setElapsed] = useState(0)
   const elapsedRef = useRef<ReturnType<typeof setInterval> | null>(null)
@@ -277,7 +278,7 @@ export function ChatBridge() {
     try {
       if (actionLevel === 'conversation' || ctx.defaultAction === 'conversation') {
         // Unified: routes through Agent Sandbox with correct agent per context
-        const res = await chat(text, sid, sendContext)
+        const res = await chat(text, sid, sendContext, mode)
         setMessages(prev => [...prev, {
           role: 'horhanis',
           text: res.reply,
@@ -288,7 +289,7 @@ export function ChatBridge() {
         }])
         if (voiceOn) speak(res.reply)
       } else {
-        const raw = await dispatch(text, ctx.primaryRoute, sendContext, ctx.council, sid) as DispatchResult
+        const raw = await dispatch(text, ctx.primaryRoute, sendContext, ctx.council, sid, mode) as DispatchResult
         const replyText = extractDispatchText(raw)
 
         // Read authoritative context from response if classifier detected one
@@ -345,6 +346,13 @@ export function ChatBridge() {
           onClick={() => { if (voiceOn) window.speechSynthesis?.cancel(); setVoiceOn(v => !v) }}
         >
           {voiceOn ? '🔊' : '🔇'}
+        </button>
+        <button
+          className={`cb-mode-toggle ${mode === 'lite' ? 'cb-mode-lite' : 'cb-mode-std'}`}
+          onClick={() => setMode(m => m === 'standard' ? 'lite' : 'standard')}
+          title={mode === 'standard' ? 'Standard mode (gpt-4.1) — click to switch to Lite (gpt-4.1-mini, 5× cheaper)' : 'Lite mode (gpt-4.1-mini) — click to switch to Standard (gpt-4.1, full power)'}
+        >
+          {mode === 'lite' ? '⚡ LITE' : '◈ STD'}
         </button>
         <span className={`cb-status ${thinking ? 'thinking' : 'ready'}`}>
           {thinking ? '● ROUTING' : '● READY'}
@@ -470,7 +478,7 @@ export function ChatBridge() {
             </span>
             <span className="cb-text cb-blink">█</span>
             <span className="cb-route-tag" style={{ color: ctx.color, borderColor: ctx.color+'55' }}>
-              {displayContext} · {elapsed}s{elapsed >= 15 ? ' — auto-retry if needed' : ''}
+              {displayContext} · {mode === 'lite' ? 'mini' : '4.1'} · {elapsed}s{elapsed >= 15 ? ' — auto-retry if needed' : ''}
             </span>
           </div>
         )}

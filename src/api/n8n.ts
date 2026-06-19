@@ -144,13 +144,14 @@ export async function chat(
   message: string,
   sessionId: string,
   context?: string,
+  mode: 'standard' | 'lite' = 'standard',
 ): Promise<{ reply: string; replyFull?: string; sessionId: string; turnNumber: number }> {
   if (import.meta.env.PROD) {
     const agent = CONTEXT_TO_AGENT[context || 'LIFE'] || 'horhanis'
     const res = await fetchWithRetry(AGENT_SANDBOX_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message, agent, sessionId, operator: 'SunNi' }),
+      body: JSON.stringify({ message, agent, sessionId, operator: 'SunNi', mode }),
     })
     if (!res.ok) throw new Error(`Agent ${agent} failed: ${res.status}`)
     const data = await res.json()
@@ -177,6 +178,7 @@ export async function dispatch(
   context?: string,
   council?: string[],
   sessionId?: string,
+  mode: 'standard' | 'lite' = 'standard',
 ): Promise<unknown> {
   if (import.meta.env.PROD) {
     // Agent Sandbox — no auth, CORS open, all agents available
@@ -189,6 +191,7 @@ export async function dispatch(
         agent,
         sessionId: sessionId || `cc-${Date.now()}`,
         operator: 'SunNi',
+        mode,
       }),
     })
     if (!res.ok) throw new Error(`Agent failed: ${res.status}`)
