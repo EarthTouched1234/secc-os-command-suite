@@ -7,6 +7,7 @@ interface Task {
   status: 'new' | 'in_progress' | 'blocked' | 'done'
   priority: 'high' | 'medium' | 'low'
   agent: string
+  dueDate: string
   notes: string
   createdAt: string
 }
@@ -48,10 +49,22 @@ const PRIORITY_COLOR: Record<Task['priority'], string> = {
   low: '#62a8ff',
 }
 
+function dueDateLabel(dueDate: string): { label: string; color: string } | null {
+  if (!dueDate) return null
+  const today = new Date(); today.setHours(0, 0, 0, 0)
+  const due = new Date(dueDate + 'T00:00:00')
+  const diff = Math.round((due.getTime() - today.getTime()) / 86400000)
+  if (diff < 0)  return { label: `Overdue (${due.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })})`, color: '#ff453a' }
+  if (diff === 0) return { label: 'Due Today', color: '#ffd60a' }
+  if (diff === 1) return { label: 'Due Tomorrow', color: '#ffb020' }
+  if (diff <= 7)  return { label: `Due ${due.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}`, color: '#62a8ff' }
+  return { label: due.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }), color: '#555' }
+}
+
 export function Tasks() {
   const [tasks, setTasks] = useState<Task[]>(loadTasks)
   const [adding, setAdding] = useState(false)
-  const [draft, setDraft] = useState({ title: '', project: '', status: 'new' as Task['status'], priority: 'medium' as Task['priority'], agent: 'unassigned', notes: '' })
+  const [draft, setDraft] = useState({ title: '', project: '', status: 'new' as Task['status'], priority: 'medium' as Task['priority'], agent: 'unassigned', dueDate: '', notes: '' })
   const [filter, setFilter] = useState<'all' | Task['status']>('all')
   const [agentFilter, setAgentFilter] = useState<string>('all')
 
@@ -61,7 +74,7 @@ export function Tasks() {
     if (!draft.title.trim()) return
     const task: Task = { id: newId(), ...draft, createdAt: new Date().toISOString() }
     save([task, ...tasks])
-    setDraft({ title: '', project: '', status: 'new', priority: 'medium', agent: 'unassigned', notes: '' })
+    setDraft({ title: '', project: '', status: 'new', priority: 'medium', agent: 'unassigned', dueDate: '', notes: '' })
     setAdding(false)
   }
 
@@ -79,8 +92,16 @@ export function Tasks() {
     .filter(t => filter === 'all' || t.status === filter)
     .filter(t => agentFilter === 'all' || (t.agent || 'unassigned') === agentFilter)
     .sort((a, b) => {
+      const today = new Date().toISOString().slice(0, 10)
+      const aOverdue = a.dueDate && a.dueDate < today && a.status !== 'done' ? -1 : 0
+      const bOverdue = b.dueDate && b.dueDate < today && b.status !== 'done' ? -1 : 0
+      if (aOverdue !== bOverdue) return aOverdue - bOverdue
       const pri = { high: 0, medium: 1, low: 2 }
-      return pri[a.priority] - pri[b.priority] || b.createdAt.localeCompare(a.createdAt)
+      if (pri[a.priority] !== pri[b.priority]) return pri[a.priority] - pri[b.priority]
+      if (a.dueDate && b.dueDate) return a.dueDate.localeCompare(b.dueDate)
+      if (a.dueDate) return -1
+      if (b.dueDate) return 1
+      return b.createdAt.localeCompare(a.createdAt)
     })
 
   const counts = {
@@ -143,6 +164,16 @@ export function Tasks() {
           >
             {AGENTS.map(a => <option key={a.key} value={a.key}>{a.label}</option>)}
           </select>
+          <div className="task-form-row" style={{ alignItems: 'center' }}>
+            <label style={{ fontSize: 11, color: '#666', whiteSpace: 'nowrap' }}>Due date</label>
+            <input
+              type="date"
+              className="task-input"
+              value={draft.dueDate}
+              style={{ flex: 1, colorScheme: 'dark' }}
+              onChange={e => setDraft(d => ({ ...d, dueDate: e.target.value }))}
+            />
+          </div>
           <textarea className="task-notes" placeholder="Notes (optional)…" value={draft.notes} onChange={e => setDraft(d => ({ ...d, notes: e.target.value }))} rows={2} />
           <div className="task-form-actions">
             <button className="btn-gold" onClick={addTask}>Add Task</button>
@@ -167,6 +198,7 @@ export function Tasks() {
                   )}
                 </div>
                 {task.project && <span className="task-project">{task.project}</span>}
+                {(() => { const d = dueDateLabel(task.dueDate); return d ? <span style={{ fontSize: 10, color: d.color, marginTop: 2 }}>⏱ {d.label}</span> : null })()}
                 {task.notes && <span className="task-notes-preview">{task.notes}</span>}
               </div>
             </div>
