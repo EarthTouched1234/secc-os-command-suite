@@ -6,9 +6,21 @@ interface Task {
   project: string
   status: 'new' | 'in_progress' | 'blocked' | 'done'
   priority: 'high' | 'medium' | 'low'
+  agent: string
   notes: string
   createdAt: string
 }
+
+const AGENTS = [
+  { key: 'unassigned', label: '— Unassigned —', color: '#555' },
+  { key: 'HORHANiS', label: 'HORHANiS', color: '#f5c518' },
+  { key: 'TRiO',     label: 'TRiO',     color: '#62a8ff' },
+  { key: 'TiTO',     label: 'TiTO',     color: '#bf5af2' },
+  { key: 'CiRO',     label: 'CiRO',     color: '#32d2f2' },
+  { key: 'SunNi',    label: 'SunNi',    color: '#ffd60a' },
+  { key: 'GUARDiAN', label: 'GUARDiAN', color: '#ff453a' },
+]
+const AGENT_COLOR = Object.fromEntries(AGENTS.map(a => [a.key, a.color]))
 
 const STORAGE_KEY = 'secc_tasks'
 
@@ -39,8 +51,9 @@ const PRIORITY_COLOR: Record<Task['priority'], string> = {
 export function Tasks() {
   const [tasks, setTasks] = useState<Task[]>(loadTasks)
   const [adding, setAdding] = useState(false)
-  const [draft, setDraft] = useState({ title: '', project: '', status: 'new' as Task['status'], priority: 'medium' as Task['priority'], notes: '' })
+  const [draft, setDraft] = useState({ title: '', project: '', status: 'new' as Task['status'], priority: 'medium' as Task['priority'], agent: 'unassigned', notes: '' })
   const [filter, setFilter] = useState<'all' | Task['status']>('all')
+  const [agentFilter, setAgentFilter] = useState<string>('all')
 
   function save(updated: Task[]) { setTasks(updated); saveTasks(updated) }
 
@@ -48,8 +61,12 @@ export function Tasks() {
     if (!draft.title.trim()) return
     const task: Task = { id: newId(), ...draft, createdAt: new Date().toISOString() }
     save([task, ...tasks])
-    setDraft({ title: '', project: '', status: 'new', priority: 'medium', notes: '' })
+    setDraft({ title: '', project: '', status: 'new', priority: 'medium', agent: 'unassigned', notes: '' })
     setAdding(false)
+  }
+
+  function updateAgent(id: string, agent: string) {
+    save(tasks.map(t => t.id === id ? { ...t, agent } : t))
   }
 
   function updateStatus(id: string, status: Task['status']) {
@@ -60,6 +77,7 @@ export function Tasks() {
 
   const visible = tasks
     .filter(t => filter === 'all' || t.status === filter)
+    .filter(t => agentFilter === 'all' || (t.agent || 'unassigned') === agentFilter)
     .sort((a, b) => {
       const pri = { high: 0, medium: 1, low: 2 }
       return pri[a.priority] - pri[b.priority] || b.createdAt.localeCompare(a.createdAt)
@@ -85,6 +103,20 @@ export function Tasks() {
         </div>
         <button className="btn-gold" onClick={() => setAdding(true)}>+ Task</button>
       </div>
+      <div className="filter-group" style={{ marginBottom: 8 }}>
+        <button
+          className={`filter-btn ${agentFilter === 'all' ? 'active' : ''}`}
+          onClick={() => setAgentFilter('all')}
+        >All Agents</button>
+        {AGENTS.filter(a => a.key !== 'unassigned').map(a => (
+          <button
+            key={a.key}
+            className={`filter-btn ${agentFilter === a.key ? 'active' : ''}`}
+            style={agentFilter === a.key ? { borderColor: a.color, color: a.color } : {}}
+            onClick={() => setAgentFilter(agentFilter === a.key ? 'all' : a.key)}
+          >{a.label}</button>
+        ))}
+      </div>
 
       {adding && (
         <div className="task-add-form">
@@ -103,6 +135,14 @@ export function Tasks() {
               <option value="done">Done</option>
             </select>
           </div>
+          <select
+            className="task-select"
+            value={draft.agent}
+            style={{ color: AGENT_COLOR[draft.agent] || '#555', width: '100%' }}
+            onChange={e => setDraft(d => ({ ...d, agent: e.target.value }))}
+          >
+            {AGENTS.map(a => <option key={a.key} value={a.key}>{a.label}</option>)}
+          </select>
           <textarea className="task-notes" placeholder="Notes (optional)…" value={draft.notes} onChange={e => setDraft(d => ({ ...d, notes: e.target.value }))} rows={2} />
           <div className="task-form-actions">
             <button className="btn-gold" onClick={addTask}>Add Task</button>
@@ -118,12 +158,27 @@ export function Tasks() {
             <div className="task-card-left">
               <span className="task-priority-dot" style={{ background: PRIORITY_COLOR[task.priority] }} title={task.priority} />
               <div className="task-card-body">
-                <span className="task-title">{task.title}</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <span className="task-title">{task.title}</span>
+                  {task.agent && task.agent !== 'unassigned' && (
+                    <span style={{ fontSize: 10, fontWeight: 700, color: AGENT_COLOR[task.agent] || '#888', padding: '1px 6px', borderRadius: 3, border: `1px solid ${AGENT_COLOR[task.agent] || '#333'}`, background: '#0d0d0d', whiteSpace: 'nowrap' }}>
+                      {task.agent}
+                    </span>
+                  )}
+                </div>
                 {task.project && <span className="task-project">{task.project}</span>}
                 {task.notes && <span className="task-notes-preview">{task.notes}</span>}
               </div>
             </div>
             <div className="task-card-right">
+              <select
+                className="task-status-select"
+                value={task.agent || 'unassigned'}
+                style={{ color: AGENT_COLOR[task.agent || 'unassigned'] || '#555', maxWidth: 90 }}
+                onChange={e => updateAgent(task.id, e.target.value)}
+              >
+                {AGENTS.map(a => <option key={a.key} value={a.key}>{a.label}</option>)}
+              </select>
               <select
                 className="task-status-select"
                 value={task.status}
