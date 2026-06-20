@@ -80,6 +80,58 @@ async function fetchWithRetry(
     return attempt()
   }
 }
+const ACTION_APPROVE_URL = 'https://sunnicommandcenter.app.n8n.cloud/webhook/secc-os/approve-v2'
+const PENDING_ACTIONS_URL = 'https://sunnicommandcenter.app.n8n.cloud/webhook/secc-os/actions/pending'
+
+export interface ActionRecord {
+  action_id: string
+  notion_page_id?: string
+  agent: string
+  action_type: string
+  status: string
+  preview_message: string
+  destination: string
+  session_id: string
+  timestamp: string
+  action_payload: string
+}
+
+export interface ActionReceipt {
+  action_id: string
+  type: string
+  status: string
+  timestamp: string
+  destination: string | null
+  receipt_url_or_file_path: string | null
+  approved: boolean
+  approver?: string
+}
+
+export async function fetchPendingActions(): Promise<ActionRecord[]> {
+  try {
+    const res = await fetch(PENDING_ACTIONS_URL)
+    if (!res.ok) return []
+    const data = await res.json()
+    return data.actions || []
+  } catch {
+    return []
+  }
+}
+
+export async function approveAction(
+  actionId: string,
+  approved: boolean,
+  approver = 'SunNi',
+): Promise<ActionReceipt> {
+  const res = await fetchWithRetry(ACTION_APPROVE_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action_id: actionId, approved, approver }),
+  })
+  if (!res.ok) throw new Error(`Approve failed: ${res.status}`)
+  return res.json()
+}
+
 const CC_INTAKE_WF = import.meta.env.VITE_CC_INTAKE_WORKFLOW_ID || 'OQeDlPmsb8gape73'
 
 const WORKFLOW_NAMES: Record<string, string> = {
