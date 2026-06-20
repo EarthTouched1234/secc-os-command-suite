@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
-import { chat, dispatch } from '../api/n8n'
+import { chat, dispatch, type SLAResult } from '../api/n8n'
 
 // ── Context OS ────────────────────────────────────────────
 type ContextKey = 'WORK' | 'SCHOOL' | 'COMMAND' | 'CONTENT' | 'LIFE'
@@ -106,6 +106,7 @@ interface Message {
   routeKey?: string
   context?: ContextKey
   council?: CouncilMember[]
+  sla?: SLAResult
 }
 
 interface DispatchResult {
@@ -286,6 +287,7 @@ export function ChatBridge() {
           turn: res.turnNumber,
           context: sendContext,
           council: ctx.council,
+          sla: res.sla,
         }])
         if (voiceOn) speak(res.reply)
       } else {
@@ -455,6 +457,20 @@ export function ChatBridge() {
                     >
                       ⊕ save
                     </button>
+                    {m.sla && (() => {
+                      const { status, elapsedMs, targetMs } = m.sla
+                      const color = status === 'met' ? '#30d158' : status === 'warning' ? '#ffb020' : '#ff453a'
+                      const icon  = status === 'met' ? '✓' : status === 'warning' ? '⚠' : '✗'
+                      return (
+                        <span
+                          className="cb-sla-badge"
+                          style={{ color, border: `1px solid ${color}44`, background: `${color}11` }}
+                          title={`SLA: ${Math.round(elapsedMs/1000)}s elapsed / ${Math.round(targetMs/1000)}s target (${status})`}
+                        >
+                          {icon} {Math.round(elapsedMs/1000)}s / {Math.round(targetMs/1000)}s SLA
+                        </span>
+                      )
+                    })()}
                   </div>
                 </div>
               ) : (

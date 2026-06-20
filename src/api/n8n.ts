@@ -83,6 +83,26 @@ async function fetchWithRetry(
 const ACTION_APPROVE_URL = 'https://sunnicommandcenter.app.n8n.cloud/webhook/secc-os/approve-v2'
 const PENDING_ACTIONS_URL = 'https://sunnicommandcenter.app.n8n.cloud/webhook/secc-os/actions/pending'
 
+// SLA targets per agent per mode (milliseconds).
+// Warning fires at 80% of target; breach fires at 100%.
+export const SLA_TARGETS: Record<string, { standard: number; lite: number }> = {
+  horhanis:  { standard: 45_000, lite: 20_000 },
+  trio:      { standard: 60_000, lite: 25_000 },
+  tito:      { standard: 90_000, lite: 40_000 },
+  ciro:      { standard: 90_000, lite: 40_000 },
+  sunni:     { standard: 60_000, lite: 25_000 },
+  guardian:  { standard: 30_000, lite: 15_000 },
+  triage:    { standard: 60_000, lite: 25_000 },
+}
+
+export interface SLAResult {
+  elapsedMs: number
+  targetMs: number
+  status: 'met' | 'warning' | 'breached'
+  agent: string
+  mode: 'standard' | 'lite'
+}
+
 export interface ActionRecord {
   action_id: string
   notion_page_id?: string
@@ -192,12 +212,23 @@ export async function fetchSystemExecutions(limit = 30): Promise<SystemExecution
 
 // Unified agent call — routes all contexts through Agent Sandbox (supports all 6 agents).
 // `context` maps to the correct agent; `actionLevel` is passed as metadata for logging.
+function computeSLA(sendAt: number, agent: string, mode: 'standard' | 'lite'): SLAResult {
+  const elapsedMs = Date.now() - sendAt
+  const key = agent.toLowerCase()
+  const targetMs = (SLA_TARGETS[key] ?? SLA_TARGETS.horhanis)[mode]
+  const status = elapsedMs > targetMs ? 'breached'
+    : elapsedMs > targetMs * 0.8 ? 'warning'
+    : 'met'
+  return { elapsedMs, targetMs, status, agent, mode }
+}
+
 export async function chat(
   message: string,
   sessionId: string,
   context?: string,
   mode: 'standard' | 'lite' = 'standard',
-): Promise<{ reply: string; replyFull?: string; sessionId: string; turnNumber: number }> {
+): Promise<{ reply: string; replyFull?: string; sessionId: string; turnNumber: number; sla: SLAResult }> {
+  const sendAt = Date.now()
   if (import.meta.env.PROD) {
     const agent = CONTEXT_TO_AGENT[context || 'LIFE'] || 'horhanis'
     const res = await fetchWithRetry(AGENT_SANDBOX_URL, {
@@ -207,11 +238,11 @@ export async function chat(
     })
     if (!res.ok) throw new Error(`Agent ${agent} failed: ${res.status}`)
     const data = await res.json()
-    // Agent Sandbox returns { reply, replyFull, sessionId, turnNumber }
     return {
       reply: data.replyFull || data.reply || data.response || data.message || JSON.stringify(data),
       sessionId: data.sessionId || sessionId,
       turnNumber: data.turnNumber || 1,
+      sla: computeSLA(sendAt, agent, mode),
     }
   }
   // Dev: Vite proxy
@@ -221,7 +252,8 @@ export async function chat(
     body: JSON.stringify({ message, sessionId, operator: 'SunNi' }),
   })
   if (!res.ok) throw new Error(`Chat failed: ${res.status}`)
-  return res.json()
+  const data = await res.json()
+  return { ...data, sla: computeSLA(sendAt, 'horhanis', mode) }
 }
 
 export async function dispatch(

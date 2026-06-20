@@ -1927,3 +1927,14 @@ button, input { font: inherit; }
   color: var(--green);
   background: rgba(48,209,88,.08);
 }
+.cb-sla-badge {
+  font-size: 9px;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 3px;
+  letter-spacing: 0.03em;
+  cursor: default;
+  white-space: nowrap;
+  margin-left: auto;
+}
