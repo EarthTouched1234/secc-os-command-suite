@@ -118,7 +118,7 @@ button, input { font: inherit; }
 
 .cc-tabs {
   display: grid;
-  grid-template-columns: repeat(11, minmax(0, 1fr));
+  grid-template-columns: repeat(12, minmax(0, 1fr));
   gap: 6px;
 }
 
@@ -1938,3 +1938,55 @@ button, input { font: inherit; }
   white-space: nowrap;
   margin-left: auto;
 }
+
+/* ── PMO Dashboard ─────────────────────────────────────────── */
+.pmo-root { display: flex; flex-direction: column; gap: 16px; padding: 16px; }
+.pmo-header { display: flex; align-items: center; gap: 12px; }
+.pmo-title { font-size: 13px; font-weight: 700; color: var(--gold); letter-spacing: 0.05em; flex: 1; }
+.pmo-last-fetch { font-size: 10px; color: #555; }
+.pmo-refresh { font-size: 10px; padding: 2px 8px; background: #1a1a1a; border: 1px solid #333; color: #888; border-radius: 4px; cursor: pointer; }
+.pmo-refresh:hover { border-color: #555; color: #aaa; }
+.pmo-error { padding: 8px 12px; background: #2a1a1a; border: 1px solid #ff453a55; border-radius: 6px; font-size: 11px; color: #ff453a; }
+
+/* KPI Strip */
+.pmo-kpi-strip { display: flex; gap: 2px; }
+.pmo-kpi { flex: 1; background: #111; border: 1px solid #222; border-radius: 6px; padding: 10px 8px; text-align: center; display: flex; flex-direction: column; gap: 3px; }
+.pmo-kpi-value { font-size: 20px; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+.pmo-kpi-label { font-size: 9px; color: #555; letter-spacing: 0.05em; text-transform: uppercase; }
+
+/* Heatmap */
+.pmo-section { padding: 0; }
+.pmo-heatmap { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; padding: 12px; }
+.pmo-cell { border-left: 4px solid #333; background: #111; border-radius: 0 6px 6px 0; padding: 10px 12px; display: flex; flex-direction: column; gap: 5px; cursor: default; transition: background 0.15s; }
+.pmo-cell:hover { background: #181818; }
+.pmo-cell-top { display: flex; align-items: center; gap: 6px; }
+.pmo-cell-name { font-size: 11px; font-weight: 600; color: #ccc; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pmo-hold-chip { font-size: 8px; padding: 1px 4px; border-radius: 3px; background: #2a2a00; color: #888; border: 1px solid #44440055; }
+.pmo-cell-meta { display: flex; align-items: center; gap: 5px; }
+.pmo-gate-badge { font-size: 9px; padding: 1px 5px; border-radius: 3px; font-weight: 700; font-family: monospace; }
+.pmo-owner-chip { font-size: 9px; padding: 1px 5px; border-radius: 3px; font-weight: 600; }
+.pmo-wf-count { font-size: 9px; color: #555; margin-left: auto; }
+.pmo-health-bar { height: 3px; background: #222; border-radius: 2px; overflow: hidden; }
+.pmo-health-fill { height: 100%; border-radius: 2px; transition: width 0.4s; }
+.pmo-cell-date { font-size: 9px; }
+.pmo-skeleton-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; padding: 12px; }
+.pmo-skeleton-cell { height: 80px; background: #111; border-left: 4px solid #222; border-radius: 0 6px 6px 0; animation: pulse 1.5s ease-in-out infinite; }
+@keyframes pulse { 0%,100% { opacity: 0.4; } 50% { opacity: 0.8; } }
+
+/* Two-col */
+.pmo-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 680px) { .pmo-two-col { grid-template-columns: 1fr; } }
+
+/* Risk list */
+.pmo-risk-list, .pmo-gate-list { display: flex; flex-direction: column; padding: 8px 12px; gap: 6px; }
+.pmo-risk-row { display: flex; align-items: center; gap: 8px; }
+.pmo-risk-chip { font-size: 9px; padding: 1px 6px; border-radius: 3px; font-weight: 700; white-space: nowrap; }
+.pmo-risk-name { font-size: 11px; color: #aaa; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pmo-risk-owner { font-size: 9px; font-weight: 600; }
+
+/* Gate activity */
+.pmo-gate-row { display: flex; align-items: center; gap: 8px; }
+.pmo-gate-prog { font-size: 11px; color: #aaa; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pmo-gate-arrow { font-size: 10px; color: #555; white-space: nowrap; }
+.pmo-rag-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.pmo-empty { font-size: 11px; color: #444; padding: 4px 0; }

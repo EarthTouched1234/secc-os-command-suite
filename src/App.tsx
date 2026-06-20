@@ -14,11 +14,12 @@ import { Documents } from './components/Documents'
 import { Projects } from './components/Projects'
 import { Tasks } from './components/Tasks'
 import { Connectors } from './components/Connectors'
+import { PMODashboard } from './components/PMODashboard'
 import { computeMissionStatus } from './hooks/useFeed'
 import './App.css'
 
-type Tab = 'Dashboard' | 'Execute' | 'Approve' | 'Critical' | 'Agents' | 'ChatBridge' | 'Documents' | 'Projects' | 'Tasks' | 'Connectors' | 'Inbox'
-const TABS: Tab[] = ['Dashboard', 'ChatBridge', 'Documents', 'Projects', 'Tasks', 'Connectors', 'Execute', 'Approve', 'Critical', 'Agents', 'Inbox']
+type Tab = 'Dashboard' | 'Execute' | 'Approve' | 'Critical' | 'Agents' | 'ChatBridge' | 'Documents' | 'Projects' | 'Tasks' | 'Connectors' | 'Inbox' | 'PMO'
+const TABS: Tab[] = ['Dashboard', 'PMO', 'ChatBridge', 'Documents', 'Projects', 'Tasks', 'Connectors', 'Execute', 'Approve', 'Critical', 'Agents', 'Inbox']
 
 export default function App() {
   const { feed, systemExecs, loading, error, lastUpdated, refresh } = useFeed()
@@ -142,6 +143,7 @@ export default function App() {
         {activeTab === 'Agents' && <div className="cc-full-stack"><AgentFeed feed={feed} /></div>}
         {activeTab === 'ChatBridge' && <div className="cc-full-stack"><ChatBridge /></div>}
         {activeTab === 'Documents' && <div className="cc-full-stack"><Documents /></div>}
+        {activeTab === 'PMO' && <div className="cc-full-stack"><PMODashboard active={activeTab === 'PMO'} /></div>}
         {activeTab === 'Projects' && <div className="cc-full-stack"><Projects /></div>}
         {activeTab === 'Tasks' && <div className="cc-full-stack"><Tasks /></div>}
         {activeTab === 'Connectors' && <div className="cc-full-stack"><Connectors /></div>}
