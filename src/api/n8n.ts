@@ -81,8 +81,83 @@ async function fetchWithRetry(
   }
 }
 export { fetchWithRetry }
-const ACTION_APPROVE_URL = 'https://sunnicommandcenter.app.n8n.cloud/webhook/secc-os/approve-v2'
-const PENDING_ACTIONS_URL = 'https://sunnicommandcenter.app.n8n.cloud/webhook/secc-os/actions/pending'
+const ACTION_APPROVE_URL     = 'https://sunnicommandcenter.app.n8n.cloud/webhook/secc-os/approve-v2'
+const PENDING_ACTIONS_URL    = 'https://sunnicommandcenter.app.n8n.cloud/webhook/secc-os/actions/pending'
+const GUARDIAN_RISK_URL      = 'https://sunnicommandcenter.app.n8n.cloud/webhook/guardian/risk-register'
+const GUARDIAN_INTERCEPT_URL = 'https://sunnicommandcenter.app.n8n.cloud/webhook/guardian/intercept'
+
+// GUARDiAN Zero-Trust Layer — Golden Automation Rule enforcement.
+// Any action whose type appears here is PROTECTED: blocked, logged to the Risk &
+// Decision Register, and routed to human approval before execution.
+// Non-listed types are Non-Protected and pass through as standard operations.
+export const PROTECTED_ACTION_TYPES: Record<string, { riskLevel: 'Critical' | 'High' | 'Medium'; reason: string }> = {
+  financial:         { riskLevel: 'Critical', reason: 'Financial commitment or payment' },
+  budget_change:     { riskLevel: 'Critical', reason: 'Program budget modification' },
+  credential_change: { riskLevel: 'Critical', reason: 'Credential or secret rotation' },
+  workflow_delete:   { riskLevel: 'Critical', reason: 'Irreversible workflow destruction' },
+  security:          { riskLevel: 'Critical', reason: 'Security boundary change' },
+  architectural:     { riskLevel: 'High',     reason: 'System architecture modification' },
+  gate_change:       { riskLevel: 'High',     reason: 'PMO gate transition' },
+  github_push:       { riskLevel: 'High',     reason: 'Code deployment to repository' },
+  email_file:        { riskLevel: 'Medium',   reason: 'External communication with attachments' },
+  workflow_run:      { riskLevel: 'Medium',   reason: 'Workflow execution with side effects' },
+}
+
+export interface GuardianClassification {
+  protected: boolean
+  riskLevel: 'Critical' | 'High' | 'Medium' | 'Low'
+  reason: string
+}
+
+export function classifyAction(actionType: string): GuardianClassification {
+  const match = PROTECTED_ACTION_TYPES[actionType]
+  if (match) return { protected: true, ...match }
+  return { protected: false, riskLevel: 'Low', reason: 'Standard operational action' }
+}
+
+export interface RiskEntry {
+  id: string
+  title: string
+  agent: string
+  action_type: string
+  classification: 'Protected' | 'Non-Protected'
+  risk_level: string
+  status: string
+  program: string
+  logged_at: string
+  authorized_by: string | null
+}
+
+export async function fetchRiskRegister(): Promise<RiskEntry[]> {
+  try {
+    const res = await fetchWithRetry(GUARDIAN_RISK_URL, { method: 'GET' })
+    if (!res.ok) return []
+    const data = await res.json()
+    return data.entries || []
+  } catch {
+    return []
+  }
+}
+
+export async function logToRiskRegister(action: {
+  action_id: string
+  agent: string
+  action_type: string
+  preview_message: string
+  program?: string
+}): Promise<{ logged: boolean; risk_id?: string }> {
+  try {
+    const res = await fetchWithRetry(GUARDIAN_INTERCEPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(action),
+    })
+    if (!res.ok) return { logged: false }
+    return res.json()
+  } catch {
+    return { logged: false }
+  }
+}
 
 // SLA targets per agent per mode (milliseconds).
 // Warning fires at 80% of target; breach fires at 100%.
