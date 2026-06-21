@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { fetchWithRetry, syncPortfolioStatus, snapshotPortfolio, fetchTrajectory, type TrajectoryMap, type TrajectoryDirection, type AccelDirection } from '../api/n8n'
+import { fetchWithRetry, syncPortfolioStatus, snapshotPortfolio, fetchTrajectory, runFinancialSentinel, type TrajectoryMap, type TrajectoryDirection, type AccelDirection, type SentinelAlert } from '../api/n8n'
 
 const PMO_PORTFOLIO_URL = 'https://sunnicommandcenter.app.n8n.cloud/webhook/pmo/portfolio'
 
@@ -40,7 +40,10 @@ interface Program {
   healthScore: number | null
   activeWorkflows: number
   workflowIds: string
-  budget: number
+  budget: number | null
+  budgetSpent: number | null
+  burnPct: number | null
+  burnAlert: string | null
   onHold: boolean
   nextGateDate: string | null
   lastReview: string | null
@@ -85,6 +88,8 @@ export function PMODashboard({ active }: Props) {
   const [syncing, setSyncing] = useState(false)
   const [lastSync, setLastSync] = useState<{ at: Date; updated: number } | null>(null)
   const [trajectories, setTrajectories] = useState<TrajectoryMap>({})
+  const [sentinelRunning, setSentinelRunning] = useState(false)
+  const [sentinelAlerts, setSentinelAlerts] = useState<SentinelAlert[]>([])
 
   const load = useCallback(async () => {
     if (lastFetch && Date.now() - lastFetch.getTime() < 60_000) return
@@ -119,6 +124,20 @@ export function PMODashboard({ active }: Props) {
       // Sync failed — don't block UI
     } finally {
       setSyncing(false)
+    }
+  }, [load])
+
+  const handleSentinel = useCallback(async () => {
+    setSentinelRunning(true)
+    try {
+      const result = await runFinancialSentinel()
+      setSentinelAlerts(result.alerts || [])
+      setLastFetch(null)
+      await load()
+    } catch {
+      // don't block UI
+    } finally {
+      setSentinelRunning(false)
     }
   }, [load])
 
@@ -159,6 +178,19 @@ export function PMODashboard({ active }: Props) {
           <span className="pmo-last-fetch">
             {lastFetch ? `Data ${Math.round((Date.now() - lastFetch.getTime()) / 60000)}m ago` : ''}
           </span>
+          <button
+            className="pmo-sentinel-btn"
+            onClick={handleSentinel}
+            disabled={sentinelRunning || loading}
+            title="Run Financial Sentinel — check burn rates, write Risk Register alerts"
+          >
+            {sentinelRunning ? '⟳ Checking...' : '💰 Sentinel'}
+          </button>
+          {sentinelAlerts.length > 0 && (
+            <span className="pmo-sentinel-badge" title={sentinelAlerts.map(a => `${a.name}: ${a.burn_pct}% (${a.alert_level})`).join('\n')}>
+              🚨 {sentinelAlerts.length} budget alert{sentinelAlerts.length !== 1 ? 's' : ''}
+            </span>
+          )}
           <button
             className="pmo-sync-btn"
             onClick={handleSync}
@@ -247,6 +279,34 @@ export function PMODashboard({ active }: Props) {
                         className="pmo-health-fill"
                         style={{ width: `${p.healthScore}%`, background: ragColor }}
                       />
+                    </div>
+                  )}
+                  {p.budget !== null && p.budget > 0 && (
+                    <div
+                      className="pmo-budget-bar"
+                      title={`Budget: $${(p.budget ?? 0).toLocaleString()} · Spent: $${(p.budgetSpent ?? 0).toLocaleString()} · ${p.burnPct ?? 0}% consumed`}
+                    >
+                      <div
+                        className="pmo-budget-fill"
+                        style={{
+                          width: `${Math.min(p.burnPct ?? 0, 100)}%`,
+                          background: (p.burnPct ?? 0) >= 95 ? '#ef4444'
+                            : (p.burnPct ?? 0) >= 80 ? '#f97316'
+                            : (p.burnPct ?? 0) >= 60 ? '#f59e0b'
+                            : '#22c55e',
+                        }}
+                      />
+                      <span className="pmo-budget-label">
+                        {p.burnAlert && p.burnAlert !== 'Clear' && (
+                          <span className="pmo-burn-chip" style={{
+                            color: p.burnAlert === 'Critical' ? '#ef4444'
+                              : p.burnAlert === 'Alert' ? '#f97316' : '#f59e0b'
+                          }}>
+                            {p.burnAlert === 'Critical' ? '🚨' : '⚠'} {p.burnAlert}
+                          </span>
+                        )}
+                        <span style={{ color: '#444' }}>${(p.budget ?? 0).toLocaleString()} · {p.burnPct ?? 0}%</span>
+                      </span>
                     </div>
                   )}
                   {(() => {

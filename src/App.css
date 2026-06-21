@@ -1950,6 +1950,15 @@ button, input { font: inherit; }
 .pmo-sync-btn:hover:not(:disabled) { background: #0f2e0f; }
 .pmo-sync-btn:disabled { opacity: 0.5; cursor: default; }
 .pmo-sync-badge { font-size: 9px; color: #22c55e; background: #0a1a0a; border: 1px solid #14532d; border-radius: 3px; padding: 2px 7px; letter-spacing: 0.03em; }
+.pmo-sentinel-btn { font-size: 10px; font-weight: 700; padding: 3px 10px; background: #1a1000; border: 1px solid #78350f; color: #f59e0b; border-radius: 4px; cursor: pointer; letter-spacing: 0.04em; }
+.pmo-sentinel-btn:hover:not(:disabled) { background: #2a1a00; }
+.pmo-sentinel-btn:disabled { opacity: 0.5; cursor: default; }
+.pmo-sentinel-badge { font-size: 9px; color: #ef4444; background: #1f0a0a; border: 1px solid #7f1d1d; border-radius: 3px; padding: 2px 7px; }
+/* Budget burn bar */
+.pmo-budget-bar { height: 3px; background: #1a1a1a; border-radius: 2px; overflow: hidden; margin-top: 3px; position: relative; }
+.pmo-budget-fill { height: 100%; border-radius: 2px; transition: width 0.4s; }
+.pmo-budget-label { display: flex; justify-content: space-between; align-items: center; margin-top: 2px; font-size: 9px; }
+.pmo-burn-chip { font-size: 8px; font-weight: 700; }
 .pmo-error { padding: 8px 12px; background: #2a1a1a; border: 1px solid #ff453a55; border-radius: 6px; font-size: 11px; color: #ff453a; }
 
 /* KPI Strip */
