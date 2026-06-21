@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { fetchWithRetry, syncPortfolioStatus } from '../api/n8n'
+import { fetchWithRetry, syncPortfolioStatus, snapshotPortfolio } from '../api/n8n'
 
 const PMO_PORTFOLIO_URL = 'https://sunnicommandcenter.app.n8n.cloud/webhook/pmo/portfolio'
 
@@ -105,7 +105,9 @@ export function PMODashboard({ active }: Props) {
     try {
       const result = await syncPortfolioStatus()
       setLastSync({ at: new Date(result.synced_at), updated: result.programs_updated })
-      // Refresh portfolio data after sync so health scores update in UI
+      // Chain: snapshot after sync so gate changes are archived immediately
+      await snapshotPortfolio('post_sync').catch(() => {})
+      // Refresh portfolio data so health scores update in UI
       setLastFetch(null)
       await load()
     } catch {

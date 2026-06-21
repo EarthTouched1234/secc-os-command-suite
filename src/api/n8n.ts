@@ -82,6 +82,7 @@ async function fetchWithRetry(
 }
 export { fetchWithRetry }
 const PMO_SYNC_URL           = 'https://sunnicommandcenter.app.n8n.cloud/webhook/pmo/sync-status'
+const PMO_SNAPSHOT_URL       = 'https://sunnicommandcenter.app.n8n.cloud/webhook/pmo/gate-snapshot'
 const ACTION_APPROVE_URL     = 'https://sunnicommandcenter.app.n8n.cloud/webhook/secc-os/approve-v2'
 const PENDING_ACTIONS_URL    = 'https://sunnicommandcenter.app.n8n.cloud/webhook/secc-os/actions/pending'
 const GUARDIAN_RISK_URL      = 'https://sunnicommandcenter.app.n8n.cloud/webhook/guardian/risk-register'
@@ -217,6 +218,23 @@ export async function syncPortfolioStatus(): Promise<SyncResult> {
     body: JSON.stringify({}),
   })
   if (!res.ok) throw new Error(`Sync failed: ${res.status}`)
+  return res.json()
+}
+
+export interface SnapshotResult {
+  snapshotted: boolean
+  count: number
+  reason: string
+  snapped_at: string
+}
+
+export async function snapshotPortfolio(reason = 'post_sync'): Promise<SnapshotResult> {
+  const res = await fetchWithRetry(PMO_SNAPSHOT_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ reason }),
+  })
+  if (!res.ok) throw new Error(`Snapshot failed: ${res.status}`)
   return res.json()
 }
 
