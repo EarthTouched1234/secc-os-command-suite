@@ -1974,12 +1974,16 @@ button, input { font: inherit; }
 .pmo-health-fill { height: 100%; border-radius: 2px; transition: width 0.4s; }
 .pmo-cell-date { font-size: 9px; }
 
-/* Trajectory arrow badge */
-.pmo-traj-badge { font-size: 11px; font-weight: 700; padding: 1px 5px; border-radius: 3px; margin-top: 4px; display: inline-block; cursor: default; }
+/* Trajectory + Acceleration badges */
+.pmo-traj-badge { font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 3px; margin-top: 4px; display: inline-flex; align-items: center; gap: 3px; cursor: default; letter-spacing: 0.02em; }
 .pmo-traj-up      { color: #22c55e; background: #0a1f0a; border: 1px solid #14532d; }
 .pmo-traj-stable  { color: #94a3b8; background: #111; border: 1px solid #1e293b; }
 .pmo-traj-down    { color: #ef4444; background: #1f0a0a; border: 1px solid #7f1d1d; }
 .pmo-traj-unknown { color: #444; background: #0d0d0d; border: 1px solid #222; font-size: 9px; }
+.pmo-traj-vel   { font-size: 9px; font-weight: 600; opacity: 0.85; font-family: 'JetBrains Mono', monospace; }
+.pmo-traj-accel { font-size: 8px; font-weight: 700; }
+.pmo-accel-up   { color: #22c55e; }
+.pmo-accel-down { color: #f59e0b; }
 .pmo-skeleton-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; padding: 12px; }
 .pmo-skeleton-cell { height: 80px; background: #111; border-left: 4px solid #222; border-radius: 0 6px 6px 0; animation: pulse 1.5s ease-in-out infinite; }
 @keyframes pulse { 0%,100% { opacity: 0.4; } 50% { opacity: 0.8; } }

@@ -241,14 +241,26 @@ export async function snapshotPortfolio(reason = 'post_sync'): Promise<SnapshotR
 
 export type TrajectoryDirection = 'Improving' | 'Stable' | 'Declining' | 'Unknown'
 
+export type AccelDirection = 'accelerating' | 'decelerating' | 'flat' | 'unknown'
+export type VelocityDirection = 'up' | 'down' | 'flat'
+
 export interface TrajectoryEntry {
   program_id: string
   program: string
   direction: TrajectoryDirection
   scores: number[]
   delta: number | null
+  // Velocity — avg health delta per snapshot period
+  velocity: number | null
+  velocity_pct: string | null       // e.g. "+10.2" or "-5.3"
+  velocity_dir: VelocityDirection
+  // Acceleration — 2nd derivative (delta of deltas), needs 3+ snapshots
+  acceleration: number | null
+  acceleration_pct: string | null   // e.g. "+5.0" or "-8.0"
+  accel_dir: AccelDirection
   confidence: 'high' | 'medium' | 'low'
   snapshot_count: number
+  scored_count: number
 }
 
 // Keyed by program_id for O(1) lookup in the UI
