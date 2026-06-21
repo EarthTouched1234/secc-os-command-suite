@@ -83,6 +83,7 @@ async function fetchWithRetry(
 export { fetchWithRetry }
 const PMO_SYNC_URL           = 'https://sunnicommandcenter.app.n8n.cloud/webhook/pmo/sync-status'
 const PMO_SNAPSHOT_URL       = 'https://sunnicommandcenter.app.n8n.cloud/webhook/pmo/gate-snapshot'
+const PMO_TRAJECTORY_URL     = 'https://sunnicommandcenter.app.n8n.cloud/webhook/pmo/trajectory'
 const ACTION_APPROVE_URL     = 'https://sunnicommandcenter.app.n8n.cloud/webhook/secc-os/approve-v2'
 const PENDING_ACTIONS_URL    = 'https://sunnicommandcenter.app.n8n.cloud/webhook/secc-os/actions/pending'
 const GUARDIAN_RISK_URL      = 'https://sunnicommandcenter.app.n8n.cloud/webhook/guardian/risk-register'
@@ -236,6 +237,36 @@ export async function snapshotPortfolio(reason = 'post_sync'): Promise<SnapshotR
   })
   if (!res.ok) throw new Error(`Snapshot failed: ${res.status}`)
   return res.json()
+}
+
+export type TrajectoryDirection = 'Improving' | 'Stable' | 'Declining' | 'Unknown'
+
+export interface TrajectoryEntry {
+  program_id: string
+  program: string
+  direction: TrajectoryDirection
+  scores: number[]
+  delta: number | null
+  confidence: 'high' | 'medium' | 'low'
+  snapshot_count: number
+}
+
+// Keyed by program_id for O(1) lookup in the UI
+export type TrajectoryMap = Record<string, TrajectoryEntry>
+
+export async function fetchTrajectory(): Promise<TrajectoryMap> {
+  try {
+    const res = await fetchWithRetry(PMO_TRAJECTORY_URL, { method: 'GET' })
+    if (!res.ok) return {}
+    const data = await res.json()
+    const map: TrajectoryMap = {}
+    for (const entry of (data.trajectories || [])) {
+      map[entry.program_id] = entry
+    }
+    return map
+  } catch {
+    return {}
+  }
 }
 
 export async function fetchPendingActions(): Promise<ActionRecord[]> {
