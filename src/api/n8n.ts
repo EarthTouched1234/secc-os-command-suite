@@ -84,6 +84,7 @@ export { fetchWithRetry }
 const PMO_SYNC_URL           = 'https://sunnicommandcenter.app.n8n.cloud/webhook/pmo/sync-status'
 const PMO_SNAPSHOT_URL       = 'https://sunnicommandcenter.app.n8n.cloud/webhook/pmo/gate-snapshot'
 const PMO_TRAJECTORY_URL     = 'https://sunnicommandcenter.app.n8n.cloud/webhook/pmo/trajectory'
+const PMO_SENTINEL_URL       = 'https://sunnicommandcenter.app.n8n.cloud/webhook/pmo/financial-sentinel'
 const ACTION_APPROVE_URL     = 'https://sunnicommandcenter.app.n8n.cloud/webhook/secc-os/approve-v2'
 const PENDING_ACTIONS_URL    = 'https://sunnicommandcenter.app.n8n.cloud/webhook/secc-os/actions/pending'
 const GUARDIAN_RISK_URL      = 'https://sunnicommandcenter.app.n8n.cloud/webhook/guardian/risk-register'
@@ -236,6 +237,29 @@ export async function snapshotPortfolio(reason = 'post_sync'): Promise<SnapshotR
     body: JSON.stringify({ reason }),
   })
   if (!res.ok) throw new Error(`Snapshot failed: ${res.status}`)
+  return res.json()
+}
+
+export interface SentinelAlert {
+  name: string
+  burn_pct: number
+  alert_level: 'Watch' | 'Alert' | 'Critical'
+}
+
+export interface SentinelResult {
+  sentinel: boolean
+  checked: number
+  alerts: SentinelAlert[]
+  checked_at: string
+}
+
+export async function runFinancialSentinel(): Promise<SentinelResult> {
+  const res = await fetchWithRetry(PMO_SENTINEL_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({}),
+  })
+  if (!res.ok) throw new Error(`Sentinel failed: ${res.status}`)
   return res.json()
 }
 
