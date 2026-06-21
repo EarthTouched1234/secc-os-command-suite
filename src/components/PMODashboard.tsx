@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { fetchWithRetry, syncPortfolioStatus, snapshotPortfolio, fetchTrajectory, runFinancialSentinel, type TrajectoryMap, type TrajectoryDirection, type AccelDirection, type SentinelAlert } from '../api/n8n'
+import { PMOGateGuide, GATE_LOOKUP } from './PMOGateGuide'
 
 const PMO_PORTFOLIO_URL = 'https://sunnicommandcenter.app.n8n.cloud/webhook/pmo/portfolio'
 
@@ -265,7 +266,13 @@ export function PMODashboard({ active }: Props) {
                     {p.onHold && <span className="pmo-hold-chip">HOLD</span>}
                   </div>
                   <div className="pmo-cell-meta">
-                    <span className="pmo-gate-badge" style={{ color: ragColor, border: `1px solid ${ragColor}44` }}>
+                    <span
+                      className="pmo-gate-badge"
+                      style={{ color: ragColor, border: `1px solid ${ragColor}44` }}
+                      title={GATE_LOOKUP[p.gate]
+                        ? `${p.gate}\nPMBOK® P${GATE_LOOKUP[p.gate].pmbokNum} — ${GATE_LOOKUP[p.gate].pmbokPrinciple}\nDomain: ${GATE_LOOKUP[p.gate].domain}`
+                        : p.gate}
+                    >
                       {gateShort(p.gate)}
                     </span>
                     <span className="pmo-owner-chip" style={{ color: ownerColor, border: `1px solid ${ownerColor}44` }}>
@@ -411,6 +418,10 @@ export function PMODashboard({ active }: Props) {
           </div>
         </div>
       </div>
+
+      {/* PMBOK® Gate Reference — collapsible at bottom */}
+      <PMOGateGuide />
+
     </div>
   )
 }
