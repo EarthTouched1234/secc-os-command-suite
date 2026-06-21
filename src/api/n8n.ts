@@ -81,6 +81,7 @@ async function fetchWithRetry(
   }
 }
 export { fetchWithRetry }
+const PMO_SYNC_URL           = 'https://sunnicommandcenter.app.n8n.cloud/webhook/pmo/sync-status'
 const ACTION_APPROVE_URL     = 'https://sunnicommandcenter.app.n8n.cloud/webhook/secc-os/approve-v2'
 const PENDING_ACTIONS_URL    = 'https://sunnicommandcenter.app.n8n.cloud/webhook/secc-os/actions/pending'
 const GUARDIAN_RISK_URL      = 'https://sunnicommandcenter.app.n8n.cloud/webhook/guardian/risk-register'
@@ -201,6 +202,22 @@ export interface ActionReceipt {
   receipt_url_or_file_path: string | null
   approved: boolean
   approver?: string
+}
+
+export interface SyncResult {
+  synced: boolean
+  programs_updated: number
+  synced_at: string
+}
+
+export async function syncPortfolioStatus(): Promise<SyncResult> {
+  const res = await fetchWithRetry(PMO_SYNC_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({}),
+  })
+  if (!res.ok) throw new Error(`Sync failed: ${res.status}`)
+  return res.json()
 }
 
 export async function fetchPendingActions(): Promise<ActionRecord[]> {

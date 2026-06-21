@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { fetchWithRetry } from '../api/n8n'
+import { fetchWithRetry, syncPortfolioStatus } from '../api/n8n'
 
 const PMO_PORTFOLIO_URL = 'https://sunnicommandcenter.app.n8n.cloud/webhook/pmo/portfolio'
 
@@ -82,6 +82,8 @@ export function PMODashboard({ active }: Props) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [lastFetch, setLastFetch] = useState<Date | null>(null)
+  const [syncing, setSyncing] = useState(false)
+  const [lastSync, setLastSync] = useState<{ at: Date; updated: number } | null>(null)
 
   const load = useCallback(async () => {
     if (lastFetch && Date.now() - lastFetch.getTime() < 60_000) return
@@ -97,6 +99,21 @@ export function PMODashboard({ active }: Props) {
       setLoading(false)
     }
   }, [lastFetch])
+
+  const handleSync = useCallback(async () => {
+    setSyncing(true)
+    try {
+      const result = await syncPortfolioStatus()
+      setLastSync({ at: new Date(result.synced_at), updated: result.programs_updated })
+      // Refresh portfolio data after sync so health scores update in UI
+      setLastFetch(null)
+      await load()
+    } catch {
+      // Sync failed — don't block UI
+    } finally {
+      setSyncing(false)
+    }
+  }, [load])
 
   useEffect(() => { if (active) load() }, [active, load])
 
@@ -126,12 +143,27 @@ export function PMODashboard({ active }: Props) {
       {/* Header */}
       <div className="pmo-header">
         <span className="pmo-title">PMO — Portfolio Governance</span>
-        <span className="pmo-last-fetch">
-          {lastFetch ? `Updated ${Math.round((Date.now() - lastFetch.getTime()) / 60000)}m ago` : 'Not loaded'}
-        </span>
-        <button className="pmo-refresh" onClick={() => { setLastFetch(null); load() }} disabled={loading}>
-          {loading ? '⟳' : 'Refresh'}
-        </button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          {lastSync && (
+            <span className="pmo-sync-badge">
+              ✓ Auto-synced {lastSync.updated} program{lastSync.updated !== 1 ? 's' : ''} · {lastSync.at.toLocaleTimeString()}
+            </span>
+          )}
+          <span className="pmo-last-fetch">
+            {lastFetch ? `Data ${Math.round((Date.now() - lastFetch.getTime()) / 60000)}m ago` : ''}
+          </span>
+          <button
+            className="pmo-sync-btn"
+            onClick={handleSync}
+            disabled={syncing || loading}
+            title="Pull live execution data from n8n and update health scores"
+          >
+            {syncing ? '⟳ Syncing...' : '⚡ Sync Now'}
+          </button>
+          <button className="pmo-refresh" onClick={() => { setLastFetch(null); load() }} disabled={loading}>
+            {loading ? '⟳' : 'Refresh'}
+          </button>
+        </div>
       </div>
 
       {error && <div className="pmo-error">{error}</div>}
