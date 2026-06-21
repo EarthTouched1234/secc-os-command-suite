@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import type { FeedEntry } from '../api/n8n'
-import { fetchPendingActions, approveAction, type ActionRecord } from '../api/n8n'
+import { fetchPendingActions, approveAction, classifyAction, type ActionRecord } from '../api/n8n'
 
 interface Props { feed: FeedEntry[] }
 
@@ -90,35 +90,53 @@ export function ApprovalQueue({ feed }: Props) {
           )}
           {actions.map((a) => (
             <div key={a.action_id} className="queue-item">
-              <div className="queue-item-header">
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <span style={{ fontSize: 10, color: AGENT_COLOR[a.agent] || '#888', fontWeight: 700 }}>{a.agent}</span>
-                  <span style={{ fontSize: 10, padding: '1px 6px', borderRadius: 3, background: '#1a1a1a', color: TYPE_COLOR[a.action_type] || '#888', border: `1px solid ${TYPE_COLOR[a.action_type] || '#333'}` }}>{a.action_type}</span>
-                </div>
-                <span className="queue-time">{a.timestamp ? new Date(a.timestamp).toLocaleTimeString() : ''}</span>
-              </div>
-              <div className="queue-summary" style={{ marginTop: 4 }}>{a.preview_message}</div>
-              {a.destination && (
-                <div style={{ fontSize: 10, color: '#555', marginTop: 2 }}>→ {a.destination}</div>
-              )}
-              <div style={{ fontSize: 9, color: '#444', marginTop: 3, fontFamily: 'monospace' }}>{a.action_id}</div>
-              <div className="queue-actions" style={{ marginTop: 8 }}>
-                <button
-                  className="btn-approve"
-                  disabled={processing === a.action_id}
-                  onClick={() => handleApprove(a.action_id, true)}
-                >
-                  {processing === a.action_id ? '...' : 'APPROVE'}
-                </button>
-                <button
-                  className="btn-defer"
-                  disabled={processing === a.action_id}
-                  onClick={() => handleApprove(a.action_id, false)}
-                  style={{ color: '#ff453a' }}
-                >
-                  DECLINE
-                </button>
-              </div>
+              {(() => {
+                const cls = classifyAction(a.action_type)
+                const riskColor: Record<string, string> = { Critical: '#ef4444', High: '#f97316', Medium: '#f59e0b', Low: '#22c55e' }
+                return (
+                  <>
+                    <div className="queue-item-header">
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                        <span style={{ fontSize: 10, color: AGENT_COLOR[a.agent] || '#888', fontWeight: 700 }}>{a.agent}</span>
+                        <span style={{ fontSize: 10, padding: '1px 6px', borderRadius: 3, background: '#1a1a1a', color: TYPE_COLOR[a.action_type] || '#888', border: `1px solid ${TYPE_COLOR[a.action_type] || '#333'}` }}>{a.action_type}</span>
+                        {cls.protected && (
+                          <span style={{ fontSize: 9, padding: '1px 6px', borderRadius: 3, background: '#2a0a0a', color: '#ef4444', border: '1px solid #ef4444', fontWeight: 700, letterSpacing: '0.05em' }}>
+                            🛡 GUARDIAN HOLD · {cls.riskLevel}
+                          </span>
+                        )}
+                      </div>
+                      <span className="queue-time">{a.timestamp ? new Date(a.timestamp).toLocaleTimeString() : ''}</span>
+                    </div>
+                    <div className="queue-summary" style={{ marginTop: 4 }}>{a.preview_message}</div>
+                    {cls.protected && (
+                      <div style={{ fontSize: 10, color: riskColor[cls.riskLevel], marginTop: 3, fontStyle: 'italic' }}>
+                        ⚠ {cls.reason} — human authorization required
+                      </div>
+                    )}
+                    {a.destination && (
+                      <div style={{ fontSize: 10, color: '#555', marginTop: 2 }}>→ {a.destination}</div>
+                    )}
+                    <div style={{ fontSize: 9, color: '#444', marginTop: 3, fontFamily: 'monospace' }}>{a.action_id}</div>
+                    <div className="queue-actions" style={{ marginTop: 8 }}>
+                      <button
+                        className={cls.protected ? 'btn-authorize' : 'btn-approve'}
+                        disabled={processing === a.action_id}
+                        onClick={() => handleApprove(a.action_id, true)}
+                      >
+                        {processing === a.action_id ? '...' : cls.protected ? 'AUTHORIZE ✦' : 'APPROVE'}
+                      </button>
+                      <button
+                        className="btn-defer"
+                        disabled={processing === a.action_id}
+                        onClick={() => handleApprove(a.action_id, false)}
+                        style={{ color: '#ff453a' }}
+                      >
+                        DECLINE
+                      </button>
+                    </div>
+                  </>
+                )
+              })()}
             </div>
           ))}
         </div>

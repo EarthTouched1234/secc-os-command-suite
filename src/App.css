@@ -1990,3 +1990,90 @@ button, input { font: inherit; }
 .pmo-gate-arrow { font-size: 10px; color: #555; white-space: nowrap; }
 .pmo-rag-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
 .pmo-empty { font-size: 11px; color: #444; padding: 4px 0; }
+
+/* ── GUARDiAN Zero-Trust Layer ─────────────────────────────────────── */
+.guardian-root { display: flex; flex-direction: column; gap: 12px; padding: 16px; }
+
+.guardian-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding-bottom: 12px; border-bottom: 1px solid #1a1a1a;
+}
+.guardian-title { font-size: 15px; font-weight: 700; letter-spacing: 0.08em; color: #ef4444; }
+.guardian-subtitle { font-size: 11px; color: #555; letter-spacing: 0.05em; }
+
+.guardian-golden-rule {
+  display: flex; align-items: center; gap: 7px;
+  font-size: 10px; font-weight: 700; color: #22c55e; letter-spacing: 0.08em;
+  background: #0a1f0a; border: 1px solid #166534; border-radius: 4px; padding: 4px 10px;
+}
+.guardian-rule-dot {
+  width: 7px; height: 7px; border-radius: 50%; background: #22c55e;
+  box-shadow: 0 0 6px #22c55e; animation: glow-pulse 2s ease-in-out infinite;
+}
+@keyframes glow-pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+.guardian-refresh {
+  font-size: 10px; padding: 3px 10px; background: #1a1a1a;
+  border: 1px solid #333; color: #888; border-radius: 4px; cursor: pointer;
+}
+.guardian-refresh:disabled { opacity: 0.4; cursor: default; }
+
+.guardian-doctrine {
+  display: flex; gap: 10px; align-items: flex-start;
+  background: #0d0d0d; border: 1px solid #1f1f1f; border-left: 3px solid #ef4444;
+  border-radius: 4px; padding: 10px 14px;
+}
+.guardian-doctrine-label { font-size: 9px; color: #ef4444; font-weight: 700; letter-spacing: 0.1em; white-space: nowrap; padding-top: 1px; }
+.guardian-doctrine-text { font-size: 11px; color: #888; line-height: 1.6; }
+
+.guardian-kpi-strip { display: flex; gap: 8px; flex-wrap: wrap; }
+.guardian-kpi {
+  flex: 1; min-width: 80px; display: flex; flex-direction: column; align-items: center;
+  background: #10151c; border: 1px solid #1a1a1a; border-radius: 6px; padding: 10px 8px;
+}
+.guardian-kpi-value { font-size: 22px; font-weight: 700; line-height: 1; }
+.guardian-kpi-label { font-size: 9px; color: #555; margin-top: 4px; letter-spacing: 0.06em; }
+
+.guardian-body { display: grid; grid-template-columns: 1fr 1.6fr; gap: 12px; }
+@media (max-width: 720px) { .guardian-body { grid-template-columns: 1fr; } }
+
+.guardian-panel {
+  background: #10151c; border: 1px solid #1a1a1a; border-radius: 8px;
+  overflow: hidden; display: flex; flex-direction: column;
+}
+.guardian-panel-header {
+  font-size: 9px; font-weight: 700; letter-spacing: 0.1em; color: #555;
+  padding: 8px 12px; border-bottom: 1px solid #1a1a1a; display: flex;
+  justify-content: space-between; align-items: center;
+}
+
+.guardian-rule-group { padding: 8px 12px; border-bottom: 1px solid #0d0d0d; }
+.guardian-rule-level { font-size: 10px; font-weight: 700; margin-bottom: 5px; letter-spacing: 0.05em; }
+.guardian-rule-row { display: flex; align-items: baseline; gap: 8px; margin-bottom: 3px; }
+.guardian-rule-key { font-size: 10px; color: #aaa; font-family: monospace; white-space: nowrap; flex-shrink: 0; }
+.guardian-rule-reason { font-size: 10px; color: #555; }
+
+.guardian-empty { padding: 20px; text-align: center; }
+
+.guardian-entry {
+  padding: 10px 12px; border-bottom: 1px solid #0d0d0d;
+}
+.guardian-entry:last-child { border-bottom: none; }
+.guardian-entry-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+.guardian-risk-badge {
+  font-size: 9px; font-weight: 700; padding: 1px 6px; border-radius: 3px;
+  border: 1px solid; background: transparent; letter-spacing: 0.05em;
+}
+.guardian-status-badge { font-size: 9px; font-weight: 700; letter-spacing: 0.05em; }
+.guardian-entry-title { font-size: 11px; color: #ccc; line-height: 1.4; }
+.guardian-entry-meta { display: flex; gap: 12px; font-size: 10px; color: #555; margin-top: 4px; flex-wrap: wrap; }
+
+/* Protected action AUTHORIZE button */
+.btn-authorize {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.06em;
+  padding: 5px 14px; border-radius: 4px; cursor: pointer;
+  background: #1f0a0a; border: 1px solid #ef4444; color: #ef4444;
+  transition: background 0.15s;
+}
+.btn-authorize:hover:not(:disabled) { background: #2a0f0f; }
+.btn-authorize:disabled { opacity: 0.4; cursor: default; }
