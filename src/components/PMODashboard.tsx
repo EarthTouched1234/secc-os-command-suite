@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { fetchWithRetry, syncPortfolioStatus, snapshotPortfolio, fetchTrajectory, type TrajectoryMap, type TrajectoryDirection } from '../api/n8n'
+import { fetchWithRetry, syncPortfolioStatus, snapshotPortfolio, fetchTrajectory, type TrajectoryMap, type TrajectoryDirection, type AccelDirection } from '../api/n8n'
 
 const PMO_PORTFOLIO_URL = 'https://sunnicommandcenter.app.n8n.cloud/webhook/pmo/portfolio'
 
@@ -250,18 +250,42 @@ export function PMODashboard({ active }: Props) {
                     </div>
                   )}
                   {(() => {
-                    const tEntry = trajectories[p.id]
-                    const dir: TrajectoryDirection = tEntry?.direction ?? 'Unknown'
-                    const TRAJ: Record<TrajectoryDirection, { arrow: string; cls: string; tip: string }> = {
-                      Improving: { arrow: '↑', cls: 'pmo-traj-up',      tip: `Improving · ${tEntry?.scores?.join(' → ')}` },
-                      Stable:    { arrow: '→', cls: 'pmo-traj-stable',  tip: `Stable · ${tEntry?.scores?.join(' → ')}` },
-                      Declining: { arrow: '↓', cls: 'pmo-traj-down',    tip: `Declining · ${tEntry?.scores?.join(' → ')}` },
-                      Unknown:   { arrow: '?', cls: 'pmo-traj-unknown', tip: 'Trajectory: not enough data yet' },
+                    const te  = trajectories[p.id]
+                    const dir: TrajectoryDirection = te?.direction ?? 'Unknown'
+                    const ad: AccelDirection       = te?.accel_dir ?? 'unknown'
+
+                    const DIR_ARROW: Record<TrajectoryDirection, string> = {
+                      Improving: '↑', Stable: '→', Declining: '↓', Unknown: '?',
                     }
-                    const t = TRAJ[dir]
+                    const DIR_CLS: Record<TrajectoryDirection, string> = {
+                      Improving: 'pmo-traj-up', Stable: 'pmo-traj-stable',
+                      Declining: 'pmo-traj-down', Unknown: 'pmo-traj-unknown',
+                    }
+                    const ACCEL_GLYPH: Record<AccelDirection, string> = {
+                      accelerating: '▲', decelerating: '▼', flat: '', unknown: '',
+                    }
+                    const ACCEL_CLS: Record<AccelDirection, string> = {
+                      accelerating: 'pmo-accel-up', decelerating: 'pmo-accel-down',
+                      flat: '', unknown: '',
+                    }
+
+                    const velStr    = te?.velocity_pct  ? `${te.velocity_pct}/wk` : null
+                    const accelGlyph = ACCEL_GLYPH[ad]
+                    const accelCls   = ACCEL_CLS[ad]
+                    const scoresTip  = te?.scores?.length ? te.scores.join(' → ') : 'no scored data yet'
+                    const tip = dir === 'Unknown'
+                      ? 'Trajectory: accumulating data (populate n8n Workflow IDs + run Sync Now)'
+                      : `${dir} · ${velStr ?? ''} · ${ad !== 'unknown' ? ad : 'accel: need 3 snapshots'} · scores: ${scoresTip}`
+
+                    if (dir === 'Unknown') {
+                      return <span className="pmo-traj-badge pmo-traj-unknown" title={tip}>?</span>
+                    }
+
                     return (
-                      <span className={`pmo-traj-badge ${t.cls}`} title={t.tip}>
-                        {t.arrow}
+                      <span className={`pmo-traj-badge ${DIR_CLS[dir]}`} title={tip}>
+                        {DIR_ARROW[dir]}
+                        {velStr && <span className="pmo-traj-vel"> {velStr}</span>}
+                        {accelGlyph && <span className={`pmo-traj-accel ${accelCls}`}> {accelGlyph}</span>}
                       </span>
                     )
                   })()}
