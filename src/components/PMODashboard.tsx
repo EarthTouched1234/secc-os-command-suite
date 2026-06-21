@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { fetchWithRetry, syncPortfolioStatus, snapshotPortfolio } from '../api/n8n'
+import { fetchWithRetry, syncPortfolioStatus, snapshotPortfolio, fetchTrajectory, type TrajectoryMap, type TrajectoryDirection } from '../api/n8n'
 
 const PMO_PORTFOLIO_URL = 'https://sunnicommandcenter.app.n8n.cloud/webhook/pmo/portfolio'
 
@@ -84,14 +84,17 @@ export function PMODashboard({ active }: Props) {
   const [lastFetch, setLastFetch] = useState<Date | null>(null)
   const [syncing, setSyncing] = useState(false)
   const [lastSync, setLastSync] = useState<{ at: Date; updated: number } | null>(null)
+  const [trajectories, setTrajectories] = useState<TrajectoryMap>({})
 
   const load = useCallback(async () => {
     if (lastFetch && Date.now() - lastFetch.getTime() < 60_000) return
     setLoading(true)
     setError(null)
     try {
-      const data = await fetchPortfolio()
+      // Load portfolio + trajectory in parallel
+      const [data, traj] = await Promise.all([fetchPortfolio(), fetchTrajectory()])
       setPrograms(data)
+      setTrajectories(traj)
       setLastFetch(new Date())
     } catch {
       setError('Failed to load portfolio data. Check n8n PMO Portfolio API.')
@@ -105,8 +108,10 @@ export function PMODashboard({ active }: Props) {
     try {
       const result = await syncPortfolioStatus()
       setLastSync({ at: new Date(result.synced_at), updated: result.programs_updated })
-      // Chain: snapshot after sync so gate changes are archived immediately
+      // Chain: snapshot → trajectory (fire-and-forget, don't block)
       await snapshotPortfolio('post_sync').catch(() => {})
+      const traj = await fetchTrajectory().catch(() => ({}))
+      setTrajectories(traj as TrajectoryMap)
       // Refresh portfolio data so health scores update in UI
       setLastFetch(null)
       await load()
@@ -244,6 +249,22 @@ export function PMODashboard({ active }: Props) {
                       />
                     </div>
                   )}
+                  {(() => {
+                    const tEntry = trajectories[p.id]
+                    const dir: TrajectoryDirection = tEntry?.direction ?? 'Unknown'
+                    const TRAJ: Record<TrajectoryDirection, { arrow: string; cls: string; tip: string }> = {
+                      Improving: { arrow: '↑', cls: 'pmo-traj-up',      tip: `Improving · ${tEntry?.scores?.join(' → ')}` },
+                      Stable:    { arrow: '→', cls: 'pmo-traj-stable',  tip: `Stable · ${tEntry?.scores?.join(' → ')}` },
+                      Declining: { arrow: '↓', cls: 'pmo-traj-down',    tip: `Declining · ${tEntry?.scores?.join(' → ')}` },
+                      Unknown:   { arrow: '?', cls: 'pmo-traj-unknown', tip: 'Trajectory: not enough data yet' },
+                    }
+                    const t = TRAJ[dir]
+                    return (
+                      <span className={`pmo-traj-badge ${t.cls}`} title={t.tip}>
+                        {t.arrow}
+                      </span>
+                    )
+                  })()}
                   {p.nextGateDate && (
                     <div className="pmo-cell-date" style={{ color: past ? RAG_COLOR.Red : '#555' }}>
                       {past ? '⚠ ' : ''}Next: {fmtDate(p.nextGateDate)}
