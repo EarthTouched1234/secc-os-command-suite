@@ -17,16 +17,26 @@ import { Connectors } from './components/Connectors'
 import { PMODashboard } from './components/PMODashboard'
 import { GUARDiAN } from './components/GUARDiAN'
 import { MissionTimeline } from './components/MissionTimeline'
+import { GTM } from './components/GTM'
+import { Editions } from './components/Editions'
+import { useEffect } from 'react'
+import { type Edition, loadActiveEdition, saveActiveEdition, applyEditionTheme, visibleTabs, labelFor } from './editions/editions'
 import { computeMissionStatus } from './hooks/useFeed'
 import './App.css'
 
-type Tab = 'Dashboard' | 'Execute' | 'Approve' | 'Critical' | 'Agents' | 'ChatBridge' | 'Documents' | 'Projects' | 'Tasks' | 'Connectors' | 'Inbox' | 'PMO' | 'GUARDiAN' | 'Timeline'
-const TABS: Tab[] = ['Dashboard', 'PMO', 'Timeline', 'GUARDiAN', 'ChatBridge', 'Documents', 'Projects', 'Tasks', 'Connectors', 'Execute', 'Approve', 'Critical', 'Agents', 'Inbox']
+type Tab = 'Dashboard' | 'Execute' | 'Approve' | 'Critical' | 'Agents' | 'ChatBridge' | 'Documents' | 'Projects' | 'Tasks' | 'Connectors' | 'Inbox' | 'PMO' | 'GUARDiAN' | 'Timeline' | 'GTM' | 'Editions'
+const TABS: Tab[] = ['Dashboard', 'PMO', 'Timeline', 'GUARDiAN', 'GTM', 'ChatBridge', 'Documents', 'Projects', 'Tasks', 'Connectors', 'Execute', 'Approve', 'Critical', 'Agents', 'Inbox', 'Editions']
 
 export default function App() {
   const { feed, systemExecs, loading, error, lastUpdated, refresh } = useFeed()
   const [pulseMode, setPulseMode] = useState<'ready' | 'running' | 'publish'>('ready')
   const [activeTab, setActiveTab] = useState<Tab>('Dashboard')
+  const [edition, setEdition] = useState<Edition>(loadActiveEdition)
+  const applyEdition = (e: Edition) => { setEdition(e); saveActiveEdition(e) }
+  const navTabs = visibleTabs(TABS, edition) as Tab[]
+
+  useEffect(() => { applyEditionTheme(edition) }, [edition])
+  useEffect(() => { if (!navTabs.includes(activeTab)) setActiveTab('Dashboard') }, [navTabs, activeTab])
   const missionStatus = computeMissionStatus(feed)
   const recentErrors = systemExecs.filter((e) => e.status === 'error').length
   const successes = systemExecs.filter((e) => e.status === 'success').length
@@ -40,8 +50,8 @@ export default function App() {
     <div className="cc-root" data-tab={activeTab}>
       <header className="cc-header">
         <div className="cc-title">
-          <span className="cc-mark">HORHANiS</span>
-          <span className="cc-name">Commander Console</span>
+          <span className="cc-mark">{edition.productMark}</span>
+          <span className="cc-name">{edition.productName}</span>
         </div>
         <div className="cc-meta">
           <span className="cc-pill good">Workflows Green</span>
@@ -54,15 +64,15 @@ export default function App() {
       </header>
 
       <nav className="cc-tabs" aria-label="Commander Console sections">
-        {TABS.map((item) => (
-          <button key={item} className={item === activeTab ? 'active' : ''} onClick={() => setActiveTab(item)}>{item}</button>
+        {navTabs.map((item) => (
+          <button key={item} className={item === activeTab ? 'active' : ''} onClick={() => setActiveTab(item)}>{labelFor(item, edition)}</button>
         ))}
       </nav>
 
       <section className="cc-brief" aria-label="Executive brief">
         <div className="brief-copy">
           <div className="brief-kicker">Executive Brief</div>
-          <h1>Command Center is live and watching the work.</h1>
+          <h1>{edition.tagline}</h1>
           <p>
             HORHANiS is the anchor for workflows, PMI portfolio visibility, and agent communication.
             The console should brief SunNi before it asks for a command.
@@ -148,6 +158,8 @@ export default function App() {
         {activeTab === 'PMO' && <div className="cc-full-stack"><PMODashboard active={activeTab === 'PMO'} /></div>}
         {activeTab === 'Timeline' && <div className="cc-full-stack"><MissionTimeline /></div>}
         {activeTab === 'GUARDiAN' && <div className="cc-full-stack"><GUARDiAN /></div>}
+        {activeTab === 'GTM' && <div className="cc-full-stack"><GTM /></div>}
+        {activeTab === 'Editions' && <div className="cc-full-stack"><Editions edition={edition} onApply={applyEdition} /></div>}
         {activeTab === 'Projects' && <div className="cc-full-stack"><Projects /></div>}
         {activeTab === 'Tasks' && <div className="cc-full-stack"><Tasks /></div>}
         {activeTab === 'Connectors' && <div className="cc-full-stack"><Connectors /></div>}
