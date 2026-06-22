@@ -1,7 +1,7 @@
 {
-  "timestamp": "2026-06-22T07:51:15.846Z",
-  "state_hash": "sha256:c67696709ce4b0950992db881d2fb82ed1bf565c37b86c4fc36cb684c293ffeb",
-  "commit": "c8f0657",
+  "timestamp": "2026-06-22T07:59:06.685Z",
+  "state_hash": "sha256:7894c1161b048eb02a330f6e7f04873841044707545bc2de5dd13c46faa273ba",
+  "commit": "59992be",
   "system_state": {
     "phase": "Decision Execution System",
     "intelligence_level": "Level 3 - Decision Support",
@@ -21,14 +21,14 @@
     "ai_decision_layer": "live",
     "execution_fabric": "partial",
     "ai_workforce": "live",
-    "connectors": "live"
+    "connectors": "live",
+    "execution_outcome_binding": "modeled"
   },
   "recent_changes": [
+    "Add CIRO Outcome Attribution Layer — decisions → real-world results",
     "Add CIRO Execution Lock — state hash gate prevents redundant commits",
     "Add CIRO — automatic system-state writer + deployment hook",
-    "Add Execution Fabric — the actuator layer (closed loop)",
-    "Add AI Decision Layer — the orchestration core (Phase 2)",
-    "Upgrade domains to behavioral execution engines"
+    "Add Execution Fabric — the actuator layer (closed loop)"
   ],
   "active_focus": {
     "primary_workstream": "Property Execution Fabric",
