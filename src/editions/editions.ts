@@ -26,7 +26,7 @@ export interface Edition {
 /* Modules a client edition can show/hide/reorder.
    'Dashboard' and 'Editions' are always available and not listed here. */
 export const ALL_MODULES = [
-  'PMO', 'Platform', 'Decisions', 'Fabric', 'Timeline', 'GUARDiAN', 'GTM', 'ChatBridge', 'Documents',
+  'PMO', 'Platform', 'Decisions', 'Fabric', 'Outcomes', 'Timeline', 'GUARDiAN', 'GTM', 'ChatBridge', 'Documents',
   'Projects', 'Tasks', 'Connectors', 'Execute', 'Approve', 'Critical', 'Agents', 'Inbox',
 ] as const
 

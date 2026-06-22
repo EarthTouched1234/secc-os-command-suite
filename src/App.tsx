@@ -22,13 +22,14 @@ import { Editions } from './components/Editions'
 import { Platform } from './components/Platform'
 import { DecisionLayer } from './components/DecisionLayer'
 import { ExecutionFabric } from './components/ExecutionFabric'
+import { Outcomes } from './components/Outcomes'
 import { useEffect } from 'react'
 import { type Edition, loadActiveEdition, saveActiveEdition, applyEditionTheme, visibleTabs, labelFor } from './editions/editions'
 import { computeMissionStatus } from './hooks/useFeed'
 import './App.css'
 
-type Tab = 'Dashboard' | 'Execute' | 'Approve' | 'Critical' | 'Agents' | 'ChatBridge' | 'Documents' | 'Projects' | 'Tasks' | 'Connectors' | 'Inbox' | 'PMO' | 'GUARDiAN' | 'Timeline' | 'GTM' | 'Editions' | 'Platform' | 'Decisions' | 'Fabric'
-const TABS: Tab[] = ['Dashboard', 'PMO', 'Platform', 'Decisions', 'Fabric', 'Timeline', 'GUARDiAN', 'GTM', 'ChatBridge', 'Documents', 'Projects', 'Tasks', 'Connectors', 'Execute', 'Approve', 'Critical', 'Agents', 'Inbox', 'Editions']
+type Tab = 'Dashboard' | 'Execute' | 'Approve' | 'Critical' | 'Agents' | 'ChatBridge' | 'Documents' | 'Projects' | 'Tasks' | 'Connectors' | 'Inbox' | 'PMO' | 'GUARDiAN' | 'Timeline' | 'GTM' | 'Editions' | 'Platform' | 'Decisions' | 'Fabric' | 'Outcomes'
+const TABS: Tab[] = ['Dashboard', 'PMO', 'Platform', 'Decisions', 'Fabric', 'Outcomes', 'Timeline', 'GUARDiAN', 'GTM', 'ChatBridge', 'Documents', 'Projects', 'Tasks', 'Connectors', 'Execute', 'Approve', 'Critical', 'Agents', 'Inbox', 'Editions']
 
 export default function App() {
   const { feed, systemExecs, loading, error, lastUpdated, refresh } = useFeed()
@@ -166,6 +167,7 @@ export default function App() {
         {activeTab === 'Platform' && <div className="cc-full-stack"><Platform /></div>}
         {activeTab === 'Decisions' && <div className="cc-full-stack"><DecisionLayer /></div>}
         {activeTab === 'Fabric' && <div className="cc-full-stack"><ExecutionFabric /></div>}
+        {activeTab === 'Outcomes' && <div className="cc-full-stack"><Outcomes /></div>}
         {activeTab === 'Projects' && <div className="cc-full-stack"><Projects /></div>}
         {activeTab === 'Tasks' && <div className="cc-full-stack"><Tasks /></div>}
         {activeTab === 'Connectors' && <div className="cc-full-stack"><Connectors /></div>}

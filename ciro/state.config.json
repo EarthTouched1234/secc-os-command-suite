@@ -16,7 +16,8 @@
     "ai_decision_layer": "live",
     "execution_fabric": "partial",
     "ai_workforce": "live",
-    "connectors": "live"
+    "connectors": "live",
+    "execution_outcome_binding": "modeled"
   },
   "active_focus": {
     "primary_workstream": "Property Execution Fabric",
