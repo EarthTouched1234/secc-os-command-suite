@@ -1,0 +1,42 @@
+name: CIRO System State
+
+# Runs after any code push to main, regenerates the system-state record, and
+# commits it back. Guarded against loops: the bot commit uses [skip ci] and
+# memory/** is path-ignored so CIRO never retriggers itself.
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'memory/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ciro
+  cancel-in-progress: false
+
+jobs:
+  ciro:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # CIRO reads git log for recent_changes
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Run CIRO
+        run: node ciro/ciro.mjs
+      - name: Commit system state
+        run: |
+          git config user.name "CIRO"
+          git config user.email "ciro@secc-os.local"
+          git add memory/system_state.json memory/COUNCIL_MEMORY.md
+          if git diff --staged --quiet; then
+            echo "No system-state change."
+          else
+            git commit -m "ciro: system state snapshot [skip ci]"
+            git push
+          fi
