@@ -2554,4 +2554,44 @@ button, input { font: inherit; }
 .pf-diff-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 6px; }
 .pf-diff-item { font-size: 11px; color: #d0d6e0; background: #0d1015; border: 1px solid #1a2330; border-radius: 5px; padding: 8px 10px; display: flex; gap: 8px; align-items: center; }
 .pf-diff-foot { font-size: 11px; color: #8895a8; line-height: 1.65; margin: 12px 0 0; }
+
+/* ── Platform: primary/secondary mapping + execution blueprints ──────── */
+.pf-assign-summary { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+.pf-assign-chip { font-size: 10px; font-weight: 700; border-radius: 5px; padding: 5px 10px; border: 1px solid; }
+.pf-assign-primary { color: #fbbf24; background: #1a1500; border-color: #4d3a00; }
+.pf-assign-secondary { color: #93c5fd; background: #0a0f1a; border-color: #1e3a5f; }
+
+.pf-rule { font-size: 11px; color: #8895a8; line-height: 1.6; background: #0d1015; border: 1px solid #1a2330; border-left: 3px solid var(--gold); border-radius: 6px; padding: 10px 14px; }
+.pf-rule-label { font-size: 9px; font-weight: 700; letter-spacing: 0.1em; color: var(--gold); margin-right: 10px; }
+.pf-rule strong { color: #e0e6ef; }
+
+/* domain cards (updated layout) */
+.pf-domain-top { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.pf-domain-logic { font-size: 9px; color: #555; line-height: 1.4; }
+.pf-domain.viewing { border-color: var(--gold); box-shadow: 0 0 0 1px var(--gold); }
+.pf-domain.role-primary { border-color: #4d3a00; background: rgba(251,191,36,0.05); }
+.pf-domain.role-secondary { border-color: #1e3a5f; background: rgba(98,168,255,0.04); }
+.pf-badge { font-size: 8px; font-weight: 700; letter-spacing: 0.06em; border-radius: 3px; padding: 1px 6px; }
+.pf-badge-primary { color: #050608; background: #fbbf24; }
+.pf-badge-secondary { color: #93c5fd; background: #0a0f1a; border: 1px solid #1e3a5f; }
+
+/* viewed domain panel */
+.pf-viewed { border-color: #243042; }
+.pf-assign-actions { display: flex; gap: 6px; }
+.pf-assign-btn { font-size: 9px; font-weight: 700; letter-spacing: 0.04em; padding: 4px 10px; background: #14181f; border: 1px solid #2a3340; color: #8895a8; border-radius: 4px; cursor: pointer; }
+.pf-assign-btn:hover:not(:disabled) { border-color: #3a4658; color: #c0cad8; }
+.pf-assign-btn:disabled { opacity: 0.55; cursor: default; }
+.pf-assign-btn.on-primary { color: #050608; background: #fbbf24; border-color: #fbbf24; }
+.pf-assign-btn.on-secondary { color: #93c5fd; border-color: #1e3a5f; background: #0a0f1a; }
+
+.pf-chip-inline { display: flex; flex-wrap: wrap; gap: 6px; }
+.pf-logic-chip { font-size: 10px; color: #e0e6ef; background: #11161d; border: 1px solid #2a3340; border-radius: 4px; padding: 4px 10px; font-weight: 600; }
+
+.pf-bp-banner { font-size: 9px; font-weight: 700; letter-spacing: 0.08em; color: var(--gold); margin: 14px 0 8px; padding-top: 12px; border-top: 1px solid #1a1a1a; }
+.pf-bp-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+@media (max-width: 760px) { .pf-bp-grid { grid-template-columns: 1fr; } }
+.pf-bp-card { background: #0d1015; border: 1px solid #1a1a1a; border-top: 2px solid; border-radius: 6px; padding: 10px; }
+.pf-bp-head { display: flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 700; letter-spacing: 0.04em; margin-bottom: 8px; }
+.pf-bp-items { display: flex; flex-wrap: wrap; gap: 4px; }
+.pf-bp-chip { font-size: 10px; color: #aab4c2; background: #11161d; border: 1px solid #1f2733; border-radius: 4px; padding: 3px 8px; }
 .mt-alloc { font-size: 13px; font-weight: 700; color: #22c55e; }
