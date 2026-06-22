@@ -1,6 +1,6 @@
 # Council Memory — System State Log
 
-> CIRO snapshot · 2026-06-22T07:47:57.120Z · commit `0bb53b5`
+> CIRO snapshot · 2026-06-22T07:51:01.891Z · commit `aab8097` · `sha256:5cdd01142a10a…`
 > _High-signal state of the platform now. CIRO records; it does not interpret._
 
 ## 1. Current System State
