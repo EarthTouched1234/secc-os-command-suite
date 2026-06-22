@@ -1,6 +1,6 @@
 # Council Memory — System State Log
 
-> CIRO snapshot · 2026-06-22T07:59:06.685Z · commit `59992be` · `sha256:7894c1161b048…`
+> CIRO snapshot · 2026-06-22T08:11:14.907Z · commit `70717b7` · `sha256:8a11b46ea105e…`
 > _High-signal state of the platform now. CIRO records; it does not interpret._
 
 ## 1. Current System State
@@ -16,10 +16,9 @@ The platform is a **Decision Execution System** — Level 3 - Decision Support. 
 - `execution_outcome_binding` — **modeled**
 
 ## 3. Recently Shipped Capabilities
+- Add Execution Fabric v1 (Property) — importable n8n blueprint
 - Add CIRO Outcome Attribution Layer — decisions → real-world results
 - Add CIRO Execution Lock — state hash gate prevents redundant commits
-- Add CIRO — automatic system-state writer + deployment hook
-- Add Execution Fabric — the actuator layer (closed loop)
 
 ## 4. System Loop Status
 ✅ signal  →  ✅ reasoning  →  ✅ decision  →  ✅ simulation  →  ⬜ execution  →  ⬜ feedback
