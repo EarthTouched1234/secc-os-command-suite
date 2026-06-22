@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-06-22T07:44:28.489Z",
-  "commit": "679ec50",
+  "timestamp": "2026-06-22T07:47:57.120Z",
+  "commit": "0bb53b5",
   "system_state": {
     "phase": "Decision Execution System",
     "intelligence_level": "Level 3 - Decision Support",
@@ -23,11 +23,11 @@
     "connectors": "live"
   },
   "recent_changes": [
+    "Add CIRO — automatic system-state writer + deployment hook",
     "Add Execution Fabric — the actuator layer (closed loop)",
     "Add AI Decision Layer — the orchestration core (Phase 2)",
     "Upgrade domains to behavioral execution engines",
-    "Refine Platform: execution-pattern domains + primary/secondary + blueprints",
-    "Add Platform Composer — 5-layer domain architecture"
+    "Refine Platform: execution-pattern domains + primary/secondary + blueprints"
   ],
   "active_focus": {
     "primary_workstream": "Property Execution Fabric",
