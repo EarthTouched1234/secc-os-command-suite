@@ -2594,4 +2594,50 @@ button, input { font: inherit; }
 .pf-bp-head { display: flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 700; letter-spacing: 0.04em; margin-bottom: 8px; }
 .pf-bp-items { display: flex; flex-wrap: wrap; gap: 4px; }
 .pf-bp-chip { font-size: 10px; color: #aab4c2; background: #11161d; border: 1px solid #1f2733; border-radius: 4px; padding: 3px 8px; }
+
+/* ── Platform: execution-system rendering ────────────────────────────── */
+.pf-comp-label { font-size: 10px; font-weight: 700; letter-spacing: 0.06em; color: var(--gold); margin: 16px 0 8px; display: flex; align-items: center; gap: 8px; }
+.pf-comp-label:first-child { margin-top: 0; }
+.pf-comp-num { font-size: 10px; font-weight: 800; color: #050608; background: var(--gold); border-radius: 50%; width: 18px; height: 18px; display: inline-flex; align-items: center; justify-content: center; }
+.pf-comp-sub { font-size: 9px; font-weight: 400; color: #555; letter-spacing: 0; text-transform: none; }
+
+.pf-signal-chip { font-size: 10px; color: #6ee7b7; background: #0a140d; border: 1px solid #166534; border-radius: 4px; padding: 4px 9px; font-weight: 600; }
+.pf-agent-dom { color: #c4b5fd; background: #120a1f; border: 1px solid #3b2a5f; }
+
+/* workflow loops */
+.pf-loops { display: flex; flex-direction: column; gap: 6px; }
+.pf-loop { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; background: #0d1015; border: 1px solid #161d26; border-radius: 6px; padding: 8px 12px; }
+.pf-loop-name { font-size: 10px; font-weight: 700; color: #fbbf24; min-width: 100px; }
+.pf-loop-chain { display: flex; align-items: center; flex-wrap: wrap; gap: 2px; }
+.pf-loop-stage-wrap { display: inline-flex; align-items: center; }
+.pf-loop-stage { font-size: 10px; color: #d0d6e0; background: #11161d; border: 1px solid #2a3340; border-radius: 4px; padding: 3px 9px; }
+.pf-loop-arrow { font-size: 11px; color: #475569; margin: 0 4px; }
+
+/* domain intelligence */
+.pf-intel-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+@media (max-width: 760px) { .pf-intel-grid { grid-template-columns: 1fr; } }
+.pf-intel-card { background: #0d1015; border: 1px solid #1a1a1a; border-radius: 6px; padding: 10px; }
+.pf-intel-head { font-size: 11px; font-weight: 700; margin-bottom: 8px; }
+.pf-forecast-list { display: flex; flex-direction: column; gap: 6px; }
+.pf-forecast { display: flex; flex-direction: column; gap: 2px; }
+.pf-forecast-name { font-size: 11px; font-weight: 600; color: #d0d6e0; }
+.pf-forecast-logic { font-size: 10px; color: #64748b; line-height: 1.4; }
+
+/* risk triggers — decision logic */
+.pf-trigger-banner { font-size: 10px; font-weight: 700; letter-spacing: 0.06em; color: #fca5a5; margin: 14px 0 8px; }
+.pf-triggers { display: flex; flex-direction: column; gap: 5px; }
+.pf-trigger { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; background: #0d1015; border: 1px solid #1a1a1a; border-left: 3px solid; border-radius: 5px; padding: 8px 12px; }
+.pf-trigger-sev { font-size: 8px; font-weight: 700; letter-spacing: 0.05em; border: 1px solid; border-radius: 3px; padding: 1px 6px; flex-shrink: 0; }
+.pf-trigger-signal { font-size: 11px; color: #e0e6ef; font-family: ui-monospace, monospace; font-weight: 600; }
+.pf-trigger-arrow { font-size: 12px; color: #ef4444; }
+.pf-trigger-action { font-size: 11px; color: #aab4c2; }
+
+/* 5 questions */
+.pf-questions { border-left: 3px solid #62a8ff; }
+.pf-q-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 6px; padding: 14px; }
+.pf-q { font-size: 11px; color: #c0cad8; display: flex; align-items: center; gap: 8px; background: #0d1015; border: 1px solid #1a2330; border-radius: 5px; padding: 8px 10px; }
+.pf-q-num { font-size: 10px; font-weight: 800; color: #050608; background: #62a8ff; border-radius: 50%; width: 18px; height: 18px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
+/* schema export */
+.pf-schema { width: 100%; min-height: 180px; background: #0a0d11; border: 1px solid #222b36; color: #6ee7b7; font-family: ui-monospace, monospace; font-size: 10px; line-height: 1.5; padding: 10px; border-radius: 6px; outline: none; resize: vertical; }
 .mt-alloc { font-size: 13px; font-weight: 700; color: #22c55e; }

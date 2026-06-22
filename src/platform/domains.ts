@@ -1,13 +1,14 @@
 /* ──────────────────────────────────────────────────────────────────────────
-   Platform taxonomy — AI PMO organized by EXECUTION PATTERN, not industry.
-   Every customer gets the Universal Intelligence Engine. Domains only change
-   KPIs, workflows, agents, and connector priority. Each customer maps to
-   1 primary domain + 0–2 secondary domains (the simplification rule).
-   Domain Execution Blueprints are the product layer: default KPIs, agents,
-   workflows, reports, risks, and connectors per domain.
+   Platform taxonomy — domains as BEHAVIORAL EXECUTION ENGINES, not labels.
+   Each domain is a self-contained execution system with 4 locked components:
+     1. Execution Profile     — what "good" looks like (success signals)
+     2. AI Workforce          — domain agents that auto-spawn
+     3. Operational Workflows — execution loops (how work flows)
+     4. Domain Intelligence   — KPIs + risk triggers + forecast models (decisions)
+   Customer maps to 1 primary + 0–2 secondary domains.
    ────────────────────────────────────────────────────────────────────────── */
 
-// ── Layer 1 — Universal Intelligence Engine (always on, never changes) ──
+// ── Layer 1 — Universal Intelligence Engine (always on) ──
 export const UNIVERSAL_CAPABILITIES = [
   { icon: '📁', name: 'Portfolio Management' },
   { icon: '📊', name: 'Program Management' },
@@ -24,30 +25,41 @@ export const UNIVERSAL_CAPABILITIES = [
   { icon: '🧠', name: 'AI Decision Support' },
 ]
 
-// PMO primitives that are always relevant regardless of domain.
 export const PMO_PRIMITIVES = ['Portfolio', 'Projects', 'Risk', 'Budget', 'Workforce', 'KPIs']
 
-// ── Layer 4 — Universal AI workforce (every customer gets these) ──
 export const UNIVERSAL_AGENTS = [
   'Executive PMO Officer', 'Scheduler', 'Risk Analyst', 'Financial Analyst',
   'Documentation Manager', 'Quality Manager', 'Compliance Officer',
   'Communications Officer', 'Automation Engineer', 'Data Analyst',
 ]
 
-// ── Layer 5 — Enterprise connectors ──
 export const CONNECTORS = [
   'Microsoft 365', 'Google Workspace', 'Slack', 'Teams', 'GitHub', 'Jira',
   'ServiceNow', 'Salesforce', 'SAP', 'Oracle', 'Procore', 'Yardi',
   'RealPage', 'n8n', 'Notion', 'Power BI', 'Tableau',
 ]
 
-/* Domain Execution Blueprint — the defaults that make a domain a product. */
-export interface DomainBlueprint {
+/* Every domain must answer these five questions. */
+export const DOMAIN_QUESTIONS = [
+  'How does work flow here?',
+  'What decisions get made here?',
+  'What breaks here first?',
+  'What signals predict failure?',
+  'Who (agent) owns intervention?',
+]
+
+// ── Execution-system schema ──
+export interface ExecutionLoop { name: string; stages: string[] }
+export interface RiskTrigger { signal: string; action: string; severity: 'High' | 'Medium' | 'Low' }
+export interface ForecastModel { name: string; logic: string }
+
+export interface DomainSchema {
+  executionProfile: string[]      // success signals — "what good looks like"
+  agents: string[]                // domain AI workforce
+  workflows: ExecutionLoop[]      // execution loops
   kpis: string[]
-  agents: string[]
-  workflows: string[]
-  reports: string[]
-  risks: string[]
+  riskTriggers: RiskTrigger[]     // signal → action (the decision logic)
+  forecastModels: ForecastModel[]
   connectors: string[]
 }
 
@@ -56,23 +68,34 @@ export interface Domain {
   icon: string
   name: string
   specialty?: boolean
-  industries: string[]      // "Covers"
-  executionLogic: string[]  // "Core execution logic"
-  blueprint: DomainBlueprint
+  industries: string[]
+  executionLogic: string[]
+  schema: DomainSchema
 }
 
-// ── Layer 2 — Business Domains (final structured set, by execution pattern) ──
 export const DOMAINS: Domain[] = [
   {
     id: 'built', icon: '🏗', name: 'Built Environment & Physical Assets',
     industries: ['Construction', 'Real Estate Development', 'Facilities Management', 'Infrastructure', 'Utilities', 'Urban Planning', 'Asset Lifecycle Management'],
     executionLogic: ['Capital delivery', 'Project controls', 'Asset performance', 'Maintenance cycles'],
-    blueprint: {
-      kpis: ['Capital delivery %', 'Schedule variance', 'Cost variance (CPI)', 'Asset performance index', 'Maintenance backlog'],
+    schema: {
+      executionProfile: ['On-time capital delivery', 'Budget adherence', 'Asset uptime', 'Safety compliance', 'Maintenance currency'],
       agents: ['Superintendent AI', 'Estimator AI', 'Safety Officer AI', 'Project Controls AI'],
-      workflows: ['RFI routing', 'Change order approval', 'Permit tracking', 'Inspection scheduling'],
-      reports: ['Capital delivery report', 'Earned value (EVM)', 'Safety incident log'],
-      risks: ['Schedule slippage', 'Cost overrun', 'Permit delay', 'Safety incident'],
+      workflows: [
+        { name: 'Capital Delivery', stages: ['Design', 'Permit', 'Procure', 'Build', 'Commission'] },
+        { name: 'Change Control', stages: ['RFI', 'Review', 'Change Order', 'Approve', 'Execute'] },
+        { name: 'Asset Maintenance', stages: ['Inspect', 'Detect', 'Schedule', 'Repair', 'Verify'] },
+      ],
+      kpis: ['Capital delivery %', 'Schedule variance', 'Cost variance (CPI)', 'Asset performance index', 'Maintenance backlog'],
+      riskTriggers: [
+        { signal: 'CPI < 0.90', action: 'Cost-recovery review', severity: 'High' },
+        { signal: 'Schedule variance > 10%', action: 'Critical-path recovery plan', severity: 'High' },
+        { signal: 'Permit aging > 30 days', action: 'Escalate to authority liaison', severity: 'Medium' },
+      ],
+      forecastModels: [
+        { name: 'Earned-value completion (EAC)', logic: 'Project final cost/date from CPI + SPI trend' },
+        { name: 'Maintenance failure forecast', logic: 'Asset age + condition index → failure probability' },
+      ],
       connectors: ['Procore', 'Microsoft 365', 'n8n', 'Power BI'],
     },
   },
@@ -80,12 +103,24 @@ export const DOMAINS: Domain[] = [
     id: 'digital', icon: '💻', name: 'Digital Systems & Software Execution',
     industries: ['Software Development', 'DevOps', 'Cybersecurity Operations', 'Cloud Infrastructure', 'Platform Engineering', 'Data Engineering', 'AI / ML Operations'],
     executionLogic: ['Release cycles', 'System uptime', 'Deployment velocity', 'Engineering throughput'],
-    blueprint: {
-      kpis: ['Deployment velocity', 'System uptime %', 'MTTR', 'Engineering throughput', 'Escaped defects'],
+    schema: {
+      executionProfile: ['High deployment velocity', 'Strong uptime vs SLO', 'Low MTTR', 'Low escaped defects', 'Secure posture'],
       agents: ['Sprint Master AI', 'DevOps Engineer AI', 'Security Analyst AI', 'Reliability AI'],
-      workflows: ['Sprint planning', 'CI/CD gate', 'Incident response', 'Vulnerability triage'],
-      reports: ['Release report', 'Uptime / SLO report', 'Sprint velocity'],
-      risks: ['Deployment failure', 'Security breach', 'Tech debt', 'SLA breach'],
+      workflows: [
+        { name: 'Delivery', stages: ['Backlog', 'Sprint', 'Build', 'Test', 'Deploy'] },
+        { name: 'Incident', stages: ['Detect', 'Triage', 'Mitigate', 'Resolve', 'Postmortem'] },
+        { name: 'Security', stages: ['Scan', 'Triage', 'Patch', 'Verify', 'Close'] },
+      ],
+      kpis: ['Deployment velocity', 'System uptime %', 'MTTR', 'Engineering throughput', 'Escaped defects'],
+      riskTriggers: [
+        { signal: 'Uptime < SLO', action: 'Reliability freeze + incident review', severity: 'High' },
+        { signal: 'MTTR rising 2 sprints', action: 'On-call + runbook audit', severity: 'Medium' },
+        { signal: 'Critical CVE open > 48h', action: 'Emergency patch protocol', severity: 'High' },
+      ],
+      forecastModels: [
+        { name: 'Release forecast', logic: 'Sprint velocity → projected ship date' },
+        { name: 'Incident-rate trend', logic: 'Rolling incident frequency → reliability risk' },
+      ],
       connectors: ['GitHub', 'Jira', 'ServiceNow', 'Slack'],
     },
   },
@@ -93,12 +128,24 @@ export const DOMAINS: Domain[] = [
     id: 'human', icon: '🏥', name: 'Human Services & Care Systems',
     industries: ['Healthcare (Clinical + Operational)', 'Hospitals & Clinics', 'Public Health Systems', 'Education Systems', 'Social Services', 'Mental Health Programs'],
     executionLogic: ['Capacity vs demand', 'Compliance-heavy workflows', 'Staffing sensitivity', 'Service delivery timelines'],
-    blueprint: {
-      kpis: ['Capacity vs demand', 'Service delivery time', 'Staffing ratio', 'Compliance rate', 'Client outcomes'],
+    schema: {
+      executionProfile: ['Capacity meets demand', 'Compliance maintained', 'Adequate staffing', 'On-time service', 'Positive outcomes'],
       agents: ['Clinical Coordinator AI', 'Compliance Nurse AI', 'Capacity Planner AI'],
-      workflows: ['Credentialing', 'Scheduling', 'Compliance audit', 'Intake routing'],
-      reports: ['Capacity report', 'Compliance dashboard', 'Outcomes report'],
-      risks: ['Capacity overflow', 'Compliance violation', 'Staffing shortage', 'Care delay'],
+      workflows: [
+        { name: 'Care Delivery', stages: ['Intake', 'Triage', 'Schedule', 'Deliver', 'Follow-up'] },
+        { name: 'Compliance', stages: ['Credential', 'Audit', 'Remediate', 'Attest', 'Renew'] },
+        { name: 'Capacity', stages: ['Forecast', 'Staff', 'Allocate', 'Monitor', 'Rebalance'] },
+      ],
+      kpis: ['Capacity vs demand', 'Service delivery time', 'Staffing ratio', 'Compliance rate', 'Client outcomes'],
+      riskTriggers: [
+        { signal: 'Capacity utilization > 90%', action: 'Surge staffing protocol', severity: 'High' },
+        { signal: 'Compliance rate < 100%', action: 'Remediation + audit hold', severity: 'High' },
+        { signal: 'Staffing ratio below floor', action: 'Agency backfill trigger', severity: 'Medium' },
+      ],
+      forecastModels: [
+        { name: 'Demand forecast', logic: 'Seasonality + referral inflow → expected load' },
+        { name: 'Staffing-gap forecast', logic: 'Projected demand vs roster → gap alert' },
+      ],
       connectors: ['Microsoft 365', 'ServiceNow', 'Notion'],
     },
   },
@@ -106,12 +153,24 @@ export const DOMAINS: Domain[] = [
     id: 'industrial', icon: '🏭', name: 'Industrial & Supply Chain Systems',
     industries: ['Manufacturing', 'Logistics', 'Warehousing', 'Supply Chain', 'Procurement Operations', 'Automotive', 'Aerospace', 'Robotics Operations'],
     executionLogic: ['Throughput optimization', 'Downtime reduction', 'Quality control', 'Inventory flow'],
-    blueprint: {
-      kpis: ['Throughput', 'OEE', 'Downtime %', 'Quality defect rate', 'Inventory turns'],
+    schema: {
+      executionProfile: ['High throughput', 'Low downtime', 'Quality in spec', 'Inventory balanced', 'On-time delivery'],
       agents: ['Production Planner AI', 'Quality Manager AI', 'Supply Chain Analyst AI'],
-      workflows: ['Production scheduling', 'Quality inspection', 'Inventory replenishment', 'Supplier onboarding'],
-      reports: ['OEE report', 'Quality report', 'Inventory flow report'],
-      risks: ['Downtime', 'Quality defect', 'Supply disruption', 'Inventory stockout'],
+      workflows: [
+        { name: 'Production', stages: ['Plan', 'Schedule', 'Produce', 'Inspect', 'Ship'] },
+        { name: 'Quality', stages: ['Detect', 'Contain', 'Root-cause', 'Correct', 'Verify'] },
+        { name: 'Replenishment', stages: ['Forecast', 'Order', 'Receive', 'Stock', 'Consume'] },
+      ],
+      kpis: ['Throughput', 'OEE', 'Downtime %', 'Quality defect rate', 'Inventory turns'],
+      riskTriggers: [
+        { signal: 'OEE < target', action: 'Line optimization protocol', severity: 'High' },
+        { signal: 'Defect rate > threshold', action: 'Quality hold + containment', severity: 'High' },
+        { signal: 'Stock cover < lead time', action: 'Expedite reorder', severity: 'Medium' },
+      ],
+      forecastModels: [
+        { name: 'Inventory forecast', logic: 'Demand signal → reorder point + safety stock' },
+        { name: 'Downtime/OEE trend', logic: 'Rolling OEE → maintenance scheduling' },
+      ],
       connectors: ['SAP', 'Oracle', 'Power BI'],
     },
   },
@@ -119,12 +178,24 @@ export const DOMAINS: Domain[] = [
     id: 'governance', icon: '🏛', name: 'Governance & Public Systems',
     industries: ['Federal / State / Local Government', 'Defense / Military Systems', 'Public Safety', 'Transportation Authorities', 'Regulatory Agencies'],
     executionLogic: ['Compliance enforcement', 'Budget execution', 'Policy-to-action tracking', 'Public KPI accountability'],
-    blueprint: {
-      kpis: ['Budget execution %', 'Policy-to-action rate', 'Compliance rate', 'Public accountability score', 'Cycle time'],
+    schema: {
+      executionProfile: ['Budget executed on plan', 'Compliance enforced', 'Policy delivered', 'Public KPIs met', 'Audit-clean'],
       agents: ['Compliance Officer AI', 'Grants Manager AI', 'Budget Analyst AI'],
-      workflows: ['Grant management', 'Procurement', 'Public records', 'Policy tracking'],
-      reports: ['Budget execution report', 'Compliance report', 'Public accountability scorecard'],
-      risks: ['Budget shortfall', 'Compliance failure', 'Audit finding', 'Policy delay'],
+      workflows: [
+        { name: 'Budget', stages: ['Appropriate', 'Allocate', 'Obligate', 'Spend', 'Report'] },
+        { name: 'Grant', stages: ['Apply', 'Award', 'Disburse', 'Monitor', 'Close'] },
+        { name: 'Policy', stages: ['Mandate', 'Plan', 'Execute', 'Track', 'Report'] },
+      ],
+      kpis: ['Budget execution %', 'Policy-to-action rate', 'Compliance rate', 'Public accountability score', 'Cycle time'],
+      riskTriggers: [
+        { signal: 'Budget execution < plan / quarter', action: 'Reallocation review', severity: 'High' },
+        { signal: 'Compliance finding open', action: 'Corrective action plan', severity: 'High' },
+        { signal: 'Grant disbursement stalled > 30d', action: 'Escalation', severity: 'Medium' },
+      ],
+      forecastModels: [
+        { name: 'Budget burn-rate', logic: 'Obligation pace → year-end execution forecast' },
+        { name: 'Grant utilization', logic: 'Disbursement rate → underspend risk' },
+      ],
       connectors: ['Microsoft 365', 'ServiceNow', 'Tableau'],
     },
   },
@@ -132,12 +203,24 @@ export const DOMAINS: Domain[] = [
     id: 'enterprise', icon: '💼', name: 'Enterprise Business Operations',
     industries: ['Finance', 'Accounting', 'HR / Workforce Management', 'Legal Operations', 'Marketing Operations', 'Sales Operations', 'Customer Success', 'Procurement'],
     executionLogic: ['Internal efficiency', 'Revenue alignment', 'Workforce optimization', 'Cost control'],
-    blueprint: {
-      kpis: ['Internal efficiency', 'Revenue alignment', 'Cost control', 'Workforce utilization', 'Cycle time'],
+    schema: {
+      executionProfile: ['Efficient operations', 'Revenue aligned', 'Costs controlled', 'Workforce optimized', 'Fast cycle time'],
       agents: ['Financial Analyst AI', 'HR Coordinator AI', 'Legal Reviewer AI', 'RevOps AI'],
-      workflows: ['Budgeting', 'Contract review', 'Campaign tracking', 'Pipeline management'],
-      reports: ['Financial report', 'Workforce report', 'Pipeline report'],
-      risks: ['Cost overrun', 'Legal / compliance', 'Attrition', 'Revenue miss'],
+      workflows: [
+        { name: 'Revenue', stages: ['Lead', 'Qualify', 'Propose', 'Close', 'Onboard'] },
+        { name: 'Budget', stages: ['Plan', 'Approve', 'Spend', 'Track', 'Reforecast'] },
+        { name: 'Contract', stages: ['Draft', 'Review', 'Negotiate', 'Sign', 'Renew'] },
+      ],
+      kpis: ['Internal efficiency', 'Revenue alignment', 'Cost control', 'Workforce utilization', 'Cycle time'],
+      riskTriggers: [
+        { signal: 'Cost variance > budget', action: 'Spend freeze review', severity: 'High' },
+        { signal: 'Pipeline coverage < 3x', action: 'Demand-gen acceleration', severity: 'Medium' },
+        { signal: 'Attrition > threshold', action: 'Retention protocol', severity: 'High' },
+      ],
+      forecastModels: [
+        { name: 'Pipeline/revenue forecast', logic: 'Stage-weighted pipeline → bookings projection' },
+        { name: 'Cost-trend forecast', logic: 'Spend run-rate → budget variance projection' },
+      ],
       connectors: ['Salesforce', 'Microsoft 365', 'SAP'],
     },
   },
@@ -145,12 +228,25 @@ export const DOMAINS: Domain[] = [
     id: 'property', icon: '🏢', name: 'Property, Facilities & Asset Operations', specialty: true,
     industries: ['Multifamily Housing', 'Commercial Real Estate', 'Hospitality', 'Asset Management', 'Leasing Operations', 'Resident / Customer Lifecycle', 'Maintenance & Facilities Ops'],
     executionLogic: ['Occupancy', 'Asset yield', 'Turnover efficiency', 'Service response time', 'Revenue per asset'],
-    blueprint: {
-      kpis: ['Occupancy %', 'Asset yield', 'Turnover efficiency', 'Service response time', 'Revenue per asset', 'Lead → Lease conversion'],
-      agents: ['Leasing Manager AI', 'Maintenance Coordinator AI', 'Resident Relations AI', 'Asset Performance AI'],
-      workflows: ['Leasing pipeline (DAR)', 'Maintenance dispatch', 'Renewal tracking', 'Occupancy forecasting'],
-      reports: ['Daily Activity Report (DAR)', 'Occupancy report', 'Asset yield report', 'Service SLA report'],
-      risks: ['Vacancy', 'Delinquency', 'Turnover spike', 'Maintenance backlog', 'Service SLA breach'],
+    schema: {
+      executionProfile: ['Occupancy stability', 'Turnover velocity', 'Maintenance SLA adherence', 'Rent collection rate', 'Unit readiness time'],
+      agents: ['Leasing Optimization Agent', 'Maintenance Coordinator Agent', 'Resident Experience Agent', 'Asset Performance Analyst Agent'],
+      workflows: [
+        { name: 'Leasing', stages: ['Lead', 'Tour', 'Application', 'Lease', 'Renewal'] },
+        { name: 'Work Order', stages: ['Work Order', 'Dispatch', 'Completion', 'QA', 'Close'] },
+        { name: 'Turn', stages: ['Vacancy', 'Turn', 'Ready', 'Market', 'Lease'] },
+      ],
+      kpis: ['Occupancy %', 'Turnover velocity', 'Maintenance SLA adherence', 'Rent collection rate', 'Unit readiness time', 'Lead → Lease conversion'],
+      riskTriggers: [
+        { signal: 'Occupancy < 92%', action: 'Trigger leasing acceleration protocol', severity: 'High' },
+        { signal: 'Maintenance backlog > threshold', action: 'Delay leasing readiness flag', severity: 'Medium' },
+        { signal: 'Renewal drop > X%', action: 'Pricing review trigger', severity: 'High' },
+        { signal: 'Delinquency > threshold', action: 'Collections escalation', severity: 'Medium' },
+      ],
+      forecastModels: [
+        { name: 'Occupancy forecast', logic: 'Leasing velocity vs notice-to-vacate → projected occupancy' },
+        { name: 'Revenue-per-asset projection', logic: 'Rent roll + renewal + turn cost → NOI trajectory' },
+      ],
       connectors: ['Yardi', 'RealPage', 'CRM IQ', 'n8n', 'Notion'],
     },
   },
@@ -158,12 +254,24 @@ export const DOMAINS: Domain[] = [
     id: 'innovation', icon: '🚀', name: 'Innovation, Venture & Product Systems',
     industries: ['Startups', 'Venture Capital Portfolios', 'Product Launches', 'R&D Labs', 'Incubators / Accelerators', 'Innovation Programs'],
     executionLogic: ['Hypothesis testing', 'Portfolio risk balancing', 'Speed-to-validation', 'Iteration cycles'],
-    blueprint: {
-      kpis: ['Speed-to-validation', 'Iteration cycle time', 'Portfolio risk balance', 'Burn vs runway', 'Experiment win rate'],
+    schema: {
+      executionProfile: ['Fast validation', 'Balanced portfolio risk', 'Healthy runway', 'High iteration speed', 'Positive experiment win rate'],
       agents: ['Product Strategist AI', 'Fundraising Analyst AI', 'Experiment Designer AI'],
-      workflows: ['Hypothesis testing', 'Roadmap planning', 'Fundraising pipeline', 'Cohort management'],
-      reports: ['Portfolio risk report', 'Runway report', 'Experiment results'],
-      risks: ['Runway depletion', 'Failed validation', 'Portfolio concentration', 'Market timing'],
+      workflows: [
+        { name: 'Validation', stages: ['Hypothesis', 'Experiment', 'Measure', 'Learn', 'Decide'] },
+        { name: 'Fundraising', stages: ['Pipeline', 'Pitch', 'Diligence', 'Term', 'Close'] },
+        { name: 'Roadmap', stages: ['Idea', 'Prioritize', 'Build', 'Launch', 'Iterate'] },
+      ],
+      kpis: ['Speed-to-validation', 'Iteration cycle time', 'Portfolio risk balance', 'Burn vs runway', 'Experiment win rate'],
+      riskTriggers: [
+        { signal: 'Runway < 6 months', action: 'Fundraising acceleration / burn cut', severity: 'High' },
+        { signal: 'Validation failure rate high', action: 'Pivot review', severity: 'Medium' },
+        { signal: 'Portfolio concentration > threshold', action: 'Rebalance', severity: 'Medium' },
+      ],
+      forecastModels: [
+        { name: 'Runway forecast', logic: 'Burn vs cash → months remaining' },
+        { name: 'Validation-throughput', logic: 'Experiment cadence → time-to-product-market-fit' },
+      ],
       connectors: ['Notion', 'Slack', 'GitHub'],
     },
   },
@@ -171,12 +279,24 @@ export const DOMAINS: Domain[] = [
     id: 'energy', icon: '🌍', name: 'Energy & Environmental Systems',
     industries: ['Oil & Gas', 'Renewable Energy', 'Solar / Wind Operations', 'Utilities (Water, Power)', 'Environmental Programs', 'Climate Infrastructure'],
     executionLogic: ['Resource optimization', 'Regulatory compliance', 'Infrastructure uptime', 'Sustainability metrics'],
-    blueprint: {
-      kpis: ['Infrastructure uptime', 'Resource optimization', 'Regulatory compliance', 'Sustainability metrics', 'Outage frequency'],
+    schema: {
+      executionProfile: ['Infrastructure uptime', 'Resources optimized', 'Regulatory compliant', 'Sustainability targets met', 'Low outage frequency'],
       agents: ['SCADA Operator AI', 'Compliance Officer AI', 'Environmental Analyst AI', 'Asset Performance AI'],
-      workflows: ['SCADA monitoring', 'Compliance reporting (NERC / IEC)', 'Outage management', 'Environmental reporting'],
-      reports: ['Uptime report', 'Compliance report', 'Sustainability scorecard'],
-      risks: ['Outage', 'Regulatory violation', 'Resource shortfall', 'Environmental incident'],
+      workflows: [
+        { name: 'Operations', stages: ['Monitor', 'Detect', 'Dispatch', 'Restore', 'Review'] },
+        { name: 'Compliance', stages: ['Measure', 'Report', 'Audit', 'Remediate', 'Attest'] },
+        { name: 'Sustainability', stages: ['Baseline', 'Target', 'Track', 'Optimize', 'Report'] },
+      ],
+      kpis: ['Infrastructure uptime', 'Resource optimization', 'Regulatory compliance', 'Sustainability metrics', 'Outage frequency'],
+      riskTriggers: [
+        { signal: 'Uptime < threshold', action: 'Outage response protocol', severity: 'High' },
+        { signal: 'Emissions > permit limit', action: 'Environmental escalation', severity: 'High' },
+        { signal: 'Compliance report overdue', action: 'Regulatory filing alert', severity: 'Medium' },
+      ],
+      forecastModels: [
+        { name: 'Load/outage forecast', logic: 'Demand + asset health → outage probability' },
+        { name: 'Sustainability trajectory', logic: 'Emissions trend vs target → gap projection' },
+      ],
       connectors: ['n8n', 'Power BI', 'SAP'],
     },
   },
@@ -184,12 +304,24 @@ export const DOMAINS: Domain[] = [
     id: 'knowledge', icon: '🎓', name: 'Knowledge & Institutional Systems',
     industries: ['Universities', 'Schools', 'Research Institutions', 'Nonprofits', 'Foundations', 'Think Tanks'],
     executionLogic: ['Program outcomes', 'Funding efficiency', 'Research throughput', 'Curriculum / program delivery'],
-    blueprint: {
-      kpis: ['Program outcomes', 'Funding efficiency', 'Research throughput', 'Program delivery', 'Enrollment / retention'],
+    schema: {
+      executionProfile: ['Strong program outcomes', 'Efficient funding use', 'High research throughput', 'On-time program delivery', 'Healthy enrollment / retention'],
       agents: ['Research Coordinator AI', 'Grants Manager AI', 'Program Outcomes AI'],
-      workflows: ['Grant management', 'Curriculum planning', 'Research protocols', 'Accreditation tracking'],
-      reports: ['Outcomes report', 'Funding efficiency report', 'Research throughput'],
-      risks: ['Funding gap', 'Outcome shortfall', 'Accreditation risk', 'Enrollment decline'],
+      workflows: [
+        { name: 'Program', stages: ['Design', 'Enroll', 'Deliver', 'Assess', 'Improve'] },
+        { name: 'Grant', stages: ['Apply', 'Award', 'Execute', 'Report', 'Renew'] },
+        { name: 'Research', stages: ['Propose', 'Approve', 'Conduct', 'Publish', 'Archive'] },
+      ],
+      kpis: ['Program outcomes', 'Funding efficiency', 'Research throughput', 'Program delivery', 'Enrollment / retention'],
+      riskTriggers: [
+        { signal: 'Funding utilization < plan', action: 'Grant compliance review', severity: 'Medium' },
+        { signal: 'Outcome metrics below target', action: 'Program intervention', severity: 'High' },
+        { signal: 'Enrollment decline > X%', action: 'Recruitment protocol', severity: 'Medium' },
+      ],
+      forecastModels: [
+        { name: 'Enrollment forecast', logic: 'Applications + yield → projected enrollment' },
+        { name: 'Funding-utilization', logic: 'Spend pace vs award → underspend risk' },
+      ],
       connectors: ['Google Workspace', 'Microsoft 365', 'Notion'],
     },
   },
@@ -206,13 +338,13 @@ export const DIFFERENTIATORS = [
   { icon: '🌐', text: 'Cross-industry adaptability' },
 ]
 
-// ── Persisted customer profile: 1 primary + 0–2 secondary domains ──
+// ── Customer profile: 1 primary + 0–2 secondary domains ──
 export const MAX_SECONDARY = 2
 
 export interface PlatformProfile {
   primary: string | null
-  secondary: string[]    // up to MAX_SECONDARY
-  viewed: string | null  // which domain blueprint is open
+  secondary: string[]
+  viewed: string | null
 }
 
 const KEY = 'secc-os.platform.profile'
@@ -231,4 +363,18 @@ export function saveProfile(p: PlatformProfile) {
 
 export function domainById(id: string | null): Domain | undefined {
   return DOMAINS.find(d => d.id === id)
+}
+
+/* Export a domain as the Domain Execution Schema Template (the JSON contract). */
+export function toExecutionSchema(d: Domain) {
+  return {
+    domain: d.name,
+    execution_profile: d.schema.executionProfile,
+    agents: d.schema.agents,
+    workflows: d.schema.workflows.map(w => ({ name: w.name, loop: w.stages })),
+    kpis: d.schema.kpis,
+    risk_triggers: d.schema.riskTriggers.map(t => ({ signal: t.signal, action: t.action, severity: t.severity })),
+    forecast_models: d.schema.forecastModels,
+    connectors: d.schema.connectors,
+  }
 }
