@@ -1,0 +1,33 @@
+{
+  "contract": "metric-registry",
+  "version": "2.0",
+  "status": "frozen",
+  "frozen_at": "2026-06-22",
+  "description": "Canonical metric keys. Connectors MUST emit these keys (mapping their source field via aliases). Prevents every connector inventing its own name (occupied_pct vs Occupancy % vs occPercent). label/unit drive Decision context + Outcome before/after display.",
+  "metrics": {
+    "occupied_pct":            { "label": "Occupancy %", "unit": "percent", "aliases": ["OccPct", "occupancy", "occPercent", "Occupancy %"] },
+    "leased_pct":              { "label": "Leased %", "unit": "percent", "aliases": ["LeasedPct"] },
+    "trend_pct":               { "label": "Occupancy Trend", "unit": "percent_delta", "aliases": ["TrendPct"] },
+    "total_units":             { "label": "Total Units", "unit": "count", "aliases": ["Units"] },
+    "available":               { "label": "Available Units", "unit": "count", "aliases": ["Available"] },
+    "vacant_unrented":         { "label": "Vacant Unrented", "unit": "count", "aliases": ["VacantUnrented"] },
+    "down":                    { "label": "Down Units", "unit": "count", "aliases": ["Down"] },
+    "average_rent":            { "label": "Average Rent", "unit": "dollar", "aliases": ["AverageRent"] },
+    "average_sqft":            { "label": "Average Sqft", "unit": "number", "aliases": ["AverageSqft"] },
+    "workorders_overdue":      { "label": "Work Orders Overdue", "unit": "count", "aliases": ["Overdue"] },
+    "workorders_unassigned":   { "label": "Work Orders Unassigned", "unit": "count", "aliases": ["Unassigned"] },
+    "lead_reply_sec":          { "label": "Lead First-Reply Time", "unit": "seconds", "aliases": ["LeadReply"] },
+    "sms_chat_sec":            { "label": "SMS/Chat Response Time", "unit": "seconds", "aliases": ["SmsChat"] },
+    "calls":                   { "label": "Calls", "unit": "count", "aliases": ["Calls"] },
+    "process_completed":       { "label": "Process Completed", "unit": "count", "aliases": ["completed"] },
+    "process_pending":         { "label": "Process Pending", "unit": "count", "aliases": ["pending"] },
+    "process_total":           { "label": "Process Total", "unit": "count", "aliases": ["total"] },
+    "process_performance_pct": { "label": "Process Performance %", "unit": "percent", "aliases": ["performance"] },
+
+    "cpi":                     { "label": "Cost Performance Index", "unit": "ratio", "aliases": [], "_domain": "built" },
+    "spi_trend":               { "label": "Schedule Performance Trend", "unit": "ratio_delta", "aliases": [], "_domain": "built" },
+    "schedule_pct_complete":   { "label": "Schedule % Complete", "unit": "percent", "aliases": [], "_domain": "built" },
+    "budget_health_pct":       { "label": "Budget Health %", "unit": "percent", "aliases": [], "_domain": "built" },
+    "open_rfis_overdue":       { "label": "Open RFIs Overdue", "unit": "count", "aliases": [], "_domain": "built" }
+  }
+}

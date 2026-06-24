@@ -1,0 +1,25 @@
+{
+  "contract": "outcome",
+  "version": "2.0",
+  "status": "frozen",
+  "frozen_at": "2026-06-22",
+  "description": "What the Outcome Attribution layer (src/outcomes/outcomeAttribution.ts) needs FROM upstream to bind a decision to its real-world result. The connector supplies the longitudinal state via entity_key + measures snapshots.",
+  "upstream_requirements": {
+    "entity_key": "date-independent identity — REQUIRED to match before→after snapshots of the same entity",
+    "before": "measures snapshot at decision time (Record<string,string> via metric-registry labels)",
+    "after": "measures snapshot after the action landed",
+    "domain": "domain id",
+    "signal": "the signal that triggered the decision"
+  },
+  "outcome_record_fields": [
+    "decision_id", "domain", "signal", "action_taken", "expected_outcome", "actual_outcome",
+    "variance", "cause", "system_learning", "before", "after",
+    "agent_effectiveness", "workflow_effectiveness", "confidence", "status"
+  ],
+  "longitudinal_questions_enabled": [
+    "Did this decision improve occupancy?",
+    "How did this work order change over time?",
+    "Was this forecast accurate?"
+  ],
+  "note": "before/after are produced by joining two Inbox records on entity_key (not dedupe_key, which is per-snapshot). Measures map to labeled KPIs via metric-registry."
+}

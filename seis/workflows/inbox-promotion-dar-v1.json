@@ -1,0 +1,310 @@
+{
+  "name": "SECC-OS — Inbox Promotion v1 (Validated → LIE DAR)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "connector/promote-dar",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "node-trigger",
+      "name": "Promote Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        240,
+        400
+      ],
+      "notes": "On-demand DAR promotion. Run AFTER the DAR Generator's 6:07pm cron so the day's DAR row exists to enrich."
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "databasePage",
+        "operation": "getAll",
+        "databaseId": {
+          "__rl": true,
+          "value": "07a654a3826b4678b64076138283993a",
+          "mode": "id"
+        },
+        "returnAll": true,
+        "options": {}
+      },
+      "id": "node-query-inbox",
+      "name": "Query Inbox Rows",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        460,
+        400
+      ],
+      "alwaysOutputData": true,
+      "notes": "Integration Inbox. Code filters Record Lifecycle=Validated + Entity Type in {property_unit, workorder}. Attach Notion credential in UI (Bug 26)."
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "databasePage",
+        "operation": "getAll",
+        "databaseId": {
+          "__rl": true,
+          "value": "2f0e31250bc746dd8f584aafc7cdcb78",
+          "mode": "id"
+        },
+        "returnAll": true,
+        "options": {}
+      },
+      "id": "node-query-dar",
+      "name": "Query DAR Rows",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        680,
+        400
+      ],
+      "alwaysOutputData": true,
+      "notes": "LIE DAR Data Engine. Used to match an existing DAR row by Property + DAR Date. Promotion ENRICHES (update-only) — it never creates a DAR (the DAR Generator owns creation). Attach Notion credential in UI."
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// BUILD DAR UPDATES — enrich the existing day's DAR row with verified box-score\n// numbers from promoted Inbox rows. Gate: Record Lifecycle='Validated' AND\n// Entity Type in {property_unit, workorder}. Match an EXISTING DAR by Property +\n// DAR Date; if none exists, leave the row Validated (never create a DAR here).\n//\n// Bug 27: Notion getAll strips '%' from property names on READ — 'Occupied %' ->\n// property_occupied, 'Lease %' -> property_lease. We read those flat keys but WRITE\n// using the real property names ('Occupied %|number') downstream.\nfunction __d(v){if(v==null)return '';if(typeof v==='string')return v.slice(0,10);if(typeof v==='object'){var s=v.start||(v.date&&v.date.start)||v.startDate||'';if(!s){var m=JSON.stringify(v).match(/\\d{4}-\\d{2}-\\d{2}/);if(m)s=m[0];}return String(s).slice(0,10);}return String(v).slice(0,10);}\nconst inbox = $('Query Inbox Rows').all();\nconst dars = $('Query DAR Rows').all();\n\n// property_code -> DAR Property select value (extend as properties are added)\nconst propMap = { 'eddy': 'The Eddy at Riverview Landing' };\n\n// index existing DARs by 'PropertyName|YYYY-MM-DD'\nconst darIndex = {};\nfor (const d of dars) {\n  const prop = String(d.json.property_property || '').trim();\n  const date = __d(d.json.property_dar_date);\n  if (prop && date) darIndex[prop + '|' + date] = d.json;\n}\n\nconst wanted = new Set(['property_unit', 'workorder']);\nconst num = (v) => (v == null || v === '' ? null : Number(v));\nconst out = [];\n\nfor (const r of inbox) {\n  const j = r.json;\n  if (String(j.property_record_lifecycle || '') !== 'Validated') continue;\n  if (!wanted.has(String(j.property_entity_type || ''))) continue;\n\n  let payload = {};\n  try { payload = JSON.parse(j.property_payload_json || '{}'); } catch (e) { payload = {}; }\n  const measures = (payload && payload.measures) || {};\n\n  const code = String(j.property_property_code || j.property_program || '').trim().toLowerCase();\n  const propName = propMap[code] || String(j.property_program || '').trim();\n  const date = __d(j.property_captured_at);\n  const darRow = darIndex[propName + '|' + date];\n  if (!darRow) continue; // no DAR for that property+date — leave Validated, do not create\n\n  // measure value if provided, else keep the DAR's existing value (no clobber)\n  const occ = measures.occupied_pct != null ? Number(measures.occupied_pct) : num(darRow.property_occupied);\n  const lease = measures.leased_pct != null ? Number(measures.leased_pct) : num(darRow.property_lease);\n  const pendWO = measures.workorders_overdue != null ? Number(measures.workorders_overdue) : num(darRow.property_pending_work_orders);\n\n  out.push({ json: {\n    inbox_page_id: j.id,\n    dar_page_id: darRow.id,\n    property: propName,\n    dar_date: date,\n    occupied_pct: occ,\n    leased_pct: lease,\n    pending_wo: pendWO,\n    entity_type: String(j.property_entity_type || ''),\n    entity_key: String(j.property_entity_key || ''),\n    promoted_at: new Date().toISOString()\n  }});\n}\n\nif (!out.length) return [{ json: { _empty: true, message: 'No Validated property_unit/workorder rows with a matching DAR to promote.' } }];\nreturn out;"
+      },
+      "id": "node-build",
+      "name": "Build DAR Updates",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        900,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "version": 2
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $json._empty }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "node-empty-if",
+      "name": "Nothing to Promote?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1120,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ promoted: 0, message: $json.message }) }}",
+        "options": {}
+      },
+      "id": "node-respond-none",
+      "name": "Respond — Nothing",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1340,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "databasePage",
+        "operation": "update",
+        "pageId": {
+          "__rl": true,
+          "value": "={{ $json.dar_page_id }}",
+          "mode": "id"
+        },
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Occupied %|number",
+              "numberValue": "={{ $json.occupied_pct }}"
+            },
+            {
+              "key": "Lease %|number",
+              "numberValue": "={{ $json.leased_pct }}"
+            },
+            {
+              "key": "Pending Work Orders|number",
+              "numberValue": "={{ $json.pending_wo }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "node-update-dar",
+      "name": "Update DAR Row",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        1340,
+        480
+      ],
+      "notes": "Enriches the existing DAR row with verified box-score numbers (Occupied %, Lease %, Pending Work Orders). Narrative fields (Traffic/Resident Notes) are never overwritten. Attach Notion credential in UI."
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "databasePage",
+        "operation": "update",
+        "pageId": {
+          "__rl": true,
+          "value": "={{ $('Build DAR Updates').item.json.inbox_page_id }}",
+          "mode": "id"
+        },
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Record Lifecycle|select",
+              "selectValue": "Promoted"
+            },
+            {
+              "key": "Promoted To|multi_select",
+              "multiSelectValue": "DAR"
+            },
+            {
+              "key": "Notes|rich_text",
+              "textContent": "={{ 'Promoted to DAR ' + $('Build DAR Updates').item.json.property + ' ' + $('Build DAR Updates').item.json.dar_date + ' @ ' + $('Build DAR Updates').item.json.promoted_at }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "node-mark-promoted",
+      "name": "Mark Inbox Promoted",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        1560,
+        480
+      ],
+      "notes": "Flips the Inbox row to Promoted + stamps Promoted To = 'LIE DAR Data Engine'. Reads inbox_page_id from Build DAR Updates so the pairing survives the upstream Update node. Attach Notion credential in UI."
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ promoted: $runIndex + 1, property: $('Build DAR Updates').item.json.property, dar_date: $('Build DAR Updates').item.json.dar_date, lifecycle: 'Promoted', promoted_to: 'DAR' }) }}",
+        "options": {}
+      },
+      "id": "node-respond-ok",
+      "name": "Respond — Promoted",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1780,
+        480
+      ]
+    }
+  ],
+  "connections": {
+    "Promote Trigger": {
+      "main": [
+        [
+          {
+            "node": "Query Inbox Rows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Query Inbox Rows": {
+      "main": [
+        [
+          {
+            "node": "Query DAR Rows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Query DAR Rows": {
+      "main": [
+        [
+          {
+            "node": "Build DAR Updates",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build DAR Updates": {
+      "main": [
+        [
+          {
+            "node": "Nothing to Promote?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Nothing to Promote?": {
+      "main": [
+        [
+          {
+            "node": "Respond — Nothing",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update DAR Row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update DAR Row": {
+      "main": [
+        [
+          {
+            "node": "Mark Inbox Promoted",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mark Inbox Promoted": {
+      "main": [
+        [
+          {
+            "node": "Respond — Promoted",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

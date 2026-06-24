@@ -1,0 +1,41 @@
+{
+  "contract": "threshold-registry",
+  "version": "2.0",
+  "status": "frozen",
+  "frozen_at": "2026-06-22",
+  "description": "SINGLE SOURCE OF TRUTH for business rules (health weights + risk thresholds + trajectory). The normalizer reads this — it does NOT hard-code thresholds. Transcribed from src/platform/domains.ts riskTriggers; domains.ts should be reconciled to match (Property red is occupancy < 92, per domains.ts). Rules are evaluated in order; first match wins. A rule with default:true is the catch-all.",
+  "operators": ["<", "<=", ">", ">=", "==", "!="],
+  "domains": {
+    "property": {
+      "status": "live",
+      "trajectory_metric": "trend_pct",
+      "health": {
+        "weights": [["occupied_pct", 0.60], ["leased_pct", 0.25]],
+        "baseline": 15,
+        "drag": { "metric": "workorders_overdue", "per_unit": 3, "max": 15 }
+      },
+      "risk_rules": [
+        { "level": "red",    "match": "any", "conditions": [ { "metric": "occupied_pct", "op": "<", "value": 92 }, { "metric": "workorders_overdue", "op": ">=", "value": 5 } ] },
+        { "level": "yellow", "match": "any", "conditions": [ { "metric": "occupied_pct", "op": "<", "value": 95 }, { "metric": "workorders_overdue", "op": ">=", "value": 2 }, { "metric": "trend_pct", "op": "<", "value": -1 } ] },
+        { "level": "green",  "default": true }
+      ],
+      "source_domains_ts": "Occupancy < 92% → High (red). Yellow band (<95 / overdue>=2 / trend<-1) is a connector-level early-warning refinement."
+    },
+    "built": {
+      "status": "stub",
+      "trajectory_metric": "spi_trend",
+      "health": {
+        "weights": [["schedule_pct_complete", 0.50], ["budget_health_pct", 0.40]],
+        "baseline": 10,
+        "drag": { "metric": "open_rfis_overdue", "per_unit": 2, "max": 15 }
+      },
+      "risk_rules": [
+        { "level": "red",    "match": "any", "conditions": [ { "metric": "cpi", "op": "<", "value": 0.90 }, { "metric": "budget_health_pct", "op": "<", "value": 85 }, { "metric": "open_rfis_overdue", "op": ">=", "value": 8 } ] },
+        { "level": "yellow", "match": "any", "conditions": [ { "metric": "schedule_pct_complete", "op": "<", "value": 90 }, { "metric": "spi_trend", "op": "<", "value": -0.05 } ] },
+        { "level": "green",  "default": true }
+      ],
+      "source_domains_ts": "CPI < 0.90 → High; Schedule variance > 10% → High."
+    }
+  },
+  "pending_domains": ["digital", "human", "industrial", "governance", "enterprise", "innovation", "energy", "knowledge"]
+}

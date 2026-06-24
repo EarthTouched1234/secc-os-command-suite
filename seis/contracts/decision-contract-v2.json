@@ -1,0 +1,24 @@
+{
+  "contract": "decision",
+  "version": "2.0",
+  "status": "frozen",
+  "frozen_at": "2026-06-22",
+  "description": "The signal envelope the Decision Layer's Signal Engine ingests. Aligns to DecisionObject in src/decision/decisionLayer.ts — the connector produces the INPUT to engine 1 (Signal), not a finished DecisionObject.",
+  "signal_envelope": {
+    "id": "string — dedupe_key (per-snapshot)",
+    "entity_key": "string — date-independent join key (REQUIRED for Decision→Outcome attribution)",
+    "type": "string — e.g. metric_threshold",
+    "source": "source key (connector-contract)",
+    "domain": "domain id (domain-registry) — NOT the display name",
+    "entity": { "code": "string", "name": "string", "subtype": "string" },
+    "metric": "canonical metric key (metric-registry) — the domain primary_metric",
+    "value": "number",
+    "severity": "green|yellow|red (from threshold-registry risk_rules)",
+    "direction": "improving|stable|declining (from threshold-registry trajectory_metric)",
+    "observed_at": "ISO-8601"
+  },
+  "decision_object_handoff": {
+    "note": "Signal Engine maps signal_envelope -> DecisionObject.signal (string) + seeds context from sibling measures (labels via metric-registry).",
+    "decision_object_fields": ["domain", "signal", "context", "diagnosis", "predictions", "options", "recommendedAction", "routing", "confidence"]
+  }
+}

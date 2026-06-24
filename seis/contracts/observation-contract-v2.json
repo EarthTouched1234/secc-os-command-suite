@@ -1,0 +1,22 @@
+{
+  "contract": "observation",
+  "version": "2.0",
+  "status": "frozen",
+  "frozen_at": "2026-06-22",
+  "description": "Adapter-neutral observation — the ONLY thing a Connector Adapter may emit. System-specific field names are translated to canonical metric keys (metric-registry) before this point.",
+  "shape": {
+    "source_system": "string (matches connector-contract source key)",
+    "source_endpoint": "string",
+    "entity_type": "enum — see entity_types",
+    "entity": { "code": "string (required)", "name": "string", "subtype": "string" },
+    "program": "string",
+    "captured_at": "ISO-8601",
+    "metrics": "object<canonical_metric_key, number> (keys MUST exist in metric-registry)"
+  },
+  "entity_types": ["property_unit", "project", "asset", "incident", "service_case", "work_center", "grant", "deal", "experiment", "workorder", "portfolio", "vendor", "process", "unknown"],
+  "rules": [
+    "metrics keys must resolve in metric-registry (or via its aliases).",
+    "no PII fields permitted — aggregate measures only.",
+    "entity.code is required (it seeds entity_key)."
+  ]
+}

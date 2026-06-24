@@ -1,0 +1,26 @@
+{
+  "contract": "connector",
+  "version": "2.0",
+  "status": "frozen",
+  "frozen_at": "2026-06-22",
+  "description": "What a connector must declare to the Connector Registry, and what it must produce.",
+  "registry_entry": {
+    "source_key": "string (immutable, lowercase)",
+    "label": "string (human name)",
+    "default_domain": "domain id (must exist in domain-registry)",
+    "auth_basis": "manual_export | api | oauth | token",
+    "status": "live | planned"
+  },
+  "adapter_interface": {
+    "function": "adapt(export, program, captured_at) -> observation[]",
+    "must": [
+      "emit observation-contract v2 objects only",
+      "translate source fields to canonical metric keys (metric-registry)",
+      "read an allow-list of fields — never forward PII"
+    ]
+  },
+  "governance": {
+    "auth_rule": "session-bound sources (auth_basis=manual_export) must be fed by user export, never browser-session replay",
+    "write_rule": "connector output is written ONLY to the Integration Inbox (quarantine), never to production"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "contract": "domain-registry",
+  "version": "2.0",
+  "status": "frozen",
+  "frozen_at": "2026-06-22",
+  "description": "Immutable platform domain IDs. Every component (Connector, Decision Layer, Execution Fabric, CIRO, Outcome Attribution) references these IDs — never ad-hoc strings. id is the join key; name is display only. Mirrors src/platform/domains.ts.",
+  "domains": {
+    "built":      { "name": "Built Environment & Physical Assets", "primary_metric": "cpi", "trajectory_metric": "spi_trend", "anchor": false },
+    "digital":    { "name": "Digital Systems & Software Execution", "primary_metric": "uptime_pct", "trajectory_metric": "mttr_trend", "anchor": false },
+    "human":      { "name": "Human Services & Care Systems", "primary_metric": "capacity_utilization_pct", "trajectory_metric": "demand_trend", "anchor": false },
+    "industrial": { "name": "Industrial & Supply Chain Systems", "primary_metric": "oee", "trajectory_metric": "oee_trend", "anchor": false },
+    "governance": { "name": "Governance & Public Systems", "primary_metric": "budget_execution_pct", "trajectory_metric": "burn_trend", "anchor": false },
+    "enterprise": { "name": "Enterprise Business Operations", "primary_metric": "cost_variance_pct", "trajectory_metric": "cost_trend", "anchor": false },
+    "property":   { "name": "Property, Facilities & Asset Operations", "primary_metric": "occupied_pct", "trajectory_metric": "trend_pct", "anchor": true },
+    "innovation": { "name": "Innovation, Venture & Product Systems", "primary_metric": "runway_months", "trajectory_metric": "burn_trend", "anchor": false },
+    "energy":     { "name": "Energy & Environmental Systems", "primary_metric": "uptime_pct", "trajectory_metric": "uptime_trend", "anchor": false },
+    "knowledge":  { "name": "Knowledge & Institutional Systems", "primary_metric": "funding_utilization_pct", "trajectory_metric": "enrollment_trend", "anchor": false }
+  }
+}
