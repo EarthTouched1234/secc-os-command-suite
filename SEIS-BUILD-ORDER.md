@@ -116,3 +116,62 @@ Phase 5 (gated on external access) — sequence AFTER 1–3 so real writes are g
 Phases 0–4 are **buildable now** and produce a fully-proven, governed, observable, self-recovering
 system on POC data. Phase 5 — and only Phase 5 — waits on external API access. The work is not
 "more architecture"; it's executing this order without re-opening the frozen Core.
+
+---
+
+# v2 Refinements (architecture review, 2026-06-24)
+
+Five additions reviewed. Four adopted, one deferred — adopting them **does not change the
+direction** or touch the frozen Core; they complete it.
+
+## Adopt
+1. **Version Compatibility Matrix** — every module declares the contract version it supports, so
+   incompatibilities surface at load, not at runtime. Add to the contract registry:
+   `Core v2.0 ◄ Capability ◄ Deployment ◄ Execution Fabric v1.2 ◄ Adapters`. (Cheap, high-value,
+   reinforces the freeze.) → fold into **Phase 1 (Govern)**.
+2. **Connector Registry + health** — extend the existing `registry.py` with per-connector
+   `status / latency / authentication / last_sync / health / retry_policy`. → **Phase 4 (Observe)**.
+3. **Telemetry / Audit separation** — make the rule explicit: **Audit Ledger = immutable evidence**;
+   **Telemetry = mutable health/performance/alerts**. Performance data must never pollute evidence
+   records. (Half-present already — System Health is separate from the ledger.) → **Phase 2 + 4**.
+4. **Knowledge Intelligence — NEW "Learn" phase**, inserted **before** real execution. NOTE: this
+   **partially exists** — HORHANiS pattern recognition (Bridge Intelligence Ledger + daily/weekly
+   pattern scans) is the Knowledge layer. "Learn" = wire the **execution ledger** into that existing
+   engine: `Knowledge Capture → Pattern Detection → Playbook Updates → Agent Learning Queue`.
+   The platform's differentiator is institutional learning, not automation — so this precedes
+   full production execution. → **new Phase 5**.
+
+## Defer (honest pushback)
+5. **Event Bus** — sound at scale, premature now. **n8n IS the orchestration bus today.** A dedicated
+   pub/sub bus adds infra complexity unjustified at single-property / POC scale, and adopting it now
+   would be the over-engineering the rest of this design avoids. **Trigger to revisit:** multi-domain
+   fan-out or execution volume that n8n can't sequence cleanly. Documented, not built.
+
+## Revised build order (Learn inserted)
+```
+0 Prove → 1 Govern(+Version Matrix) → 2 Harden(+Telemetry/Audit split)
+        → 3 Recovery → 4 Observe(+Connector Registry) → 5 LEARN → 6 Execute (gated)
+```
+Learn before Execute: turn proven execution history into reusable operational intelligence before
+real external writes scale.
+
+## Final merged architecture
+```
+Mission Control
+  → Market Intelligence
+  → Intelligence Engine
+  → Contract Validator        (permanent governance — never dropped)
+  → GUARDiAN                  (registry-driven thresholds)
+  → Execution Queue
+  → [Event Bus]               (DEFERRED — n8n is the bus until scale demands it)
+  → Agent Network             (request-only; agents never write directly)
+  → External Systems          (CRM IQ / Yardi — access-gated)
+  → Execution Ledger          (immutable, append-only)
+  → Verification              (read-back confirmed)
+  → Recovery                  (retry → compensation → escalation)
+  → Knowledge Intelligence    (wires into existing HORHANiS pattern engine)
+  → Telemetry                 (mutable — health/perf/alerts, separate from ledger)
+  → Executive Reporting
+```
+
+**Status: roadmap adopted, NOT deployed.** Direction unchanged; Core untouched.
