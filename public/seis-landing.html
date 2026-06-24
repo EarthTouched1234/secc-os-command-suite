@@ -158,9 +158,54 @@ Audit Ledger             (always written — even on reject)
   <h2>Start With Controlled Automation</h2>
   <p>Move from workflow execution to governed execution systems. Join the early-access list and
      we'll onboard you as the self-serve install ships.</p>
-  <a class="cta" href="mailto:admin@secc-os.com?subject=SEIS%20early%20access">Join the waitlist</a>
-  <a class="cta secondary" href="mailto:admin@secc-os.com?subject=SEIS%20demo%20request">Request a demo</a>
+
+  <div class="card" style="max-width:560px;">
+    <form id="wl-form">
+      <input id="wl-email" type="email" required placeholder="Work email *" style="width:100%;padding:12px;margin-bottom:10px;border-radius:8px;background:#0b0f17;color:#e8eefc;box-sizing:border-box;border:1px solid #243049;" />
+      <input id="wl-name" type="text" placeholder="Name" style="width:100%;padding:12px;margin-bottom:10px;border-radius:8px;background:#0b0f17;color:#e8eefc;box-sizing:border-box;border:1px solid #243049;" />
+      <select id="wl-tier" style="width:100%;padding:12px;margin-bottom:10px;border-radius:8px;background:#0b0f17;color:#e8eefc;box-sizing:border-box;border:1px solid #243049;">
+        <option value="Unsure">Which tier fits? (optional)</option>
+        <option value="Core">SEIS Core</option>
+        <option value="Ops">SEIS Ops</option>
+        <option value="Enterprise">SEIS Enterprise</option>
+      </select>
+      <textarea id="wl-use" rows="3" placeholder="What would you govern with SEIS? (optional)" style="width:100%;padding:12px;margin-bottom:12px;border-radius:8px;background:#0b0f17;color:#e8eefc;box-sizing:border-box;border:1px solid #243049;"></textarea>
+      <button class="cta" type="submit" id="wl-btn" style="border:none;cursor:pointer;width:100%;">Join the early-access waitlist</button>
+    </form>
+    <p id="wl-msg" style="margin-top:12px;display:none;"></p>
+  </div>
 </div>
+
+<script>
+(function(){
+  var WEBHOOK = "https://sunnicommandcenter.app.n8n.cloud/webhook/seis/waitlist";
+  var f = document.getElementById('wl-form'), msg = document.getElementById('wl-msg'), btn = document.getElementById('wl-btn');
+  f.addEventListener('submit', function(e){
+    e.preventDefault();
+    var email = document.getElementById('wl-email').value.trim();
+    if(!email){ return; }
+    btn.disabled = true; btn.textContent = 'Submitting…';
+    fetch(WEBHOOK, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        email: email,
+        name: document.getElementById('wl-name').value.trim(),
+        tier: document.getElementById('wl-tier').value,
+        use_case: document.getElementById('wl-use').value.trim()
+      })
+    }).then(function(r){ return r.json().catch(function(){ return {ok:r.ok}; }); })
+      .then(function(d){
+        f.style.display='none'; msg.style.display='block'; msg.style.color='#34d399';
+        msg.textContent = (d && d.message) ? d.message : "You're on the SEIS early-access list.";
+      })
+      .catch(function(){
+        btn.disabled=false; btn.textContent='Join the early-access waitlist';
+        msg.style.display='block'; msg.style.color='#f7a7c0';
+        msg.textContent = "Couldn't submit — email admin@secc-os.com and we'll add you.";
+      });
+  });
+})();
+</script>
 
 <!-- FOOTER -->
 <div class="section">

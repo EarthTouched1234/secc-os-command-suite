@@ -1,0 +1,109 @@
+{
+  "name": "SEIS — Waitlist Capture",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "seis/waitlist",
+        "responseMode": "responseNode",
+        "options": { "allowedOrigins": "*" }
+      },
+      "id": "node-webhook",
+      "name": "Waitlist Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 400]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// Validate + normalize a waitlist submission.\nconst raw = $input.first().json;\nconst b = raw.body || raw;\nconst email = String(b.email || '').trim().toLowerCase();\nconst okEmail = /^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$/.test(email);\nif (!okEmail) {\n  return [{ json: { _invalid: true, message: 'A valid email is required.' } }];\n}\nconst tier = ['Core','Ops','Enterprise','Unsure'].includes(b.tier) ? b.tier : 'Unsure';\nreturn [{ json: {\n  _invalid: false,\n  email,\n  name: String(b.name || b.full_name || '').slice(0, 200),\n  usecase: String(b.use_case || b.usecase || '').slice(0, 1900),\n  tier,\n  ts: new Date().toISOString()\n}}];"
+      },
+      "id": "node-validate",
+      "name": "Validate",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 400]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "version": 2 },
+          "conditions": [
+            { "leftValue": "={{ $json._invalid }}", "rightValue": true,
+              "operator": { "type": "boolean", "operation": "true", "singleValue": true } }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "node-if",
+      "name": "Invalid?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [680, 400]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ ok: false, message: $json.message }) }}",
+        "options": { "responseCode": 400, "responseHeaders": { "entries": [ { "name": "Access-Control-Allow-Origin", "value": "*" } ] } }
+      },
+      "id": "node-respond-bad",
+      "name": "Respond — Invalid",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "databasePage",
+        "operation": "create",
+        "databaseId": { "__rl": true, "value": "f1b5c240-5898-41b2-aa22-6bd6be7efa05", "mode": "id" },
+        "title": "={{ $json.email }}",
+        "propertiesUi": {
+          "propertyValues": [
+            { "key": "Full Name|rich_text", "textContent": "={{ $json.name }}" },
+            { "key": "Use Case|rich_text", "textContent": "={{ $json.usecase }}" },
+            { "key": "Tier Interest|select", "selectValue": "={{ $json.tier }}" },
+            { "key": "Source|select", "selectValue": "SEIS Landing" },
+            { "key": "Status|select", "selectValue": "New" },
+            { "key": "Submitted|date", "date": "={{ $json.ts }}" }
+          ]
+        },
+        "options": {}
+      },
+      "id": "node-save",
+      "name": "Save Waitlist",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [900, 500],
+      "notes": "Writes to 📨 SEIS Waitlist. Attach Notion credential in UI if API attach is blocked."
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ ok: true, message: 'You are on the SEIS early-access list.' }) }}",
+        "options": { "responseHeaders": { "entries": [ { "name": "Access-Control-Allow-Origin", "value": "*" } ] } }
+      },
+      "id": "node-respond-ok",
+      "name": "Respond — OK",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1120, 500]
+    }
+  ],
+  "connections": {
+    "Waitlist Webhook": { "main": [[{ "node": "Validate", "type": "main", "index": 0 }]] },
+    "Validate": { "main": [[{ "node": "Invalid?", "type": "main", "index": 0 }]] },
+    "Invalid?": {
+      "main": [
+        [{ "node": "Respond — Invalid", "type": "main", "index": 0 }],
+        [{ "node": "Save Waitlist", "type": "main", "index": 0 }]
+      ]
+    },
+    "Save Waitlist": { "main": [[{ "node": "Respond — OK", "type": "main", "index": 0 }]] }
+  },
+  "settings": { "executionOrder": "v1" }
+}
