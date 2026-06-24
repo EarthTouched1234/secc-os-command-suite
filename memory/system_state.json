@@ -1,7 +1,7 @@
 {
-  "timestamp": "2026-06-24T15:28:59.155Z",
-  "state_hash": "sha256:940762a91beab1435e4d18c5a9a6ee67ea5a31ff2b196a752f912a40f116b973",
-  "commit": "c86b18d",
+  "timestamp": "2026-06-24T19:19:07.901Z",
+  "state_hash": "sha256:4c55c02bcb1accc61e6bcde2ae0c78e5b23c41e76573d55639fc44ab3355a09a",
+  "commit": "9e35143",
   "system_state": {
     "phase": "Decision Execution System",
     "intelligence_level": "Level 3 - Decision Support",
@@ -25,9 +25,9 @@
     "execution_outcome_binding": "modeled"
   },
   "recent_changes": [
+    "SEIS install kit: add uninstaller (lifecycle completeness)",
     "Wire SEIS waitlist capture (form → n8n webhook → Notion)",
-    "SEIS install kit: documented → scripted installer",
-    "Add SEIS install kit (deliverable v0): packaged, customer-deployable"
+    "SEIS install kit: documented → scripted installer"
   ],
   "active_focus": {
     "primary_workstream": "Property Execution Fabric",
