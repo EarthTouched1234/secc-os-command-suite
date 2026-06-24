@@ -1,7 +1,7 @@
 {
-  "timestamp": "2026-06-24T00:12:41.823Z",
-  "state_hash": "sha256:3560ec90e3d4fd67426070e610ce3a0c3c480128681f198ca64e29a285e32e4a",
-  "commit": "4acae4a",
+  "timestamp": "2026-06-24T01:09:56.671Z",
+  "state_hash": "sha256:b303f4304665790db71d732f8ff287554c656ac8a4c68abe4a02a5f21f138259",
+  "commit": "167e9b2",
   "system_state": {
     "phase": "Decision Execution System",
     "intelligence_level": "Level 3 - Decision Support",
@@ -25,9 +25,10 @@
     "execution_outcome_binding": "modeled"
   },
   "recent_changes": [
+    "UI: page-level scroll on full-stack tabs",
+    "Execution Fabric v1.2: inline Contract Validator gate",
     "Reconcile working tree: Executive OS IA baseline",
-    "Add Execution Fabric v1 (Property) — importable n8n blueprint",
-    "Add CIRO Outcome Attribution Layer — decisions → real-world results"
+    "Add Execution Fabric v1 (Property) — importable n8n blueprint"
   ],
   "active_focus": {
     "primary_workstream": "Property Execution Fabric",
