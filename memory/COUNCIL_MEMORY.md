@@ -1,6 +1,6 @@
 # Council Memory — System State Log
 
-> CIRO snapshot · 2026-06-24T13:46:12.064Z · commit `ce5e6af` · `sha256:5367afcf79618…`
+> CIRO snapshot · 2026-06-24T14:46:07.841Z · commit `9d76658` · `sha256:b3080cf2510f3…`
 > _High-signal state of the platform now. CIRO records; it does not interpret._
 
 ## 1. Current System State
@@ -16,10 +16,10 @@ The platform is a **Decision Execution System** — Level 3 - Decision Support. 
 - `execution_outcome_binding` — **modeled**
 
 ## 3. Recently Shipped Capabilities
+- Publish SEIS landing page via GitHub Pages (public/ → live URL)
+- Add SEIS landing page (developer funnel, honest pre-product CTAs)
 - Remove Execution Fabric v1/v1.1 (deletion gate met — v1.2 ran live)
 - Fix Bug 34: n8n returns Notion dates as objects, not strings
-- Architecture Freeze v1.0: Phase -1 Baseline + Production Readiness Checklist
-- SEIS Build Order v2: fold in architecture-review refinements
 
 ## 4. System Loop Status
 ✅ signal  →  ✅ reasoning  →  ✅ decision  →  ✅ simulation  →  ⬜ execution  →  ⬜ feedback

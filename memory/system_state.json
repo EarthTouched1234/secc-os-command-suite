@@ -1,7 +1,7 @@
 {
-  "timestamp": "2026-06-24T13:46:12.064Z",
-  "state_hash": "sha256:5367afcf796183e6a415ae6a8f72291fabfa1d4b162abd01c8dfa173344e0c44",
-  "commit": "ce5e6af",
+  "timestamp": "2026-06-24T14:46:07.841Z",
+  "state_hash": "sha256:b3080cf2510f36a91b49a0b8a9f75f241ed3489b7f6462f88f1fc85b9b023321",
+  "commit": "9d76658",
   "system_state": {
     "phase": "Decision Execution System",
     "intelligence_level": "Level 3 - Decision Support",
@@ -25,10 +25,10 @@
     "execution_outcome_binding": "modeled"
   },
   "recent_changes": [
+    "Publish SEIS landing page via GitHub Pages (public/ → live URL)",
+    "Add SEIS landing page (developer funnel, honest pre-product CTAs)",
     "Remove Execution Fabric v1/v1.1 (deletion gate met — v1.2 ran live)",
-    "Fix Bug 34: n8n returns Notion dates as objects, not strings",
-    "Architecture Freeze v1.0: Phase -1 Baseline + Production Readiness Checklist",
-    "SEIS Build Order v2: fold in architecture-review refinements"
+    "Fix Bug 34: n8n returns Notion dates as objects, not strings"
   ],
   "active_focus": {
     "primary_workstream": "Property Execution Fabric",
