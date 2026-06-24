@@ -1,6 +1,6 @@
 # Council Memory — System State Log
 
-> CIRO snapshot · 2026-06-24T14:50:22.296Z · commit `c974801` · `sha256:214a0f6cdd5a7…`
+> CIRO snapshot · 2026-06-24T14:56:20.928Z · commit `a405a54` · `sha256:b4e30b1ae2340…`
 > _High-signal state of the platform now. CIRO records; it does not interpret._
 
 ## 1. Current System State
@@ -16,10 +16,10 @@ The platform is a **Decision Execution System** — Level 3 - Decision Support. 
 - `execution_outcome_binding` — **modeled**
 
 ## 3. Recently Shipped Capabilities
+- SEIS install kit: documented → scripted installer
 - Add SEIS install kit (deliverable v0): packaged, customer-deployable
 - Publish SEIS landing page via GitHub Pages (public/ → live URL)
 - Add SEIS landing page (developer funnel, honest pre-product CTAs)
-- Remove Execution Fabric v1/v1.1 (deletion gate met — v1.2 ran live)
 
 ## 4. System Loop Status
 ✅ signal  →  ✅ reasoning  →  ✅ decision  →  ✅ simulation  →  ⬜ execution  →  ⬜ feedback

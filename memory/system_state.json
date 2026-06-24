@@ -1,7 +1,7 @@
 {
-  "timestamp": "2026-06-24T14:50:22.296Z",
-  "state_hash": "sha256:214a0f6cdd5a7fc4830805ae0fb05375a8b4a78a199a7687b993293534ca3f9f",
-  "commit": "c974801",
+  "timestamp": "2026-06-24T14:56:20.928Z",
+  "state_hash": "sha256:b4e30b1ae2340c17dc31a70b20aa5ac826b964f256ba7bfafee5aeda1c11ee4d",
+  "commit": "a405a54",
   "system_state": {
     "phase": "Decision Execution System",
     "intelligence_level": "Level 3 - Decision Support",
@@ -25,10 +25,10 @@
     "execution_outcome_binding": "modeled"
   },
   "recent_changes": [
+    "SEIS install kit: documented → scripted installer",
     "Add SEIS install kit (deliverable v0): packaged, customer-deployable",
     "Publish SEIS landing page via GitHub Pages (public/ → live URL)",
-    "Add SEIS landing page (developer funnel, honest pre-product CTAs)",
-    "Remove Execution Fabric v1/v1.1 (deletion gate met — v1.2 ran live)"
+    "Add SEIS landing page (developer funnel, honest pre-product CTAs)"
   ],
   "active_focus": {
     "primary_workstream": "Property Execution Fabric",
