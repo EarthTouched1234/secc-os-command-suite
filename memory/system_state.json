@@ -1,7 +1,7 @@
 {
-  "timestamp": "2026-06-24T14:56:20.928Z",
-  "state_hash": "sha256:b4e30b1ae2340c17dc31a70b20aa5ac826b964f256ba7bfafee5aeda1c11ee4d",
-  "commit": "a405a54",
+  "timestamp": "2026-06-24T15:28:59.155Z",
+  "state_hash": "sha256:940762a91beab1435e4d18c5a9a6ee67ea5a31ff2b196a752f912a40f116b973",
+  "commit": "c86b18d",
   "system_state": {
     "phase": "Decision Execution System",
     "intelligence_level": "Level 3 - Decision Support",
@@ -25,10 +25,9 @@
     "execution_outcome_binding": "modeled"
   },
   "recent_changes": [
+    "Wire SEIS waitlist capture (form → n8n webhook → Notion)",
     "SEIS install kit: documented → scripted installer",
-    "Add SEIS install kit (deliverable v0): packaged, customer-deployable",
-    "Publish SEIS landing page via GitHub Pages (public/ → live URL)",
-    "Add SEIS landing page (developer funnel, honest pre-product CTAs)"
+    "Add SEIS install kit (deliverable v0): packaged, customer-deployable"
   ],
   "active_focus": {
     "primary_workstream": "Property Execution Fabric",
