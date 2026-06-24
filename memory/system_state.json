@@ -1,7 +1,7 @@
 {
-  "timestamp": "2026-06-24T02:04:35.555Z",
-  "state_hash": "sha256:0d8d77549558409da0e4bc6ded14adc35bc5f01fd0eea05b7aed835e85e49544",
-  "commit": "a01a706",
+  "timestamp": "2026-06-24T02:18:19.291Z",
+  "state_hash": "sha256:f1b6b9f361fab8284b85c1a665b75dff82ebdc6f04688a71537cfac05819af06",
+  "commit": "77bbec0",
   "system_state": {
     "phase": "Decision Execution System",
     "intelligence_level": "Level 3 - Decision Support",
@@ -25,10 +25,10 @@
     "execution_outcome_binding": "modeled"
   },
   "recent_changes": [
+    "Document n8n blueprint inventory + v1/v1.1 deletion policy",
     "Add client demo package (Property worked example + PMO scale-up)",
     "Inbox Promotion v1: Validated → LIE DAR (enrich existing)",
-    "Inbox Promotion v1: Validated → PMO Portfolio Register",
-    "UI: page-level scroll on full-stack tabs"
+    "Inbox Promotion v1: Validated → PMO Portfolio Register"
   ],
   "active_focus": {
     "primary_workstream": "Property Execution Fabric",
