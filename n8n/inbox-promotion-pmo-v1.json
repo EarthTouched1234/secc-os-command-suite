@@ -141,7 +141,7 @@
         "propertiesUi": {
           "propertyValues": [
             { "key": "Record Lifecycle|select", "selectValue": "Promoted" },
-            { "key": "Promoted To|multi_select", "multiSelectValue": "PMO Portfolio Register" },
+            { "key": "Promoted To|multi_select", "multiSelectValue": "PMO" },
             { "key": "Notes|rich_text", "textContent": "={{ 'Promoted to PMO program ' + $('Build PMO Updates').item.json.program + ' @ ' + $('Build PMO Updates').item.json.promoted_at }}" }
           ]
         },
@@ -157,7 +157,7 @@
     {
       "parameters": {
         "respondWith": "json",
-        "responseBody": "={{ JSON.stringify({ promoted: $runIndex + 1, program: $('Build PMO Updates').item.json.program, lifecycle: 'Promoted', promoted_to: 'PMO Portfolio Register' }) }}",
+        "responseBody": "={{ JSON.stringify({ promoted: $runIndex + 1, program: $('Build PMO Updates').item.json.program, lifecycle: 'Promoted', promoted_to: 'PMO' }) }}",
         "options": {}
       },
       "id": "node-respond-ok",

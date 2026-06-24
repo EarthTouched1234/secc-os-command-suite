@@ -140,7 +140,7 @@
         "propertiesUi": {
           "propertyValues": [
             { "key": "Record Lifecycle|select", "selectValue": "Promoted" },
-            { "key": "Promoted To|multi_select", "multiSelectValue": "LIE DAR Data Engine" },
+            { "key": "Promoted To|multi_select", "multiSelectValue": "DAR" },
             { "key": "Notes|rich_text", "textContent": "={{ 'Promoted to DAR ' + $('Build DAR Updates').item.json.property + ' ' + $('Build DAR Updates').item.json.dar_date + ' @ ' + $('Build DAR Updates').item.json.promoted_at }}" }
           ]
         },
@@ -156,7 +156,7 @@
     {
       "parameters": {
         "respondWith": "json",
-        "responseBody": "={{ JSON.stringify({ promoted: $runIndex + 1, property: $('Build DAR Updates').item.json.property, dar_date: $('Build DAR Updates').item.json.dar_date, lifecycle: 'Promoted', promoted_to: 'LIE DAR Data Engine' }) }}",
+        "responseBody": "={{ JSON.stringify({ promoted: $runIndex + 1, property: $('Build DAR Updates').item.json.property, dar_date: $('Build DAR Updates').item.json.dar_date, lifecycle: 'Promoted', promoted_to: 'DAR' }) }}",
         "options": {}
       },
       "id": "node-respond-ok",
