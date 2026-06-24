@@ -26,9 +26,12 @@ export interface Edition {
 /* Modules a client edition can show/hide/reorder.
    'Dashboard' and 'Editions' are always available and not listed here. */
 export const ALL_MODULES = [
-  'PMO', 'Platform', 'Decisions', 'Fabric', 'Outcomes', 'Timeline', 'GUARDiAN', 'GTM', 'ChatBridge', 'Documents',
+  'MissionControl', 'PMO', 'Platform', 'Decisions', 'Fabric', 'Outcomes', 'Timeline', 'GUARDiAN', 'GTM', 'ChatBridge', 'Documents',
   'Projects', 'Tasks', 'Connectors', 'Execute', 'Approve', 'Critical', 'Agents', 'Inbox',
 ] as const
+
+/* Base display names for tabs whose id isn't its prettiest form. */
+export const BASE_LABELS: Record<string, string> = { MissionControl: 'Mission Control' }
 
 export const TIERS = ['Flight Deck', 'Trajectory', 'Sovereign', 'Critical Infrastructure'] as const
 
@@ -37,8 +40,8 @@ export const DEFAULT_EDITION: Edition = {
   id: 'secc-os-native',
   name: 'SECC-OS Native',
   preset: 'SECC-OS Native',
-  productMark: 'HORHANiS',
-  productName: 'Commander Console',
+  productMark: 'SUNNi',
+  productName: 'Mission Control',
   tagline: 'Command Center is live and watching the work.',
   accent: '#f4c95d',
   bg: '#050608',
@@ -100,7 +103,17 @@ const SAVED_KEY = 'secc-os.edition.saved'
 export function loadActiveEdition(): Edition {
   try {
     const raw = localStorage.getItem(ACTIVE_KEY)
-    if (raw) return { ...DEFAULT_EDITION, ...JSON.parse(raw) }
+    if (raw) {
+      const merged = { ...DEFAULT_EDITION, ...JSON.parse(raw) }
+      // The native edition always inherits the current brand, so renames propagate
+      // even if an older brand string is cached in localStorage.
+      if (merged.id === 'secc-os-native') {
+        merged.productMark = DEFAULT_EDITION.productMark
+        merged.productName = DEFAULT_EDITION.productName
+        merged.tagline = DEFAULT_EDITION.tagline
+      }
+      return merged
+    }
   } catch { /* ignore */ }
   return DEFAULT_EDITION
 }
@@ -152,15 +165,16 @@ export function applyEditionTheme(e: Edition) {
 
 /* Display label for a tab, honoring an edition's terminology overrides. */
 export function labelFor(tab: string, e: Edition): string {
-  return e.terminology[tab] || tab
+  return e.terminology[tab] || BASE_LABELS[tab] || tab
 }
 
 /* Ordered, de-duplicated visible tabs for an edition.
    Dashboard is always first; Editions is always available to the operator. */
 export function visibleTabs(allTabs: string[], e: Edition): string[] {
-  const wanted = new Set(['Dashboard', 'Editions', ...e.modules])
+  const wanted = new Set(['MissionControl', 'Dashboard', 'Editions', ...e.modules])
   const ordered: string[] = []
-  // Dashboard first
+  // Mission Control is the home screen, then Dashboard
+  if (allTabs.includes('MissionControl')) ordered.push('MissionControl')
   ordered.push('Dashboard')
   // edition module order next (only valid ones)
   for (const m of e.modules) if (allTabs.includes(m) && !ordered.includes(m)) ordered.push(m)

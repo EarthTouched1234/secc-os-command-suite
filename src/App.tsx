@@ -15,6 +15,7 @@ import { Projects } from './components/Projects'
 import { Tasks } from './components/Tasks'
 import { Connectors } from './components/Connectors'
 import { PMODashboard } from './components/PMODashboard'
+import { MissionControl } from './components/MissionControl'
 import { GUARDiAN } from './components/GUARDiAN'
 import { MissionTimeline } from './components/MissionTimeline'
 import { GTM } from './components/GTM'
@@ -26,21 +27,22 @@ import { Outcomes } from './components/Outcomes'
 import { useEffect } from 'react'
 import { type Edition, loadActiveEdition, saveActiveEdition, applyEditionTheme, visibleTabs, labelFor } from './editions/editions'
 import { computeMissionStatus } from './hooks/useFeed'
+import sunniLogo from './assets/sunni-pulse-mark.svg'
 import './App.css'
 
-type Tab = 'Dashboard' | 'Execute' | 'Approve' | 'Critical' | 'Agents' | 'ChatBridge' | 'Documents' | 'Projects' | 'Tasks' | 'Connectors' | 'Inbox' | 'PMO' | 'GUARDiAN' | 'Timeline' | 'GTM' | 'Editions' | 'Platform' | 'Decisions' | 'Fabric' | 'Outcomes'
-const TABS: Tab[] = ['Dashboard', 'PMO', 'Platform', 'Decisions', 'Fabric', 'Outcomes', 'Timeline', 'GUARDiAN', 'GTM', 'ChatBridge', 'Documents', 'Projects', 'Tasks', 'Connectors', 'Execute', 'Approve', 'Critical', 'Agents', 'Inbox', 'Editions']
+type Tab = 'MissionControl' | 'Dashboard' | 'Execute' | 'Approve' | 'Critical' | 'Agents' | 'ChatBridge' | 'Documents' | 'Projects' | 'Tasks' | 'Connectors' | 'Inbox' | 'PMO' | 'GUARDiAN' | 'Timeline' | 'GTM' | 'Editions' | 'Platform' | 'Decisions' | 'Fabric' | 'Outcomes'
+const TABS: Tab[] = ['MissionControl', 'Dashboard', 'PMO', 'Platform', 'Decisions', 'Fabric', 'Outcomes', 'Timeline', 'GUARDiAN', 'GTM', 'ChatBridge', 'Documents', 'Projects', 'Tasks', 'Connectors', 'Execute', 'Approve', 'Critical', 'Agents', 'Inbox', 'Editions']
 
 export default function App() {
   const { feed, systemExecs, loading, error, lastUpdated, refresh } = useFeed()
   const [pulseMode, setPulseMode] = useState<'ready' | 'running' | 'publish'>('ready')
-  const [activeTab, setActiveTab] = useState<Tab>('Dashboard')
+  const [activeTab, setActiveTab] = useState<Tab>('MissionControl')
   const [edition, setEdition] = useState<Edition>(loadActiveEdition)
   const applyEdition = (e: Edition) => { setEdition(e); saveActiveEdition(e) }
   const navTabs = visibleTabs(TABS, edition) as Tab[]
 
   useEffect(() => { applyEditionTheme(edition) }, [edition])
-  useEffect(() => { if (!navTabs.includes(activeTab)) setActiveTab('Dashboard') }, [navTabs, activeTab])
+  useEffect(() => { if (!navTabs.includes(activeTab)) setActiveTab('MissionControl') }, [navTabs, activeTab])
   const missionStatus = computeMissionStatus(feed)
   const recentErrors = systemExecs.filter((e) => e.status === 'error').length
   const successes = systemExecs.filter((e) => e.status === 'success').length
@@ -54,6 +56,9 @@ export default function App() {
     <div className="cc-root" data-tab={activeTab}>
       <header className="cc-header">
         <div className="cc-title">
+          <span className="cc-logo">
+            <img src={sunniLogo} alt="SunNi Pulse" width={32} height={32} />
+          </span>
           <span className="cc-mark">{edition.productMark}</span>
           <span className="cc-name">{edition.productName}</span>
         </div>
@@ -143,6 +148,7 @@ export default function App() {
       </section>
 
       <div className="cc-grid">
+        {activeTab === 'MissionControl' && <div className="cc-full-stack"><MissionControl active={activeTab === 'MissionControl'} feed={feed} systemExecs={systemExecs} lastUpdated={lastUpdated} onRefresh={refresh} /></div>}
         {activeTab === 'Dashboard' && <>
           <div className="cc-main-stack">
             <ThePulse feed={feed} systemExecs={systemExecs} lastUpdated={lastUpdated} />

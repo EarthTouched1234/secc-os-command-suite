@@ -1,0 +1,58 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">SunNi Pulse building mark</title>
+  <desc id="desc">Building-mode SunNi Pulse mark with fast electron orbit and bright green eye pupil.</desc>
+  <style>
+    .ripple { transform-origin: 256px 256px; animation: orbitRipple 1.7s ease-out infinite; opacity: 0; }
+    .r2 { animation-delay: .34s; }
+    .r3 { animation-delay: .68s; }
+    .electron { transform-origin: 256px 256px; animation: electronSpin .68s linear infinite; }
+    .electron.b { animation-duration: .82s; }
+    .electron.c { animation-duration: .56s; animation-direction: reverse; }
+    .core { transform-origin: 256px 256px; animation: sunPulse 1.2s ease-in-out infinite; }
+    @keyframes orbitRipple {
+      0% { opacity: 0; transform: scale(.42); }
+      12% { opacity: .95; }
+      70% { opacity: .34; }
+      100% { opacity: 0; transform: scale(2.55); }
+    }
+    @keyframes electronSpin { to { transform: rotate(360deg); } }
+    @keyframes sunPulse {
+      0%, 100% { transform: scale(.98); opacity: .86; }
+      50% { transform: scale(1.08); opacity: 1; }
+    }
+  </style>
+  <defs>
+    <filter id="goldGlow" x="-70%" y="-70%" width="240%" height="240%" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="18" result="blur"/>
+      <feColorMatrix in="blur" type="matrix" values="1 0 0 0 0.956 0 1 0 0 0.788 0 0 1 0 0.365 0 0 0 0.82 0"/>
+      <feBlend in="SourceGraphic" mode="normal"/>
+    </filter>
+    <filter id="greenGlow" x="-95%" y="-95%" width="290%" height="290%" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="22" result="blur"/>
+      <feColorMatrix in="blur" type="matrix" values="0 0 0 0 0.224 0 0 0 0 1 0 0 0 0 0.416 0 0 0 1 0"/>
+      <feBlend in="SourceGraphic" mode="normal"/>
+    </filter>
+  </defs>
+  <rect width="512" height="512" rx="104" fill="#050608"/>
+  <circle class="ripple r1" cx="256" cy="256" r="56" stroke="#F4C95D" stroke-width="6"/>
+  <circle class="ripple r2" cx="256" cy="256" r="56" stroke="#62A8FF" stroke-width="6"/>
+  <circle class="ripple r3" cx="256" cy="256" r="56" stroke="#30D158" stroke-width="6"/>
+  <g class="electron a">
+    <ellipse cx="256" cy="256" rx="182" ry="78" stroke="#62A8FF" stroke-width="10" opacity="0.78"/>
+    <circle cx="438" cy="256" r="16" fill="#F4C95D"/>
+  </g>
+  <g class="electron b">
+    <ellipse cx="256" cy="256" rx="182" ry="78" stroke="#F4C95D" stroke-width="10" opacity="0.78" transform="rotate(60 256 256)"/>
+    <circle cx="347" cy="414" r="16" fill="#62A8FF"/>
+  </g>
+  <g class="electron c">
+    <ellipse cx="256" cy="256" rx="182" ry="78" stroke="#62A8FF" stroke-width="10" opacity="0.58" transform="rotate(-60 256 256)"/>
+    <circle cx="347" cy="98" r="16" fill="#30D158"/>
+  </g>
+  <circle class="core" cx="256" cy="256" r="76" fill="#15151B" stroke="#F4C95D" stroke-width="15" filter="url(#goldGlow)"/>
+  <ellipse cx="256" cy="256" rx="61" ry="32" stroke="#CAFFD8" stroke-width="10"/>
+  <circle cx="256" cy="256" r="22" fill="#39FF6A" filter="url(#greenGlow)"/>
+  <circle cx="256" cy="256" r="7" fill="#EFFFF2"/>
+  <path d="M112 136C169 105 218 132 248 207" stroke="#62A8FF" stroke-width="17" stroke-linecap="round"/>
+  <path d="M400 136C343 105 294 132 264 207" stroke="#62A8FF" stroke-width="17" stroke-linecap="round"/>
+</svg>
