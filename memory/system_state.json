@@ -1,7 +1,7 @@
 {
-  "timestamp": "2026-06-22T08:11:14.907Z",
-  "state_hash": "sha256:8a11b46ea105e1d82422ee3bbdae2f12da612429072a97fef78bad818f638150",
-  "commit": "70717b7",
+  "timestamp": "2026-06-24T00:12:41.823Z",
+  "state_hash": "sha256:3560ec90e3d4fd67426070e610ce3a0c3c480128681f198ca64e29a285e32e4a",
+  "commit": "4acae4a",
   "system_state": {
     "phase": "Decision Execution System",
     "intelligence_level": "Level 3 - Decision Support",
@@ -25,9 +25,9 @@
     "execution_outcome_binding": "modeled"
   },
   "recent_changes": [
+    "Reconcile working tree: Executive OS IA baseline",
     "Add Execution Fabric v1 (Property) — importable n8n blueprint",
-    "Add CIRO Outcome Attribution Layer — decisions → real-world results",
-    "Add CIRO Execution Lock — state hash gate prevents redundant commits"
+    "Add CIRO Outcome Attribution Layer — decisions → real-world results"
   ],
   "active_focus": {
     "primary_workstream": "Property Execution Fabric",
