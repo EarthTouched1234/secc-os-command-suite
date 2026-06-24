@@ -603,8 +603,23 @@ button, input { font: inherit; }
   flex-direction: column;
   gap: 8px;
   min-height: 0;
-  overflow: hidden;
+  /* Page-level scroll: component tabs (PMO, Platform, Decisions, etc.) render
+     their own roots with natural height — let them scroll instead of clipping.
+     Panel-based tabs keep their inner list scroll; their flex:1 panels fill
+     exactly, so no outer scrollbar appears for them. */
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-bright) transparent;
 }
+
+.cc-full-stack::-webkit-scrollbar { width: 8px; }
+.cc-full-stack::-webkit-scrollbar-track { background: transparent; }
+.cc-full-stack::-webkit-scrollbar-thumb {
+  background: var(--line-bright);
+  border-radius: 4px;
+}
+.cc-full-stack::-webkit-scrollbar-thumb:hover { background: var(--gold); }
 
 .cc-full-stack > .panel {
   flex: 1;
