@@ -26,6 +26,7 @@ Trigger → Guardian Gate → Contract Validator → Execute OR Reject
 seis/
 ├── README.md            ← you are here
 ├── install.py           ← scripted installer (provisions DBs, imports, activates, verifies)
+├── uninstall.py         ← clean removal (deletes the SEIS workflows; preserves your Notion data)
 ├── install.config.example ← copy → fill in your n8n + Notion details
 ├── INSTALL.md           ← scripted + manual setup on a fresh n8n + Notion
 ├── notion-schema.md     ← the Notion databases to create (Audit Ledger, Integration Inbox)
