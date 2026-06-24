@@ -1,7 +1,7 @@
 {
-  "timestamp": "2026-06-24T13:27:51.700Z",
-  "state_hash": "sha256:8533f7702fe59850003fd8735611eab77c4d80e49e35e1f0789d3f9a1506f66a",
-  "commit": "5f467a4",
+  "timestamp": "2026-06-24T13:42:18.738Z",
+  "state_hash": "sha256:1fd17343d0219501b5b7428919a8dd8300c52330f3290f62e99aa3bf0c9727c2",
+  "commit": "7a9eff3",
   "system_state": {
     "phase": "Decision Execution System",
     "intelligence_level": "Level 3 - Decision Support",
@@ -25,10 +25,10 @@
     "execution_outcome_binding": "modeled"
   },
   "recent_changes": [
+    "Fix Bug 34: n8n returns Notion dates as objects, not strings",
     "Architecture Freeze v1.0: Phase -1 Baseline + Production Readiness Checklist",
     "SEIS Build Order v2: fold in architecture-review refinements",
-    "Add SEIS Build Order Map (reconciliation → implementation sequence)",
-    "Tier-1 test prep: fix Promoted To values + runbook"
+    "Add SEIS Build Order Map (reconciliation → implementation sequence)"
   ],
   "active_focus": {
     "primary_workstream": "Property Execution Fabric",

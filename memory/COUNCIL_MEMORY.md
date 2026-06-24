@@ -1,6 +1,6 @@
 # Council Memory — System State Log
 
-> CIRO snapshot · 2026-06-24T13:27:51.700Z · commit `5f467a4` · `sha256:8533f7702fe59…`
+> CIRO snapshot · 2026-06-24T13:42:18.738Z · commit `7a9eff3` · `sha256:1fd17343d0219…`
 > _High-signal state of the platform now. CIRO records; it does not interpret._
 
 ## 1. Current System State
@@ -16,10 +16,10 @@ The platform is a **Decision Execution System** — Level 3 - Decision Support. 
 - `execution_outcome_binding` — **modeled**
 
 ## 3. Recently Shipped Capabilities
+- Fix Bug 34: n8n returns Notion dates as objects, not strings
 - Architecture Freeze v1.0: Phase -1 Baseline + Production Readiness Checklist
 - SEIS Build Order v2: fold in architecture-review refinements
 - Add SEIS Build Order Map (reconciliation → implementation sequence)
-- Tier-1 test prep: fix Promoted To values + runbook
 
 ## 4. System Loop Status
 ✅ signal  →  ✅ reasoning  →  ✅ decision  →  ✅ simulation  →  ⬜ execution  →  ⬜ feedback
