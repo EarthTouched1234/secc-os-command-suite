@@ -7,7 +7,27 @@ execution; you wire your own actions into the Execute node).
 - An n8n instance (Cloud or self-hosted)
 - A Notion workspace + an n8n Notion credential (OAuth2)
 
-## Steps
+## Scripted install (recommended)
+
+```bash
+cp install.config.example install.config   # fill in your n8n + Notion details
+source install.config
+python3 install.py --dry-run               # validates config + workflows, changes nothing
+python3 install.py                         # creates DBs, imports + activates, runs the verify test
+```
+
+The script: creates the two Notion DBs → patches each workflow (swaps in the new DB IDs + attaches
+your Notion credential) → creates and activates them via the n8n API → fires a valid + an invalid
+decision and confirms the ledger has both receipts. Promotion workflows install **inactive** unless
+you set `SEIS_PMO_DB` / `SEIS_DAR_DB` (your existing portfolio + reporting tables).
+
+Re-run just the smoke test later with `python3 install.py --verify-only <your_n8n_url>`.
+
+> One manual step the API can't do: in some n8n setups a credential must be attached in the UI
+> rather than via API. If the script reports a credential error, open each workflow and attach the
+> Notion credential, then activate.
+
+## Manual install (what the script does, by hand)
 
 ### 1. Create the Notion databases
 From `notion-schema.md`, create:

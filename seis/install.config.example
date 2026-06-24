@@ -1,0 +1,14 @@
+# SEIS installer config — copy to a private file and `source` it (do NOT commit secrets).
+#   cp install.config.example install.config && edit && source install.config && python3 install.py --dry-run
+
+export SEIS_N8N_URL="https://yourco.app.n8n.cloud"      # no trailing slash
+export SEIS_N8N_API_KEY="<n8n public API key>"
+export SEIS_NOTION_TOKEN="<Notion integration token>"   # the integration must be shared with the parent page
+export SEIS_NOTION_PARENT="<Notion parent PAGE id>"     # where the Audit Ledger + Inbox DBs get created
+export SEIS_N8N_NOTION_CRED_ID="<n8n Notion OAuth2 credential id>"
+export SEIS_N8N_NOTION_CRED_NAME="Notion"               # optional display name
+
+# Optional — promotion targets (your existing portfolio + reporting tables).
+# If unset, the promotion workflows install INACTIVE and you wire them later.
+export SEIS_PMO_DB=""   # portfolio / PMO register database id
+export SEIS_DAR_DB=""   # reporting / DAR database id

@@ -25,7 +25,9 @@ Trigger → Guardian Gate → Contract Validator → Execute OR Reject
 ```
 seis/
 ├── README.md            ← you are here
-├── INSTALL.md           ← step-by-step setup on a fresh n8n + Notion
+├── install.py           ← scripted installer (provisions DBs, imports, activates, verifies)
+├── install.config.example ← copy → fill in your n8n + Notion details
+├── INSTALL.md           ← scripted + manual setup on a fresh n8n + Notion
 ├── notion-schema.md     ← the Notion databases to create (Audit Ledger, Integration Inbox)
 ├── workflows/           ← 3 import-ready n8n workflows
 │   ├── execution-fabric-property-v1.2.json   (the governed execution pipeline)
