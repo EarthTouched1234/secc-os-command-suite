@@ -1,7 +1,7 @@
 {
-  "timestamp": "2026-06-24T01:44:19.262Z",
-  "state_hash": "sha256:77606a5067fa968a3d889749184d28bd1766c9f28b1c2efa461b4dc7fe16d4b1",
-  "commit": "b84f779",
+  "timestamp": "2026-06-24T02:04:35.555Z",
+  "state_hash": "sha256:0d8d77549558409da0e4bc6ded14adc35bc5f01fd0eea05b7aed835e85e49544",
+  "commit": "a01a706",
   "system_state": {
     "phase": "Decision Execution System",
     "intelligence_level": "Level 3 - Decision Support",
@@ -25,10 +25,10 @@
     "execution_outcome_binding": "modeled"
   },
   "recent_changes": [
+    "Add client demo package (Property worked example + PMO scale-up)",
     "Inbox Promotion v1: Validated → LIE DAR (enrich existing)",
     "Inbox Promotion v1: Validated → PMO Portfolio Register",
-    "UI: page-level scroll on full-stack tabs",
-    "Execution Fabric v1.2: inline Contract Validator gate"
+    "UI: page-level scroll on full-stack tabs"
   ],
   "active_focus": {
     "primary_workstream": "Property Execution Fabric",
