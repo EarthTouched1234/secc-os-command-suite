@@ -1,6 +1,6 @@
 # Council Memory — System State Log
 
-> CIRO snapshot · 2026-06-24T01:09:56.671Z · commit `167e9b2` · `sha256:b303f43046657…`
+> CIRO snapshot · 2026-06-24T01:44:19.262Z · commit `b84f779` · `sha256:77606a5067fa9…`
 > _High-signal state of the platform now. CIRO records; it does not interpret._
 
 ## 1. Current System State
@@ -16,10 +16,10 @@ The platform is a **Decision Execution System** — Level 3 - Decision Support. 
 - `execution_outcome_binding` — **modeled**
 
 ## 3. Recently Shipped Capabilities
+- Inbox Promotion v1: Validated → LIE DAR (enrich existing)
+- Inbox Promotion v1: Validated → PMO Portfolio Register
 - UI: page-level scroll on full-stack tabs
 - Execution Fabric v1.2: inline Contract Validator gate
-- Reconcile working tree: Executive OS IA baseline
-- Add Execution Fabric v1 (Property) — importable n8n blueprint
 
 ## 4. System Loop Status
 ✅ signal  →  ✅ reasoning  →  ✅ decision  →  ✅ simulation  →  ⬜ execution  →  ⬜ feedback
