@@ -1,33 +1,30 @@
 # n8n Blueprints
 
-Importable workflow JSON. These are **artifacts, not running workflows** — none is active
-until imported into n8n and given credentials. Import: n8n → Import from File → attach the
-Notion credential in the UI (Bug 26: cross-project creds can't attach via API).
+Source-of-truth JSON for the governed execution workflows. **Deployed + active** in n8n as of
+2026-06-24 (created via API with the Notion credential attached).
 
-## Current
+## Deployed (active)
 
-| File | Workflow | Webhook |
-|------|----------|---------|
-| `execution-fabric-property-v1.2.json` | Execution Fabric v1.2 (Property + Contract Gate + Audit) | `POST /webhook/secc-os/execution-fabric` |
-| `inbox-promotion-pmo-v1.json` | Inbox Promotion (Validated → PMO) | `POST /webhook/connector/promote` |
-| `inbox-promotion-dar-v1.json` | Inbox Promotion (Validated → LIE DAR) | `POST /webhook/connector/promote-dar` |
+| File | Workflow | Live ID | Webhook |
+|------|----------|---------|---------|
+| `execution-fabric-property-v1.2.json` | Execution Fabric v1.2 (Property + Contract Gate + Audit) | `TAebEuqGJMRFmaTI` | `POST /webhook/secc-os/execution-fabric` |
+| `inbox-promotion-pmo-v1.json` | Inbox Promotion (Validated → PMO) | `WNvJCSRbIcdgdJeN` | `POST /webhook/connector/promote` |
+| `inbox-promotion-dar-v1.json` | Inbox Promotion (Validated → LIE DAR) | `UI9O6Xz6VmloJy8y` | `POST /webhook/connector/promote-dar` |
 
-## Superseded (kept intentionally — see policy)
+- Audit ledger: 🧾 Execution Fabric — Audit Log (`002cc2e2…`)
+- Notion credential: account 31 (`UQMCFpPT6IB8emgh`, key `notionOAuth2Api`)
+- Run / verify: `../demo/TIER1-RUNBOOK.md`
 
-| File | Superseded by | Difference |
-|------|---------------|-----------|
-| `execution-fabric-property-v1.json` | v1.2 | no audit, no contract gate |
-| `execution-fabric-property-v1.1.json` | v1.2 | added Notion audit; **no contract gate** |
+## Removed (2026-06-24)
+`execution-fabric-property-v1.json` and `execution-fabric-property-v1.1.json` deleted — superseded
+by v1.2 (which adds the contract validation gate). The retired live `v1` workflow
+(`sR584Aa19e1GVV7t`) was also deleted from n8n.
 
-## Deletion policy (decision, 2026-06-24)
+**Deletion gate met:** v1.2 ran live end-to-end — the Audit Log holds `D-TEST-001` (success) and
+`D-TEST-002` (REJECTED_CONTRACT_VIOLATION). v1.2 is now *proven*, not just built, so the older
+versions are pure clutter.
 
-**Keep `v1` / `v1.1` until `v1.2` has ONE clean end-to-end run in the n8n DEV project**
-(import → attach credential → fire one decision → see it gate, execute, write the audit row).
-
-Rationale: v1.2 is a functional superset, but **no version has run live yet** — so v1.2 is
-well-built, not yet *proven*. Until it runs once, v1.1 (no contract gate) is a zero-effort
-fallback to isolate whether the gate is the culprit if v1.2 misbehaves on first import. Git
-history preserves all versions regardless, so deletion is reversible.
-
-**Gate for deletion = a fact ("v1.2 ran live once"), not a feeling.** Once true, delete
-v1 + v1.1 — they become pure clutter.
+**Copies preserved (3 places):**
+- `/Users/sunni/n8n-backup-2026-06-24/retired-execution-fabric-v1/` (live export + both blueprints)
+- git history
+- tag `architecture-freeze-v1.0`
