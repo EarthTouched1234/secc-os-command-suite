@@ -175,3 +175,28 @@ Mission Control
 ```
 
 **Status: roadmap adopted, NOT deployed.** Direction unchanged; Core untouched.
+
+---
+
+# v3 — Baseline discipline + Architecture Freeze (2026-06-24)
+
+## Phase -1 — Baseline (precedes EVERY state-changing phase)
+Every phase begins with "capture current state," so any failure is one restore away.
+- **Export all current n8n workflows** (instance has 88) → dated JSON backup (rollback package)
+- **Git tag** the repo at the frozen point (`architecture-freeze-v1.0`)
+- **Config/credential inventory snapshot** (names + ids, never secrets)
+- iCloud 28-folder vault already covers doc/workflow backup; GitHub commits = version history
+- **Rule:** Phase 5 fails → restore. No phase starts without a baseline.
+
+## 🔒 Architecture Freeze v1.0
+The structural design is **LOCKED** as of 2026-06-24. From here, work is:
+> connector dev · workflow dev · report dev · testing · telemetry · recovery · industry packs
+
+**NOT** structural redesign. Every proposed new diagram must answer one question:
+**"Which production problem does this solve?"** If it doesn't, it doesn't get built.
+
+**Success metric shifts:** from *"how much did we build"* → **"how many end-to-end execution
+receipts did we produce this week."** Target effort split: **80% execution/testing/validation,
+20%** justified incremental architecture only when real operational evidence demands it.
+
+**Final gate before real-world deployment:** `PRODUCTION-READINESS-CHECKLIST.md`.
