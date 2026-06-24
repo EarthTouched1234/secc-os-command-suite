@@ -12,7 +12,10 @@
       "name": "Promote Trigger",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
-      "position": [240, 400],
+      "position": [
+        240,
+        400
+      ],
       "notes": "On-demand promotion. Add a cron trigger later if you want scheduled promotion sweeps."
     },
     {
@@ -32,7 +35,10 @@
       "name": "Query Inbox Rows",
       "type": "n8n-nodes-base.notion",
       "typeVersion": 2.2,
-      "position": [460, 400],
+      "position": [
+        460,
+        400
+      ],
       "alwaysOutputData": true,
       "notes": "Integration Inbox (Quarantine). Returns all rows; the code node filters Record Lifecycle = Validated + Entity Type = portfolio (n8n Notion select filters are unreliable — Bug 28 — so filter in code). Attach Notion credential in UI (Bug 26)."
     },
@@ -53,30 +59,43 @@
       "name": "Query Portfolio Programs",
       "type": "n8n-nodes-base.notion",
       "typeVersion": 2.2,
-      "position": [680, 400],
+      "position": [
+        680,
+        400
+      ],
       "alwaysOutputData": true,
       "notes": "PMO Portfolio Register. Used to resolve program name -> page id. Promotion UPDATES an existing program only; it never creates one. Attach Notion credential in UI."
     },
     {
       "parameters": {
         "mode": "runOnceForAllItems",
-        "jsCode": "// BUILD PMO UPDATES — promotion plan for Validated portfolio rows.\n// Reads Inbox rows + Portfolio programs (flat property_* fields; Bug 23/27).\n// Gate: only Record Lifecycle = 'Validated' AND Entity Type = 'portfolio'.\n// UPDATE-only: a row whose program name has no match in the Portfolio Register\n// is left Validated (NOT promoted, NOT created) so a human can map it.\nconst inbox = $('Query Inbox Rows').all();\nconst programs = $('Query Portfolio Programs').all();\n\n// program name (lowercased) -> page id\nconst progMap = {};\nfor (const p of programs) {\n  const name = String(p.json.property_name || '').trim().toLowerCase();\n  if (name) progMap[name] = p.json.id;\n}\n\nconst ragMap = { green: 'Green', yellow: 'Amber', red: 'Red' };\nconst today = new Date().toISOString().slice(0, 10);\nconst out = [];\n\nfor (const r of inbox) {\n  const j = r.json;\n  if (String(j.property_record_lifecycle || '') !== 'Validated') continue;\n  if (String(j.property_entity_type || '') !== 'portfolio') continue;\n\n  const program = String(j.property_program || '').trim();\n  const progPage = progMap[program.toLowerCase()];\n  if (!progPage) continue; // no matching program — leave Validated for manual mapping\n\n  const health = j.property_health_score == null ? null : Number(j.property_health_score);\n  const rag = ragMap[String(j.property_risk_level || '').toLowerCase()] || 'Amber';\n  const entityKey = String(j.property_entity_key || '');\n  const captured = String(j.property_captured_at || '');\n  const note = ('Promoted from Integration Inbox · ' + entityKey + ' · health ' + (health == null ? '?' : health) + ' · captured ' + captured).slice(0, 1999);\n\n  out.push({ json: {\n    inbox_page_id: j.id,\n    program,\n    program_page_id: progPage,\n    health_score: health,\n    rag_status: rag,\n    trajectory: String(j.property_trajectory || ''),\n    last_review: today,\n    status_note: note,\n    entity_key: entityKey,\n    promoted_at: new Date().toISOString()\n  }});\n}\n\nif (!out.length) return [{ json: { _empty: true, message: 'No Validated portfolio rows with a matching program to promote.' } }];\nreturn out;"
+        "jsCode": "// BUILD PMO UPDATES — promotion plan for Validated portfolio rows.\n// Reads Inbox rows + Portfolio programs (flat property_* fields; Bug 23/27).\n// Gate: only Record Lifecycle = 'Validated' AND Entity Type = 'portfolio'.\n// UPDATE-only: a row whose program name has no match in the Portfolio Register\n// is left Validated (NOT promoted, NOT created) so a human can map it.\nfunction __d(v){if(v==null)return '';if(typeof v==='string')return v.slice(0,10);if(typeof v==='object'){var s=v.start||(v.date&&v.date.start)||v.startDate||'';if(!s){var m=JSON.stringify(v).match(/\\d{4}-\\d{2}-\\d{2}/);if(m)s=m[0];}return String(s).slice(0,10);}return String(v).slice(0,10);}\nconst inbox = $('Query Inbox Rows').all();\nconst programs = $('Query Portfolio Programs').all();\n\n// program name (lowercased) -> page id\nconst progMap = {};\nfor (const p of programs) {\n  const name = String(p.json.property_name || '').trim().toLowerCase();\n  if (name) progMap[name] = p.json.id;\n}\n\nconst ragMap = { green: 'Green', yellow: 'Amber', red: 'Red' };\nconst today = new Date().toISOString().slice(0, 10);\nconst out = [];\n\nfor (const r of inbox) {\n  const j = r.json;\n  if (String(j.property_record_lifecycle || '') !== 'Validated') continue;\n  if (String(j.property_entity_type || '') !== 'portfolio') continue;\n\n  const program = String(j.property_program || '').trim();\n  const progPage = progMap[program.toLowerCase()];\n  if (!progPage) continue; // no matching program — leave Validated for manual mapping\n\n  const health = j.property_health_score == null ? null : Number(j.property_health_score);\n  const rag = ragMap[String(j.property_risk_level || '').toLowerCase()] || 'Amber';\n  const entityKey = String(j.property_entity_key || '');\n  const captured = __d(j.property_captured_at);\n  const note = ('Promoted from Integration Inbox · ' + entityKey + ' · health ' + (health == null ? '?' : health) + ' · captured ' + captured).slice(0, 1999);\n\n  out.push({ json: {\n    inbox_page_id: j.id,\n    program,\n    program_page_id: progPage,\n    health_score: health,\n    rag_status: rag,\n    trajectory: String(j.property_trajectory || ''),\n    last_review: today,\n    status_note: note,\n    entity_key: entityKey,\n    promoted_at: new Date().toISOString()\n  }});\n}\n\nif (!out.length) return [{ json: { _empty: true, message: 'No Validated portfolio rows with a matching program to promote.' } }];\nreturn out;"
       },
       "id": "node-build",
       "name": "Build PMO Updates",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [900, 400]
+      "position": [
+        900,
+        400
+      ]
     },
     {
       "parameters": {
         "conditions": {
-          "options": { "caseSensitive": true, "version": 2 },
+          "options": {
+            "caseSensitive": true,
+            "version": 2
+          },
           "conditions": [
             {
               "leftValue": "={{ $json._empty }}",
               "rightValue": true,
-              "operator": { "type": "boolean", "operation": "true", "singleValue": true }
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
             }
           ],
           "combinator": "and"
@@ -87,7 +106,10 @@
       "name": "Nothing to Promote?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
-      "position": [1120, 400]
+      "position": [
+        1120,
+        400
+      ]
     },
     {
       "parameters": {
@@ -99,7 +121,10 @@
       "name": "Respond — Nothing",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
-      "position": [1340, 300]
+      "position": [
+        1340,
+        300
+      ]
     },
     {
       "parameters": {
@@ -113,10 +138,22 @@
         },
         "propertiesUi": {
           "propertyValues": [
-            { "key": "Health Score|number", "numberValue": "={{ $json.health_score }}" },
-            { "key": "RAG Status|select", "selectValue": "={{ $json.rag_status }}" },
-            { "key": "Status Notes|rich_text", "textContent": "={{ $json.status_note }}" },
-            { "key": "Last Review Date|date", "date": "={{ $json.last_review }}" }
+            {
+              "key": "Health Score|number",
+              "numberValue": "={{ $json.health_score }}"
+            },
+            {
+              "key": "RAG Status|select",
+              "selectValue": "={{ $json.rag_status }}"
+            },
+            {
+              "key": "Status Notes|rich_text",
+              "textContent": "={{ $json.status_note }}"
+            },
+            {
+              "key": "Last Review Date|date",
+              "date": "={{ $json.last_review }}"
+            }
           ]
         },
         "options": {}
@@ -125,7 +162,10 @@
       "name": "Update PMO Program",
       "type": "n8n-nodes-base.notion",
       "typeVersion": 2.2,
-      "position": [1340, 480],
+      "position": [
+        1340,
+        480
+      ],
       "notes": "UPDATE existing program (matched by name). Writes Health Score + RAG + Status Notes + Last Review Date — same fields Auto-Status Sync writes. Attach Notion credential in UI."
     },
     {
@@ -140,9 +180,18 @@
         },
         "propertiesUi": {
           "propertyValues": [
-            { "key": "Record Lifecycle|select", "selectValue": "Promoted" },
-            { "key": "Promoted To|multi_select", "multiSelectValue": "PMO" },
-            { "key": "Notes|rich_text", "textContent": "={{ 'Promoted to PMO program ' + $('Build PMO Updates').item.json.program + ' @ ' + $('Build PMO Updates').item.json.promoted_at }}" }
+            {
+              "key": "Record Lifecycle|select",
+              "selectValue": "Promoted"
+            },
+            {
+              "key": "Promoted To|multi_select",
+              "multiSelectValue": "PMO"
+            },
+            {
+              "key": "Notes|rich_text",
+              "textContent": "={{ 'Promoted to PMO program ' + $('Build PMO Updates').item.json.program + ' @ ' + $('Build PMO Updates').item.json.promoted_at }}"
+            }
           ]
         },
         "options": {}
@@ -151,7 +200,10 @@
       "name": "Mark Inbox Promoted",
       "type": "n8n-nodes-base.notion",
       "typeVersion": 2.2,
-      "position": [1560, 480],
+      "position": [
+        1560,
+        480
+      ],
       "notes": "Flips the Inbox row to Promoted and stamps Promoted To = 'PMO Portfolio Register' (the lifecycle gate's exit). Reads inbox_page_id from Build PMO Updates so the pairing survives the upstream Update node. Attach Notion credential in UI."
     },
     {
@@ -164,22 +216,99 @@
       "name": "Respond — Promoted",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
-      "position": [1780, 480]
+      "position": [
+        1780,
+        480
+      ]
     }
   ],
   "connections": {
-    "Promote Trigger": { "main": [[{ "node": "Query Inbox Rows", "type": "main", "index": 0 }]] },
-    "Query Inbox Rows": { "main": [[{ "node": "Query Portfolio Programs", "type": "main", "index": 0 }]] },
-    "Query Portfolio Programs": { "main": [[{ "node": "Build PMO Updates", "type": "main", "index": 0 }]] },
-    "Build PMO Updates": { "main": [[{ "node": "Nothing to Promote?", "type": "main", "index": 0 }]] },
-    "Nothing to Promote?": {
+    "Promote Trigger": {
       "main": [
-        [{ "node": "Respond — Nothing", "type": "main", "index": 0 }],
-        [{ "node": "Update PMO Program", "type": "main", "index": 0 }]
+        [
+          {
+            "node": "Query Inbox Rows",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
-    "Update PMO Program": { "main": [[{ "node": "Mark Inbox Promoted", "type": "main", "index": 0 }]] },
-    "Mark Inbox Promoted": { "main": [[{ "node": "Respond — Promoted", "type": "main", "index": 0 }]] }
+    "Query Inbox Rows": {
+      "main": [
+        [
+          {
+            "node": "Query Portfolio Programs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Query Portfolio Programs": {
+      "main": [
+        [
+          {
+            "node": "Build PMO Updates",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build PMO Updates": {
+      "main": [
+        [
+          {
+            "node": "Nothing to Promote?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Nothing to Promote?": {
+      "main": [
+        [
+          {
+            "node": "Respond — Nothing",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update PMO Program",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update PMO Program": {
+      "main": [
+        [
+          {
+            "node": "Mark Inbox Promoted",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mark Inbox Promoted": {
+      "main": [
+        [
+          {
+            "node": "Respond — Promoted",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
   },
-  "settings": { "executionOrder": "v1" }
+  "settings": {
+    "executionOrder": "v1"
+  }
 }
