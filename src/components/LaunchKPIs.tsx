@@ -53,6 +53,7 @@ export default function LaunchKPIs() {
   const wl = kpi?.waitlist
   const dv = kpi?.divisions
   const site = kpi?.site
+  const li = kpi?.linkedin
 
   return (
     <div className="pmo-root">
@@ -72,6 +73,7 @@ export default function LaunchKPIs() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 12 }}>
             {site && <Stat value={site.pageviews} label="Pageviews" subline={`+${site.pageviews7} in 7d · ${site.uniqueSessions} sessions`} color="var(--blue)" />}
             {site && <Stat value={`${Math.min(100, site.conversionPct)}%`} label="Signup conversion" subline="signups ÷ pageviews" />}
+            {li && <Stat value={li.impressions.toLocaleString()} label="LinkedIn impressions" subline={`${li.reactions} reactions · wk ${li.weekOf} · manual`} color="var(--violet)" />}
             <Stat value={wl!.total} label="Waitlist signups" subline={`+${wl!.last7} in last 7 days`} />
             <Stat value={wl!.onboarded} label="Onboarded" subline={`${wl!.byStatus.New} new · ${wl!.byStatus.Contacted} contacted`} color="var(--green)" />
             <Stat value={wl!.enterpriseInterest} label="Enterprise interest" subline="tier-interest proxy" />

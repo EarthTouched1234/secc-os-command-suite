@@ -324,6 +324,14 @@ export interface LaunchKPIs {
     uniqueSessions: number
     conversionPct: number
   }
+  linkedin?: {
+    impressions: number
+    reactions: number
+    comments: number
+    engagementRate: number
+    weekOf: string
+    source: string
+  } | null
   divisions: {
     total: number
     green: number
