@@ -1,6 +1,6 @@
 # Council Memory — System State Log
 
-> CIRO snapshot · 2026-06-25T05:26:08.892Z · commit `d8a8384` · `sha256:42c60e3a91b35…`
+> CIRO snapshot · 2026-06-25T06:18:06.423Z · commit `714c8ac` · `sha256:60ea9f64d923a…`
 > _High-signal state of the platform now. CIRO records; it does not interpret._
 
 ## 1. Current System State
@@ -16,9 +16,9 @@ The platform is a **Decision Execution System** — Level 3 - Decision Support. 
 - `execution_outcome_binding` — **modeled**
 
 ## 3. Recently Shipped Capabilities
+- Landing v3: locked hero + 8-layer pyramid + AI Workforce
 - Add Launch KPI dashboard tab (Intelligence & Analytics)
 - Adopt SECC OS design tokens in Command Suite
-- Redesign landing page platform-first (SECC OS) + design tokens
 
 ## 4. System Loop Status
 ✅ signal  →  ✅ reasoning  →  ✅ decision  →  ✅ simulation  →  ⬜ execution  →  ⬜ feedback
