@@ -1,7 +1,7 @@
 {
-  "timestamp": "2026-06-25T17:29:02.040Z",
-  "state_hash": "sha256:632756e8330aa510a05d0e40ef90ed571b8c03f534745966734fb609c23082cd",
-  "commit": "a137ddc",
+  "timestamp": "2026-06-25T17:49:03.867Z",
+  "state_hash": "sha256:75611c0009b57624081a0f920d1ac19872e84562a361bcf41f91ede85d3a2f8a",
+  "commit": "2e4e462",
   "system_state": {
     "phase": "Decision Execution System",
     "intelligence_level": "Level 3 - Decision Support",
@@ -25,9 +25,9 @@
     "execution_outcome_binding": "modeled"
   },
   "recent_changes": [
+    "Add LinkedIn engagement to Launch KPI tab (manual weekly log)",
     "docs: add CLAUDE.public.md (sanitized architecture + system context for agents)",
-    "Instrument site analytics: first-party beacon + Launch tab cards",
-    "Refine AI Workforce: layer tags, sharper copy, truth-gate fix"
+    "Instrument site analytics: first-party beacon + Launch tab cards"
   ],
   "active_focus": {
     "primary_workstream": "Property Execution Fabric",
