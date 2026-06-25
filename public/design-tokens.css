@@ -1,0 +1,36 @@
+/* SECC OS — Design Tokens v1 (Brand Studio, approved 2026-06-25)
+   Single source of truth for color, type, spacing. Imported by static
+   landing pages and (to be adopted) the Command Suite. */
+
+:root {
+  /* Surfaces */
+  --bg-midnight: #0A0A0F;
+  --surface: #14141B;
+  --surface-elevated: #1C1C26;
+  --border: #2A2A35;
+
+  /* Brand accents */
+  --solar-gold: #E8A93C;        /* primary hero accent — one per view */
+  --solar-gold-bright: #FFC85C; /* hover / emphasis */
+  --trajectory-blue: #3B82F6;   /* secondary accent — links, data flow */
+
+  /* Status (reserved for status only, never decorative) */
+  --signal-red: #EF4444;
+  --signal-amber: #F5B43C;
+  --signal-green: #34D399;
+
+  /* Neutrals */
+  --titanium: #8B8B96;
+  --text-primary: #F5F5F7;
+  --text-secondary: #A1A1AA;
+
+  /* Type */
+  --font-display: 'Sora', system-ui, -apple-system, sans-serif;
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
+
+  /* Rhythm (8px grid) */
+  --radius: 12px;
+  --radius-sm: 8px;
+  --space: 8px;
+}

@@ -3,174 +3,264 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>SEIS v1.2 — Deterministic Execution Layer for n8n</title>
+<title>SECC OS — Enterprise Intelligence Platform</title>
+<meta name="description" content="SECC OS is an Enterprise Intelligence Platform that transforms operational data into governed decisions, automated execution, and executive visibility across business domains." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="design-tokens.css" />
 
 <style>
+* { box-sizing: border-box; }
 body {
   margin: 0;
-  font-family: Inter, Arial, sans-serif;
-  background: #0b0f17;
-  color: #e8eefc;
+  font-family: var(--font-body);
+  background: var(--bg-midnight);
+  color: var(--text-primary);
   line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
 }
-.container { max-width: 1100px; margin: 0 auto; padding: 60px 24px; }
-h1, h2, h3 { color: #ffffff; }
-.highlight { color: #6ea8fe; }
-.section { margin-bottom: 80px; }
-.card { background: #121a2a; padding: 24px; border-radius: 12px; margin-top: 20px; }
-.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+h1, h2, h3 { font-family: var(--font-display); color: var(--text-primary); line-height: 1.2; margin: 0 0 12px; }
+h1 { font-size: 48px; font-weight: 700; letter-spacing: -0.5px; }
+h2 { font-size: 30px; font-weight: 600; }
+h3 { font-size: 18px; font-weight: 600; }
+p { color: var(--text-secondary); }
+a { color: var(--trajectory-blue); text-decoration: none; }
+.container { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+.section { padding: 72px 0; border-top: 1px solid var(--border); }
+.section:first-of-type { border-top: none; }
+.lead { color: var(--text-primary); font-size: 19px; max-width: 760px; }
+.muted { color: var(--titanium); font-size: 13px; }
+
+/* Top bar */
+.nav {
+  position: sticky; top: 0; z-index: 10;
+  background: rgba(10,10,15,0.82); backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+}
+.nav .container { display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; }
+.wordmark { font-family: var(--font-display); font-weight: 700; letter-spacing: 1px; color: var(--text-primary); font-size: 18px; }
+.wordmark .os { color: var(--solar-gold); }
+.nav-links { display: flex; gap: 22px; align-items: center; }
+.nav-links a { color: var(--text-secondary); font-size: 14px; }
+.nav-links a:hover { color: var(--text-primary); }
+@media (max-width: 760px) { .nav-links a:not(.cta) { display: none; } h1 { font-size: 34px; } }
+
+/* Buttons */
 .cta {
-  display: inline-block; background: #3b82f6; color: white; padding: 14px 22px;
-  border-radius: 8px; text-decoration: none; font-weight: 600;
+  display: inline-block; background: var(--solar-gold); color: #0A0A0F;
+  padding: 13px 22px; border-radius: var(--radius-sm); font-weight: 600; font-size: 15px;
+  border: none; cursor: pointer;
 }
-.cta:hover { background: #2563eb; }
-.cta.secondary { background: transparent; border: 1px solid #3b82f6; color: #6ea8fe; margin-left: 10px; }
-.badge {
-  display: inline-block; padding: 4px 10px; border-radius: 999px;
-  background: #1f2a44; color: #6ea8fe; font-size: 12px;
+.cta:hover { background: var(--solar-gold-bright); }
+.cta.secondary { background: transparent; border: 1px solid var(--border); color: var(--text-primary); margin-left: 10px; }
+.cta.secondary:hover { border-color: var(--solar-gold); color: var(--solar-gold); }
+
+/* Tags */
+.eyebrow { display:inline-block; margin-bottom:18px; padding:5px 12px; border-radius:999px;
+  background:rgba(232,169,60,0.1); color:var(--solar-gold); font-size:12px; font-weight:600;
+  letter-spacing:0.5px; text-transform:uppercase; border:1px solid rgba(232,169,60,0.25); }
+.tagline { font-family: var(--font-display); color: var(--solar-gold); font-weight: 600; font-size: 16px; margin: 6px 0 22px; }
+
+/* Cards / grids */
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 28px; }
+.grid-3 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+.card { background: var(--surface); border: 1px solid var(--border); padding: 22px; border-radius: var(--radius); }
+.card h3 { color: var(--text-primary); }
+.card .k { font-family: var(--font-mono); color: var(--solar-gold); font-size: 13px; }
+.card.layer .num { font-family: var(--font-mono); color: var(--titanium); font-size: 12px; }
+.card.spotlight { border-color: rgba(232,169,60,0.3); background: var(--surface-elevated); }
+
+/* Architecture flow */
+.flow { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; margin-top: 28px; }
+.flow .step { display: flex; align-items: center; gap: 14px; padding: 10px 0; }
+.flow .dot { width: 10px; height: 10px; border-radius: 999px; background: var(--titanium); flex: none; }
+.flow .step.exec .dot, .flow .step.gov .dot, .flow .step.mc .dot { background: var(--solar-gold); }
+.flow .label { font-family: var(--font-mono); font-size: 14px; color: var(--text-primary); }
+.flow .note { color: var(--titanium); font-size: 12px; margin-left: auto; }
+.flow .arrow { color: var(--border); margin-left: 4px; font-family: var(--font-mono); }
+
+/* Honesty split */
+.split { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 28px; }
+@media (max-width: 640px) { .split { grid-template-columns: 1fr; } }
+.split .now { border-left: 3px solid var(--signal-green); }
+.split .road { border-left: 3px solid var(--trajectory-blue); }
+.pill { display:inline-block; font-size:11px; font-weight:600; padding:3px 9px; border-radius:999px; margin-bottom:10px; }
+.pill.now { background: rgba(52,211,153,0.12); color: var(--signal-green); }
+.pill.road { background: rgba(59,130,246,0.12); color: var(--trajectory-blue); }
+.pill.proof { background: rgba(232,169,60,0.12); color: var(--solar-gold); }
+
+/* Form */
+.form-card { max-width: 560px; }
+.form-card input, .form-card select, .form-card textarea {
+  width:100%; padding:12px; margin-bottom:10px; border-radius:var(--radius-sm);
+  background:var(--bg-midnight); color:var(--text-primary); box-sizing:border-box;
+  border:1px solid var(--border); font-family: var(--font-body); font-size: 14px;
 }
-.eyebrow { display:inline-block; margin-bottom:14px; padding:4px 10px; border-radius:999px;
-  background:#15241a; color:#34d399; font-size:12px; border:1px solid #166534; }
-.muted { opacity: 0.6; font-size: 13px; }
+.form-card input:focus, .form-card select:focus, .form-card textarea:focus { outline: none; border-color: var(--solar-gold); }
+.domains { display:flex; flex-wrap:wrap; gap:10px; margin-top:24px; }
+.domain { padding:8px 14px; border:1px solid var(--border); border-radius:999px; font-size:14px; color:var(--text-secondary); }
+.domain.proof { border-color: rgba(232,169,60,0.4); color: var(--solar-gold); }
 </style>
 </head>
 
 <body>
+
+<!-- NAV -->
+<div class="nav">
+  <div class="container">
+    <span class="wordmark">SECC <span class="os">OS</span></span>
+    <div class="nav-links">
+      <a href="#platform">Platform</a>
+      <a href="#architecture">Architecture</a>
+      <a href="#domains">Domains</a>
+      <a href="#pricing">Pricing</a>
+      <a class="cta" href="#waitlist">Early access</a>
+    </div>
+  </div>
+</div>
+
 <div class="container">
 
 <!-- HERO -->
 <div class="section">
-  <span class="eyebrow">Early access — currently in production validation</span><br/>
-  <span class="badge">Deterministic Execution Layer for n8n · part of GUARDiAN OS</span>
-  <h1>
-    SEIS v1.2<br/>
-    <span class="highlight">No Silent Failures. No Uncontrolled Automation.</span>
-  </h1>
-  <p>
-    SEIS turns n8n workflows into a governed execution system with enforced validation,
-    deterministic gating, and full auditability of every execution — success or failure.
+  <span class="eyebrow">Enterprise Intelligence Platform</span>
+  <h1>One operating system for<br/>enterprise management.</h1>
+  <p class="tagline">From manual status reporting to continuous operational intelligence.</p>
+  <p class="lead">
+    SECC OS transforms operational data into <b style="color:var(--text-primary)">governed decisions, automated execution,
+    and executive visibility</b> — across multiple business domains. Operational status updates itself
+    from connected systems, reducing manual reporting.
   </p>
-  <a class="cta" href="#waitlist">Join the early-access waitlist</a>
-  <a class="cta secondary" href="#how">See how it works</a>
+  <div style="margin-top:28px;">
+    <a class="cta" href="#waitlist">Join early access</a>
+    <a class="cta secondary" href="#architecture">See the architecture</a>
+  </div>
 </div>
 
-<!-- PROBLEM -->
-<div class="section">
-  <h2>The Problem</h2>
+<!-- PLATFORM / 7 LAYERS -->
+<div id="platform" class="section">
+  <h2>The platform, in seven layers</h2>
+  <p class="lead">SECC OS is the umbrella. SEIS and GUARDiAN are layers within it — not separate products.</p>
   <div class="grid">
-    <div class="card">Workflows execute without governance</div>
-    <div class="card">Failures occur silently or are inconsistently logged</div>
-    <div class="card">No structural validation before execution</div>
-    <div class="card">Automation scales without control</div>
+    <div class="card layer"><div class="num">01</div><h3>Executive Command</h3><p>Mission Control — executive visibility and launch authority.</p></div>
+    <div class="card layer"><div class="num">02</div><h3>Intelligence Layer</h3><p>Turns operational data into signals.</p></div>
+    <div class="card layer"><div class="num">03</div><h3>Decision Layer</h3><p>Converts signals into governed decisions.</p></div>
+    <div class="card layer spotlight"><div class="num">04 · SEIS</div><h3>Execution Layer</h3><p>Deterministic workflow execution — no silent failures, no uncontrolled automation.</p></div>
+    <div class="card layer spotlight"><div class="num">05 · GUARDiAN</div><h3>Governance Layer</h3><p>Governance, validation, and organizational command.</p></div>
+    <div class="card layer"><div class="num">06</div><h3>Analytics Layer</h3><p>KPIs, trajectory, and reporting.</p></div>
+    <div class="card layer"><div class="num">07</div><h3>Integration Layer</h3><p>Connectors and adapters into enterprise systems.</p></div>
   </div>
 </div>
 
-<!-- SOLUTION -->
-<div class="section">
-  <h2>The Solution</h2>
-  <div class="card">
-    SEIS introduces a deterministic execution pipeline that enforces validation before execution
-    and guarantees an audit record for every outcome — including rejections.
+<!-- ARCHITECTURE FLOW -->
+<div id="architecture" class="section">
+  <h2>How it works</h2>
+  <p class="lead">Operational data flows from your systems into governed decisions and back out as controlled, verified action.</p>
+  <div class="flow">
+    <div class="step"><span class="dot"></span><span class="label">Enterprise Systems</span><span class="note">source of truth</span></div>
+    <div class="arrow">↓</div>
+    <div class="step"><span class="dot"></span><span class="label">Connector Adapter</span><span class="note">Integration Layer</span></div>
+    <div class="arrow">↓</div>
+    <div class="step"><span class="dot"></span><span class="label">Normalization</span><span class="note">clean, structured</span></div>
+    <div class="arrow">↓</div>
+    <div class="step"><span class="dot"></span><span class="label">Decision Intelligence</span><span class="note">Intelligence + Decision</span></div>
+    <div class="arrow">↓</div>
+    <div class="step exec"><span class="dot"></span><span class="label">SEIS Execution</span><span class="note">deterministic</span></div>
+    <div class="arrow">↓</div>
+    <div class="step gov"><span class="dot"></span><span class="label">GUARDiAN Governance</span><span class="note">validation + control</span></div>
+    <div class="arrow">↓</div>
+    <div class="step mc"><span class="dot"></span><span class="label">Executive Mission Control</span><span class="note">visibility + authority</span></div>
   </div>
-  <div class="grid">
-    <div class="card"><b>Guardian Gate</b><br/>Risk enforcement before execution</div>
-    <div class="card"><b>Contract Validator</b><br/>Schema compliance — a hard stop, not a checker</div>
-    <div class="card"><b>Execution Engine</b><br/>Controlled runtime execution</div>
-    <div class="card"><b>Verification Layer</b><br/>Outcome validation (no false success)</div>
-    <div class="card"><b>CIRO Feedback</b><br/>Execution intelligence capture</div>
-    <div class="card"><b>Audit Ledger</b><br/>Immutable record of every run — success <i>and</i> failure</div>
-  </div>
-</div>
-
-<!-- HOW IT WORKS -->
-<div id="how" class="section">
-  <h2>How It Works</h2>
-  <div class="card">
-<pre>
-Trigger Event
-   ↓
-Guardian Gate            (risk / safety)
-   ↓
-Contract Validator       (structure — hard stop on violation)
-   ↓
-Execute OR Reject
-   ↓
-Verify Outcome
-   ↓
-CIRO Feedback
-   ↓
-Audit Ledger             (always written — even on reject)
-</pre>
-  </div>
-  <p class="muted">Two enforced gates before execution. Every path — pass or fail — terminates in the ledger.</p>
+  <p class="muted">Every path is validated and recorded. You keep exclusive launch authority over financial, architectural, and security changes.</p>
 </div>
 
 <!-- VALUE -->
 <div class="section">
-  <h2>What You Get</h2>
-  <div class="grid">
-    <div class="card">Eliminate silent workflow failures</div>
-    <div class="card">Enforce execution structure at runtime</div>
-    <div class="card">Full audit trail of all automation activity</div>
-    <div class="card">Pre-execution validation gates</div>
-    <div class="card">Production-grade workflow governance</div>
-    <div class="card">Deterministic automation behavior</div>
+  <h2>Why it's different</h2>
+  <div class="grid grid-3">
+    <div class="card"><h3>Continuous operational intelligence</h3><p>Status updates itself from connected systems, cutting manual reporting.</p></div>
+    <div class="card"><h3>You keep launch authority</h3><p>GUARDiAN governance + the Golden Rule: high-stakes changes require your authenticated approval.</p></div>
+    <div class="card"><h3>Trajectory, not just status</h3><p>Health velocity and acceleration — “amber trending up” ≠ “amber trending down.”</p></div>
+    <div class="card"><h3>Built on real standards</h3><p>PMBOK® 8th Edition principle-based governance, mapped gate by gate.</p></div>
+    <div class="card"><h3>Deterministic execution</h3><p>SEIS enforces validation before execution and records every outcome — success and failure.</p></div>
+    <div class="card"><h3>Inverted economics</h3><p>A fixed agent roster absorbs admin load. Scope scales up; cost scales down.</p></div>
   </div>
 </div>
 
-<!-- USE CASES -->
+<!-- DOMAINS -->
+<div id="domains" class="section">
+  <h2>Industry-agnostic by design</h2>
+  <p class="lead">One platform, many domains. Property Management is our live proof of capability — the reference
+    implementation that demonstrates the model — not the platform's identity.</p>
+  <div class="domains">
+    <span class="domain proof">Property Management · live proof</span>
+    <span class="domain">Construction</span>
+    <span class="domain">Healthcare</span>
+    <span class="domain">Manufacturing</span>
+    <span class="domain">Government</span>
+    <span class="domain">Finance</span>
+    <span class="domain">Technology</span>
+  </div>
+</div>
+
+<!-- HONESTY SPLIT -->
 <div class="section">
-  <h2>Built For</h2>
-  <div class="grid">
-    <div class="card">Operations automation systems</div>
-    <div class="card">Property management workflows</div>
-    <div class="card">CRM &amp; leasing pipelines</div>
-    <div class="card">AI agent execution systems</div>
-    <div class="card">Enterprise workflow governance</div>
+  <h2>What it does today — and what's next</h2>
+  <p class="lead">We say exactly what's shipped. Demos match reality.</p>
+  <div class="split">
+    <div class="card now">
+      <span class="pill now">Today</span>
+      <p style="color:var(--text-primary)">Governed decisions · deterministic workflow execution (SEIS) · governance &amp; validation (GUARDiAN) · continuous reporting · trajectory · executive visibility.</p>
+    </div>
+    <div class="card road">
+      <span class="pill road">Roadmap</span>
+      <p style="color:var(--text-primary)">Autonomous write-back into external enterprise systems — first live loop targeted within ~90 days.</p>
+    </div>
   </div>
 </div>
 
 <!-- PRICING -->
 <div id="pricing" class="section">
   <h2>Pricing <span class="muted">— at general availability</span></h2>
-  <div class="grid">
+  <div class="grid grid-3">
     <div class="card">
       <h3>SEIS Core</h3>
-      <p>$49–$149 / month</p>
-      <p>Governance + execution validation layer</p>
+      <p class="k">$49–$149 / month</p>
+      <p>Execution + governance validation for connected workflows.</p>
     </div>
     <div class="card">
       <h3>SEIS Ops</h3>
-      <p>$299–$799 / month</p>
-      <p>Full workflow enforcement + verification + audit system</p>
+      <p class="k">$299–$799 / month</p>
+      <p>Full workflow enforcement, verification, and audit system.</p>
     </div>
     <div class="card">
-      <h3>SEIS Enterprise</h3>
-      <p>$1,500+ / month</p>
-      <p>Multi-system governance, analytics, and compliance-grade audit control</p>
+      <h3>Enterprise</h3>
+      <p class="k">$1,500+ / month</p>
+      <p>Multi-system governance, analytics, and compliance-grade audit control.</p>
     </div>
   </div>
-  <p class="muted">Pricing shown for planning. Early access is invite-based while the install is hardened.</p>
+  <p class="muted">Pricing shown for planning. Early access is invite-based while the platform is hardened.</p>
 </div>
 
 <!-- WAITLIST / CTA -->
 <div id="waitlist" class="section">
-  <h2>Start With Controlled Automation</h2>
-  <p>Move from workflow execution to governed execution systems. Join the early-access list and
-     we'll onboard you as the self-serve install ships.</p>
+  <h2>Start with controlled operations</h2>
+  <p class="lead">Move from manual status reporting to continuous operational intelligence. Join early access and we'll onboard you as the self-serve install ships.</p>
 
-  <div class="card" style="max-width:560px;">
+  <div class="card form-card" style="margin-top:28px;">
     <form id="wl-form">
-      <input id="wl-email" type="email" required placeholder="Work email *" style="width:100%;padding:12px;margin-bottom:10px;border-radius:8px;background:#0b0f17;color:#e8eefc;box-sizing:border-box;border:1px solid #243049;" />
-      <input id="wl-name" type="text" placeholder="Name" style="width:100%;padding:12px;margin-bottom:10px;border-radius:8px;background:#0b0f17;color:#e8eefc;box-sizing:border-box;border:1px solid #243049;" />
-      <select id="wl-tier" style="width:100%;padding:12px;margin-bottom:10px;border-radius:8px;background:#0b0f17;color:#e8eefc;box-sizing:border-box;border:1px solid #243049;">
+      <input id="wl-email" type="email" required placeholder="Work email *" />
+      <input id="wl-name" type="text" placeholder="Name" />
+      <select id="wl-tier">
         <option value="Unsure">Which tier fits? (optional)</option>
         <option value="Core">SEIS Core</option>
         <option value="Ops">SEIS Ops</option>
-        <option value="Enterprise">SEIS Enterprise</option>
+        <option value="Enterprise">Enterprise</option>
       </select>
-      <textarea id="wl-use" rows="3" placeholder="What would you govern with SEIS? (optional)" style="width:100%;padding:12px;margin-bottom:12px;border-radius:8px;background:#0b0f17;color:#e8eefc;box-sizing:border-box;border:1px solid #243049;"></textarea>
-      <button class="cta" type="submit" id="wl-btn" style="border:none;cursor:pointer;width:100%;">Join the early-access waitlist</button>
+      <textarea id="wl-use" rows="3" placeholder="What would you govern with SECC OS? (optional)"></textarea>
+      <button class="cta" type="submit" id="wl-btn" style="width:100%;">Join early access</button>
     </form>
     <p id="wl-msg" style="margin-top:12px;display:none;"></p>
   </div>
@@ -195,12 +285,12 @@ Audit Ledger             (always written — even on reject)
       })
     }).then(function(r){ return r.json().catch(function(){ return {ok:r.ok}; }); })
       .then(function(d){
-        f.style.display='none'; msg.style.display='block'; msg.style.color='#34d399';
-        msg.textContent = (d && d.message) ? d.message : "You're on the SEIS early-access list.";
+        f.style.display='none'; msg.style.display='block'; msg.style.color='var(--signal-green)';
+        msg.textContent = (d && d.message) ? d.message : "You're on the SECC OS early-access list.";
       })
       .catch(function(){
-        btn.disabled=false; btn.textContent='Join the early-access waitlist';
-        msg.style.display='block'; msg.style.color='#f7a7c0';
+        btn.disabled=false; btn.textContent='Join early access';
+        msg.style.display='block'; msg.style.color='var(--signal-amber)';
         msg.textContent = "Couldn't submit — email admin@secc-os.com and we'll add you.";
       });
   });
@@ -208,9 +298,10 @@ Audit Ledger             (always written — even on reject)
 </script>
 
 <!-- FOOTER -->
-<div class="section">
-  <p class="muted">
-    SEIS v1.2 — Deterministic Execution Layer for n8n · a module of GUARDiAN OS
+<div class="section" style="text-align:center;">
+  <span class="wordmark">SECC <span class="os">OS</span></span>
+  <p class="muted" style="margin-top:10px;">
+    Enterprise Intelligence Platform · Execution (SEIS) + Governance (GUARDiAN) · admin@secc-os.com
   </p>
 </div>
 
