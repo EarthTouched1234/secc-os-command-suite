@@ -318,6 +318,12 @@ export interface LaunchKPIs {
     onboarded: number
     enterpriseInterest: number
   }
+  site?: {
+    pageviews: number
+    pageviews7: number
+    uniqueSessions: number
+    conversionPct: number
+  }
   divisions: {
     total: number
     green: number

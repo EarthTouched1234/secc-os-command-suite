@@ -338,6 +338,23 @@ a { color: var(--trajectory-blue); text-decoration: none; }
 })();
 </script>
 
+<!-- ANALYTICS BEACON (first-party, one pageview per session) -->
+<script>
+(function(){
+  try {
+    var KEY = 'seccos_pv';
+    if (sessionStorage.getItem(KEY)) return;
+    sessionStorage.setItem(KEY, '1');
+    var sid = localStorage.getItem('seccos_sid');
+    if (!sid) { sid = Date.now().toString(36) + Math.random().toString(36).slice(2, 8); localStorage.setItem('seccos_sid', sid); }
+    fetch('https://sunnicommandcenter.app.n8n.cloud/webhook/launch/beacon', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, keepalive: true,
+      body: JSON.stringify({ type: 'pageview', path: location.pathname, referrer: document.referrer || 'direct', session: sid })
+    }).catch(function(){});
+  } catch (e) {}
+})();
+</script>
+
 <!-- FOOTER -->
 <div class="section" style="text-align:center;">
   <span class="wordmark">SECC <span class="os">OS</span></span>
