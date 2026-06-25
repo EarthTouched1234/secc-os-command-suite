@@ -1,0 +1,31 @@
+/* SECC OS — Design Tokens v1 (Brand Studio, approved 2026-06-25)
+   Mirror of public/design-tokens.css so the React app and the static
+   landing page share one palette. Keep the two files in sync. */
+
+:root {
+  /* Surfaces */
+  --bg-midnight: #0A0A0F;
+  --surface: #14141B;
+  --surface-elevated: #1C1C26;
+  --border: #2A2A35;
+
+  /* Brand accents */
+  --solar-gold: #E8A93C;
+  --solar-gold-bright: #FFC85C;
+  --trajectory-blue: #3B82F6;
+
+  /* Status */
+  --signal-red: #EF4444;
+  --signal-amber: #F5B43C;
+  --signal-green: #34D399;
+
+  /* Neutrals */
+  --titanium: #8B8B96;
+  --text-primary: #F5F5F7;
+  --text-secondary: #A1A1AA;
+
+  /* Type */
+  --font-display: 'Sora', system-ui, -apple-system, sans-serif;
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

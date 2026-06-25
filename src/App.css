@@ -1,20 +1,23 @@
 :root {
-  --bg: #050608;
-  --panel: #10151c;
-  --panel-2: #18202b;
-  --panel-3: #19202a;
-  --line: #3a4658;
+  /* App variables re-pointed to SECC OS design tokens (see design-tokens.css).
+     Changing a token cascades across the whole Command Suite, keeping the
+     dashboard and the landing page on one palette. */
+  --bg: var(--bg-midnight);
+  --panel: var(--surface);
+  --panel-2: var(--surface-elevated);
+  --panel-3: var(--surface-elevated);
+  --line: var(--border);
   --line-bright: #475569;
-  --text: #e7edf6;
-  --muted: #bac6d8;
-  --soft: #91a0b6;
-  --gold: #f4c95d;
-  --green: #30d158;
-  --amber: #ffb020;
-  --red: #ff4d4f;
-  --blue: #62a8ff;
+  --text: var(--text-primary);
+  --muted: var(--text-secondary);
+  --soft: var(--titanium);
+  --gold: var(--solar-gold);
+  --green: var(--signal-green);
+  --amber: var(--signal-amber);
+  --red: var(--signal-red);
+  --blue: var(--trajectory-blue);
   --violet: #b58cff;
-  --font: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font: var(--font-mono);
 }
 
 *, *::before, *::after { box-sizing: border-box; }
