@@ -116,6 +116,10 @@ a { color: var(--trajectory-blue); text-decoration: none; }
   text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
 .substrate { margin-top: 24px; padding: 18px 20px; border: 1px dashed rgba(232,169,60,0.45);
   border-radius: var(--radius); background: rgba(232,169,60,0.06); color: var(--text-secondary); font-size: 15px; }
+
+/* AI workforce agent tags */
+.agent-tag { display: block; font-family: var(--font-mono); font-size: 11px; color: var(--titanium);
+  text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
 </style>
 </head>
 
@@ -199,17 +203,17 @@ a { color: var(--trajectory-blue); text-decoration: none; }
 <!-- AI WORKFORCE -->
 <div id="workforce" class="section">
   <h2>An AI workforce — governed by default.</h2>
-  <p class="lead">Specialized agents operate <i>inside</i> the system. Every action they take passes through the
-    GUARDiAN substrate before it runs, and lands in the immutable ledger after.</p>
+  <p class="lead">Specialized agents staff the pyramid. Every action passes through the GUARDiAN substrate
+    before it runs and lands in the immutable ledger after — so autonomy never means unaccountable.</p>
   <div class="grid grid-3">
-    <div class="card"><h3>Executive Officer</h3><p>Autonomously monitors cross-program health and escalates stalling initiatives directly to leadership.</p></div>
-    <div class="card"><h3>Risk Analyst</h3><p>Simulates operational exposure and flags cascading risks before they impact quarterly execution.</p></div>
-    <div class="card"><h3>Scheduler</h3><p>Dynamically sequences resources and resolves deployment conflicts across the portfolio.</p></div>
-    <div class="card spotlight"><h3>Compliance</h3><p>Gated by GUARDiAN to enforce schema, policy, and safety checks before any agent takes action.</p></div>
-    <div class="card"><h3>Automation Engineer</h3><p>Assembles and tests deterministic n8n pipelines for human review.</p></div>
-    <div class="card"><h3>Analyst</h3><p>Pulls from the immutable ledger to generate real-time metrics with zero manual assembly.</p></div>
-    <div class="card"><h3>Verifier</h3><p>Cryptographically confirms physical and digital outcomes, eliminating false success signals.</p></div>
-    <div class="card"><h3>Knowledge Officer</h3><p>Captures every execution via CIRO, turning runtime data into durable institutional memory.</p></div>
+    <div class="card"><span class="agent-tag">Strategic · Executive</span><h3>Executive Officer</h3><p>Watches cross-program health continuously and escalates stalling initiatives to leadership — every alert carrying the data trail that triggered it.</p></div>
+    <div class="card"><span class="agent-tag">Strategic · Program</span><h3>Risk Analyst</h3><p>Simulates operational exposure and flags cascading risks before they hit quarterly execution, ranked by impact.</p></div>
+    <div class="card"><span class="agent-tag">Operational · Project</span><h3>Scheduler</h3><p>Sequences resources and resolves deployment conflicts across the portfolio, proposing the plan for human approval.</p></div>
+    <div class="card spotlight"><span class="agent-tag">Substrate · GUARDiAN</span><h3>Compliance</h3><p>The governance gate — enforces schema, policy, and safety checks before any agent acts. Nothing executes without clearing it.</p></div>
+    <div class="card"><span class="agent-tag">Execution · 07 SEIS</span><h3>Automation Engineer</h3><p>Assembles and tests deterministic n8n pipelines, then routes them to a human for review. No pipeline ships ungated.</p></div>
+    <div class="card"><span class="agent-tag">Execution · Ledger</span><h3>Analyst</h3><p>Generates real-time metrics straight from the immutable ledger — zero manual assembly, every figure traceable to its source run.</p></div>
+    <div class="card"><span class="agent-tag">Execution · 08 Outcome</span><h3>Verifier</h3><p>Confirms outcomes against expected results before anything is marked done — eliminating false-success signals.</p></div>
+    <div class="card"><span class="agent-tag">Execution · 08 CIRO</span><h3>Knowledge Officer</h3><p>Captures every execution through CIRO, turning runtime data into durable institutional memory the whole system learns from.</p></div>
   </div>
 </div>
 
