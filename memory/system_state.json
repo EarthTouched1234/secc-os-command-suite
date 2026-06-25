@@ -1,7 +1,7 @@
 {
-  "timestamp": "2026-06-25T06:18:06.423Z",
-  "state_hash": "sha256:60ea9f64d923a7a13e09f2d31c9310b6e8865a048fbee44f8e890ee9d5cd8ebc",
-  "commit": "714c8ac",
+  "timestamp": "2026-06-25T09:30:39.105Z",
+  "state_hash": "sha256:c370391894fe9841e9f61cd353f59ec96d8940e2d81d60bedc0f31aca8bdb2d5",
+  "commit": "94b9865",
   "system_state": {
     "phase": "Decision Execution System",
     "intelligence_level": "Level 3 - Decision Support",
@@ -25,9 +25,9 @@
     "execution_outcome_binding": "modeled"
   },
   "recent_changes": [
+    "Refine AI Workforce: layer tags, sharper copy, truth-gate fix",
     "Landing v3: locked hero + 8-layer pyramid + AI Workforce",
-    "Add Launch KPI dashboard tab (Intelligence & Analytics)",
-    "Adopt SECC OS design tokens in Command Suite"
+    "Add Launch KPI dashboard tab (Intelligence & Analytics)"
   ],
   "active_focus": {
     "primary_workstream": "Property Execution Fabric",
