@@ -305,6 +305,42 @@ export async function fetchTrajectory(): Promise<TrajectoryMap> {
   }
 }
 
+// ── Launch KPIs (Intelligence & Analytics division) ──────────────────────────
+const LAUNCH_KPI_URL = 'https://sunnicommandcenter.app.n8n.cloud/webhook/launch/kpis'
+
+export interface LaunchKPIs {
+  generatedAt: string
+  waitlist: {
+    total: number
+    last7: number
+    byTier: { Core: number; Ops: number; Enterprise: number; Unsure: number }
+    byStatus: { New: number; Contacted: number; Onboarded: number; Declined: number }
+    onboarded: number
+    enterpriseInterest: number
+  }
+  divisions: {
+    total: number
+    green: number
+    amber: number
+    red: number
+    shipped: number
+    inProgress: number
+    blocked: number
+    avgConfidence: number
+  }
+  notInstrumented: { metric: string; reason: string }[]
+}
+
+export async function fetchLaunchKPIs(): Promise<LaunchKPIs | null> {
+  try {
+    const res = await fetchWithRetry(LAUNCH_KPI_URL, { method: 'GET' })
+    if (!res.ok) return null
+    return await res.json()
+  } catch {
+    return null
+  }
+}
+
 export async function fetchPendingActions(): Promise<ActionRecord[]> {
   try {
     const res = await fetch(PENDING_ACTIONS_URL)

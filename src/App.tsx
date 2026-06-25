@@ -24,14 +24,15 @@ import { Platform } from './components/Platform'
 import { DecisionLayer } from './components/DecisionLayer'
 import { ExecutionFabric } from './components/ExecutionFabric'
 import { Outcomes } from './components/Outcomes'
+import LaunchKPIs from './components/LaunchKPIs'
 import { useEffect } from 'react'
 import { type Edition, loadActiveEdition, saveActiveEdition, applyEditionTheme, visibleTabs, labelFor } from './editions/editions'
 import { computeMissionStatus } from './hooks/useFeed'
 import sunniLogo from './assets/sunni-pulse-mark.svg'
 import './App.css'
 
-type Tab = 'MissionControl' | 'Dashboard' | 'Execute' | 'Approve' | 'Critical' | 'Agents' | 'ChatBridge' | 'Documents' | 'Projects' | 'Tasks' | 'Connectors' | 'Inbox' | 'PMO' | 'GUARDiAN' | 'Timeline' | 'GTM' | 'Editions' | 'Platform' | 'Decisions' | 'Fabric' | 'Outcomes'
-const TABS: Tab[] = ['MissionControl', 'Dashboard', 'PMO', 'Platform', 'Decisions', 'Fabric', 'Outcomes', 'Timeline', 'GUARDiAN', 'GTM', 'ChatBridge', 'Documents', 'Projects', 'Tasks', 'Connectors', 'Execute', 'Approve', 'Critical', 'Agents', 'Inbox', 'Editions']
+type Tab = 'MissionControl' | 'Launch' | 'Dashboard' | 'Execute' | 'Approve' | 'Critical' | 'Agents' | 'ChatBridge' | 'Documents' | 'Projects' | 'Tasks' | 'Connectors' | 'Inbox' | 'PMO' | 'GUARDiAN' | 'Timeline' | 'GTM' | 'Editions' | 'Platform' | 'Decisions' | 'Fabric' | 'Outcomes'
+const TABS: Tab[] = ['MissionControl', 'Launch', 'Dashboard', 'PMO', 'Platform', 'Decisions', 'Fabric', 'Outcomes', 'Timeline', 'GUARDiAN', 'GTM', 'ChatBridge', 'Documents', 'Projects', 'Tasks', 'Connectors', 'Execute', 'Approve', 'Critical', 'Agents', 'Inbox', 'Editions']
 
 export default function App() {
   const { feed, systemExecs, loading, error, lastUpdated, refresh } = useFeed()
@@ -165,6 +166,7 @@ export default function App() {
         {activeTab === 'Agents' && <div className="cc-full-stack"><AgentFeed feed={feed} /></div>}
         {activeTab === 'ChatBridge' && <div className="cc-full-stack"><ChatBridge /></div>}
         {activeTab === 'Documents' && <div className="cc-full-stack"><Documents /></div>}
+        {activeTab === 'Launch' && <div className="cc-full-stack"><LaunchKPIs /></div>}
         {activeTab === 'PMO' && <div className="cc-full-stack"><PMODashboard active={activeTab === 'PMO'} /></div>}
         {activeTab === 'Timeline' && <div className="cc-full-stack"><MissionTimeline /></div>}
         {activeTab === 'GUARDiAN' && <div className="cc-full-stack"><GUARDiAN /></div>}
