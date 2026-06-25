@@ -102,6 +102,20 @@ a { color: var(--trajectory-blue); text-decoration: none; }
 .domains { display:flex; flex-wrap:wrap; gap:10px; margin-top:24px; }
 .domain { padding:8px 14px; border:1px solid var(--border); border-radius:999px; font-size:14px; color:var(--text-secondary); }
 .domain.proof { border-color: rgba(232,169,60,0.4); color: var(--solar-gold); }
+
+/* Hero value bullets */
+.hero-bullets { list-style: none; padding: 0; margin: 22px 0 0; max-width: 640px; }
+.hero-bullets li { position: relative; padding: 8px 0 8px 26px; color: var(--text-secondary); font-size: 16px; border-top: 1px solid var(--border); }
+.hero-bullets li:first-child { border-top: none; }
+.hero-bullets li b { color: var(--text-primary); }
+.hero-bullets li::before { content: "▸"; position: absolute; left: 4px; color: var(--solar-gold); }
+
+/* Architecture tiers + governance substrate */
+.tier { margin-top: 26px; }
+.tier-h { font-family: var(--font-display); color: var(--solar-gold); font-size: 13px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+.substrate { margin-top: 24px; padding: 18px 20px; border: 1px dashed rgba(232,169,60,0.45);
+  border-radius: var(--radius); background: rgba(232,169,60,0.06); color: var(--text-secondary); font-size: 15px; }
 </style>
 </head>
 
@@ -112,8 +126,8 @@ a { color: var(--trajectory-blue); text-decoration: none; }
   <div class="container">
     <span class="wordmark">SECC <span class="os">OS</span></span>
     <div class="nav-links">
-      <a href="#platform">Platform</a>
       <a href="#architecture">Architecture</a>
+      <a href="#workforce">AI Workforce</a>
       <a href="#domains">Domains</a>
       <a href="#pricing">Pricing</a>
       <a class="cta" href="#waitlist">Early access</a>
@@ -125,55 +139,78 @@ a { color: var(--trajectory-blue); text-decoration: none; }
 
 <!-- HERO -->
 <div class="section">
-  <span class="eyebrow">Enterprise Intelligence Platform</span>
-  <h1>One operating system for<br/>enterprise management.</h1>
-  <p class="tagline">From manual status reporting to continuous operational intelligence.</p>
+  <span class="eyebrow">Enterprise Operating System · AI-Driven Execution</span>
+  <h1>Run your organization<br/>like an operating system.</h1>
   <p class="lead">
-    SECC OS transforms operational data into <b style="color:var(--text-primary)">governed decisions, automated execution,
-    and executive visibility</b> — across multiple business domains. Operational status updates itself
-    from connected systems, reducing manual reporting.
+    <b style="color:var(--text-primary)">SECC OS is the enterprise operating system for AI-driven execution.</b>
+    We unify governance, decision intelligence, and orchestration into a single platform —
+    ensuring every automated action runs with verifiable control.
   </p>
+  <ul class="hero-bullets">
+    <li><b>Govern AI safely</b> with pre-execution gating.</li>
+    <li><b>Run complex workflows</b> on a deterministic execution engine.</li>
+    <li><b>Audit every execution</b> with a 100% immutable ledger.</li>
+  </ul>
   <div style="margin-top:28px;">
     <a class="cta" href="#waitlist">Join early access</a>
     <a class="cta secondary" href="#architecture">See the architecture</a>
   </div>
 </div>
 
-<!-- PLATFORM / 7 LAYERS -->
-<div id="platform" class="section">
-  <h2>The platform, in seven layers</h2>
-  <p class="lead">SECC OS is the umbrella. SEIS and GUARDiAN are layers within it — not separate products.</p>
-  <div class="grid">
-    <div class="card layer"><div class="num">01</div><h3>Executive Command</h3><p>Mission Control — executive visibility and launch authority.</p></div>
-    <div class="card layer"><div class="num">02</div><h3>Intelligence Layer</h3><p>Turns operational data into signals.</p></div>
-    <div class="card layer"><div class="num">03</div><h3>Decision Layer</h3><p>Converts signals into governed decisions.</p></div>
-    <div class="card layer spotlight"><div class="num">04 · SEIS</div><h3>Execution Layer</h3><p>Deterministic workflow execution — no silent failures, no uncontrolled automation.</p></div>
-    <div class="card layer spotlight"><div class="num">05 · GUARDiAN</div><h3>Governance Layer</h3><p>Governance, validation, and organizational command.</p></div>
-    <div class="card layer"><div class="num">06</div><h3>Analytics Layer</h3><p>KPIs, trajectory, and reporting.</p></div>
-    <div class="card layer"><div class="num">07</div><h3>Integration Layer</h3><p>Connectors and adapters into enterprise systems.</p></div>
+<!-- ARCHITECTURE — 8-LAYER PYRAMID -->
+<div id="architecture" class="section">
+  <h2>The product pyramid, instrumented end to end.</h2>
+  <p class="lead">Each layer is a capability of the same platform — sharing the same governance substrate,
+    decision intelligence, and audit ledger. Nothing operates outside the system.</p>
+
+  <div class="tier">
+    <div class="tier-h">Strategic Tier · Visibility</div>
+    <div class="grid">
+      <div class="card layer"><div class="num">01</div><h3>Executive</h3><p>Board &amp; leadership oversight.</p></div>
+      <div class="card layer"><div class="num">02</div><h3>Portfolio</h3><p>Cross-program alignment.</p></div>
+      <div class="card layer"><div class="num">03</div><h3>Program</h3><p>Initiative tracking.</p></div>
+    </div>
+  </div>
+
+  <div class="tier">
+    <div class="tier-h">Operational Tier · Management</div>
+    <div class="grid">
+      <div class="card layer"><div class="num">04</div><h3>Project</h3><p>Delivery &amp; resourcing.</p></div>
+      <div class="card layer"><div class="num">05</div><h3>Operational</h3><p>Day-to-day coordination.</p></div>
+    </div>
+  </div>
+
+  <div class="tier">
+    <div class="tier-h">Execution Tier · Action &amp; Audit</div>
+    <div class="grid">
+      <div class="card layer"><div class="num">06</div><h3>Decision</h3><p>Reasoning &amp; simulation.</p></div>
+      <div class="card layer spotlight"><div class="num">07 · SEIS</div><h3>Execution</h3><p>The deterministic execution engine.</p></div>
+      <div class="card layer"><div class="num">08 · CIRO</div><h3>Outcome</h3><p>Verified results &amp; feedback.</p></div>
+    </div>
+  </div>
+
+  <div class="substrate">
+    <b style="color:var(--solar-gold)">GUARDiAN — the governance substrate.</b>
+    Every layer runs on the same pre-execution gating, policy enforcement, and immutable audit ledger.
+    You keep exclusive launch authority over financial, architectural, and security changes.
   </div>
 </div>
 
-<!-- ARCHITECTURE FLOW -->
-<div id="architecture" class="section">
-  <h2>How it works</h2>
-  <p class="lead">Operational data flows from your systems into governed decisions and back out as controlled, verified action.</p>
-  <div class="flow">
-    <div class="step"><span class="dot"></span><span class="label">Enterprise Systems</span><span class="note">source of truth</span></div>
-    <div class="arrow">↓</div>
-    <div class="step"><span class="dot"></span><span class="label">Connector Adapter</span><span class="note">Integration Layer</span></div>
-    <div class="arrow">↓</div>
-    <div class="step"><span class="dot"></span><span class="label">Normalization</span><span class="note">clean, structured</span></div>
-    <div class="arrow">↓</div>
-    <div class="step"><span class="dot"></span><span class="label">Decision Intelligence</span><span class="note">Intelligence + Decision</span></div>
-    <div class="arrow">↓</div>
-    <div class="step exec"><span class="dot"></span><span class="label">SEIS Execution</span><span class="note">deterministic</span></div>
-    <div class="arrow">↓</div>
-    <div class="step gov"><span class="dot"></span><span class="label">GUARDiAN Governance</span><span class="note">validation + control</span></div>
-    <div class="arrow">↓</div>
-    <div class="step mc"><span class="dot"></span><span class="label">Executive Mission Control</span><span class="note">visibility + authority</span></div>
+<!-- AI WORKFORCE -->
+<div id="workforce" class="section">
+  <h2>An AI workforce — governed by default.</h2>
+  <p class="lead">Specialized agents operate <i>inside</i> the system. Every action they take passes through the
+    GUARDiAN substrate before it runs, and lands in the immutable ledger after.</p>
+  <div class="grid grid-3">
+    <div class="card"><h3>Executive Officer</h3><p>Autonomously monitors cross-program health and escalates stalling initiatives directly to leadership.</p></div>
+    <div class="card"><h3>Risk Analyst</h3><p>Simulates operational exposure and flags cascading risks before they impact quarterly execution.</p></div>
+    <div class="card"><h3>Scheduler</h3><p>Dynamically sequences resources and resolves deployment conflicts across the portfolio.</p></div>
+    <div class="card spotlight"><h3>Compliance</h3><p>Gated by GUARDiAN to enforce schema, policy, and safety checks before any agent takes action.</p></div>
+    <div class="card"><h3>Automation Engineer</h3><p>Assembles and tests deterministic n8n pipelines for human review.</p></div>
+    <div class="card"><h3>Analyst</h3><p>Pulls from the immutable ledger to generate real-time metrics with zero manual assembly.</p></div>
+    <div class="card"><h3>Verifier</h3><p>Cryptographically confirms physical and digital outcomes, eliminating false success signals.</p></div>
+    <div class="card"><h3>Knowledge Officer</h3><p>Captures every execution via CIRO, turning runtime data into durable institutional memory.</p></div>
   </div>
-  <p class="muted">Every path is validated and recorded. You keep exclusive launch authority over financial, architectural, and security changes.</p>
 </div>
 
 <!-- VALUE -->
