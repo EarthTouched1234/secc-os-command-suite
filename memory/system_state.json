@@ -1,7 +1,7 @@
 {
-  "timestamp": "2026-06-25T17:11:53.030Z",
-  "state_hash": "sha256:2138ce368a8138c5411517ee60e557e00389ae07dfa34a4f398150cdf7f7256d",
-  "commit": "2f22366",
+  "timestamp": "2026-06-25T17:29:02.040Z",
+  "state_hash": "sha256:632756e8330aa510a05d0e40ef90ed571b8c03f534745966734fb609c23082cd",
+  "commit": "a137ddc",
   "system_state": {
     "phase": "Decision Execution System",
     "intelligence_level": "Level 3 - Decision Support",
@@ -25,9 +25,9 @@
     "execution_outcome_binding": "modeled"
   },
   "recent_changes": [
+    "docs: add CLAUDE.public.md (sanitized architecture + system context for agents)",
     "Instrument site analytics: first-party beacon + Launch tab cards",
-    "Refine AI Workforce: layer tags, sharper copy, truth-gate fix",
-    "Landing v3: locked hero + 8-layer pyramid + AI Workforce"
+    "Refine AI Workforce: layer tags, sharper copy, truth-gate fix"
   ],
   "active_focus": {
     "primary_workstream": "Property Execution Fabric",

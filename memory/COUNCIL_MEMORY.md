@@ -1,6 +1,6 @@
 # Council Memory — System State Log
 
-> CIRO snapshot · 2026-06-25T17:11:53.030Z · commit `2f22366` · `sha256:2138ce368a813…`
+> CIRO snapshot · 2026-06-25T17:29:02.040Z · commit `a137ddc` · `sha256:632756e8330aa…`
 > _High-signal state of the platform now. CIRO records; it does not interpret._
 
 ## 1. Current System State
@@ -16,9 +16,9 @@ The platform is a **Decision Execution System** — Level 3 - Decision Support. 
 - `execution_outcome_binding` — **modeled**
 
 ## 3. Recently Shipped Capabilities
+- docs: add CLAUDE.public.md (sanitized architecture + system context for agents)
 - Instrument site analytics: first-party beacon + Launch tab cards
 - Refine AI Workforce: layer tags, sharper copy, truth-gate fix
-- Landing v3: locked hero + 8-layer pyramid + AI Workforce
 
 ## 4. System Loop Status
 ✅ signal  →  ✅ reasoning  →  ✅ decision  →  ✅ simulation  →  ⬜ execution  →  ⬜ feedback
