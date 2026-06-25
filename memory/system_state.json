@@ -1,7 +1,7 @@
 {
-  "timestamp": "2026-06-25T09:30:39.105Z",
-  "state_hash": "sha256:c370391894fe9841e9f61cd353f59ec96d8940e2d81d60bedc0f31aca8bdb2d5",
-  "commit": "94b9865",
+  "timestamp": "2026-06-25T17:11:53.030Z",
+  "state_hash": "sha256:2138ce368a8138c5411517ee60e557e00389ae07dfa34a4f398150cdf7f7256d",
+  "commit": "2f22366",
   "system_state": {
     "phase": "Decision Execution System",
     "intelligence_level": "Level 3 - Decision Support",
@@ -25,9 +25,9 @@
     "execution_outcome_binding": "modeled"
   },
   "recent_changes": [
+    "Instrument site analytics: first-party beacon + Launch tab cards",
     "Refine AI Workforce: layer tags, sharper copy, truth-gate fix",
-    "Landing v3: locked hero + 8-layer pyramid + AI Workforce",
-    "Add Launch KPI dashboard tab (Intelligence & Analytics)"
+    "Landing v3: locked hero + 8-layer pyramid + AI Workforce"
   ],
   "active_focus": {
     "primary_workstream": "Property Execution Fabric",
