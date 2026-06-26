@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { fetchWithRetry, syncPortfolioStatus, snapshotPortfolio, fetchTrajectory, runFinancialSentinel, type TrajectoryMap, type TrajectoryDirection, type AccelDirection, type SentinelAlert } from '../api/n8n'
 import { PMOGateGuide, GATE_LOOKUP } from './PMOGateGuide'
+import { PmoKpiSlot } from './PmoKpiSlot'
 
 const PMO_PORTFOLIO_URL = 'https://sunnicommandcenter.app.n8n.cloud/webhook/pmo/portfolio'
 
@@ -205,6 +206,9 @@ export function PMODashboard({ active }: Props) {
           </button>
         </div>
       </div>
+
+      {/* VSS proving slice — truth-layer KPI panel on the live Portfolio API */}
+      <PmoKpiSlot />
 
       {error && <div className="pmo-error">{error}</div>}
 

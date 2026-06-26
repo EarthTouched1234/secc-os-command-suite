@@ -3053,3 +3053,27 @@ button, input { font: inherit; }
 .cb-line.cb-horhanis { background: rgba(244, 201, 93, 0.045); border-left: 2px solid rgba(244, 201, 93, 0.35); }
 .cb-line.cb-deep     { background: rgba(244, 201, 93, 0.07); }
 .cb-line.cb-thinking { background: transparent; border-left: none; }
+
+/* ── VSS proving slice — truth-layer KPI panel ── */
+.vss-slot {
+  border: 1px solid #2a2d36; border-radius: 12px;
+  background: var(--panel-2, #14161d);
+  padding: 16px 18px; margin: 14px 0 18px;
+}
+.vss-slot.vss-muted { color: var(--muted, #8a8f98); font-size: 13px; }
+.vss-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+.vss-title { font-family: var(--font-display, sans-serif); font-weight: 600; font-size: 14px; color: var(--text, #e8eaed); }
+.vss-badge {
+  font-family: var(--font-mono, monospace); font-size: 11px; font-weight: 700; letter-spacing: 0.05em;
+  border: 1px solid; border-radius: 999px; padding: 3px 10px; white-space: nowrap;
+}
+.vss-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); gap: 10px; }
+.vss-kpi {
+  background: var(--bg, #0a0b0f); border: 1px solid #23262e; border-radius: 8px;
+  padding: 12px 10px; text-align: center;
+}
+.vss-kpi .n { font-family: var(--font-display, sans-serif); font-weight: 700; font-size: 24px; color: var(--solar-gold, #f4c95d); }
+.vss-kpi .l { font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted, #8a8f98); margin-top: 4px; }
+.vss-foot { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 12px; }
+.vss-slots { font-family: var(--font-mono, monospace); font-size: 11px; color: var(--solar-gold, #f4c95d); }
+.vss-note { font-size: 11px; color: var(--muted, #8a8f98); }
