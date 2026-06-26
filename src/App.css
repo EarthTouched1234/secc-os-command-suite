@@ -3045,3 +3045,11 @@ button, input { font: inherit; }
   .cb-modal-body { padding: 20px; font-size: 15px; }
   .cb-modal-inner { width: 96vw; }
 }
+
+/* ── Document-feed styling: per-role message backgrounds (intelligence-log feel) ── */
+.cb-line { padding: 9px 12px; border-radius: 8px; }
+.cb-line.cb-system   { background: rgba(255, 255, 255, 0.022); }
+.cb-line.cb-user     { background: rgba(98, 168, 255, 0.06); }
+.cb-line.cb-horhanis { background: rgba(244, 201, 93, 0.045); border-left: 2px solid rgba(244, 201, 93, 0.35); }
+.cb-line.cb-deep     { background: rgba(244, 201, 93, 0.07); }
+.cb-line.cb-thinking { background: transparent; border-left: none; }
