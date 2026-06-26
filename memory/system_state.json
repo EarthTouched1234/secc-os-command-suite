@@ -1,7 +1,7 @@
 {
-  "timestamp": "2026-06-26T15:48:11.185Z",
-  "state_hash": "sha256:0ca663f568d9d4c5e3d406c2d20e6dc6566c132111a2de38a8cbaa15f7d49893",
-  "commit": "ba9f081",
+  "timestamp": "2026-06-26T15:50:36.405Z",
+  "state_hash": "sha256:1f798f0793312c12c5ad379673bedc168abd1cac7f1511bc0a801451f203b3d4",
+  "commit": "4cc84e7",
   "system_state": {
     "phase": "Decision Execution System",
     "intelligence_level": "Level 3 - Decision Support",
@@ -25,9 +25,9 @@
     "execution_outcome_binding": "modeled"
   },
   "recent_changes": [
+    "fix(vss): honor resolver — INFERRED renders text-only, no zero-KPI authority",
     "feat(vss): PMO KPI proving slice — truth-layer panel on live Portfolio API",
-    "feat(chatbridge): export-to-PDF in reader + document-feed message styling",
-    "feat(chatbridge): full-screen reading view for messages (P1 readability fix)"
+    "feat(chatbridge): export-to-PDF in reader + document-feed message styling"
   ],
   "active_focus": {
     "primary_workstream": "Property Execution Fabric",
