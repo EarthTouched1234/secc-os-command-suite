@@ -1,7 +1,7 @@
 {
-  "timestamp": "2026-06-26T14:16:30.121Z",
-  "state_hash": "sha256:4ab96e017e3858658727a8586a2f5823f7a05a3ef7adf662902bc8fae3ac305a",
-  "commit": "cebc68f",
+  "timestamp": "2026-06-26T14:44:03.113Z",
+  "state_hash": "sha256:fab98fd3771b44c6619553a8001f1c41c0bcf43a47e39c94451f6b716296fa3f",
+  "commit": "28f1fb3",
   "system_state": {
     "phase": "Decision Execution System",
     "intelligence_level": "Level 3 - Decision Support",
@@ -25,10 +25,9 @@
     "execution_outcome_binding": "modeled"
   },
   "recent_changes": [
+    "feat(chatbridge): full-screen reading view for messages (P1 readability fix)",
     "fix(landing): correct 3 overclaims per claims audit",
-    "feat(landing): reposition to Enterprise Intelligence Platform (flagship)",
-    "feat(seis-landing): add Book-a-Flight-Deck-Demo CTA → Revenue Engine pipeline",
-    "chore: gitignore .claude/ to prevent local secrets (N8N_API_KEY) leaking on public repo"
+    "feat(landing): reposition to Enterprise Intelligence Platform (flagship)"
   ],
   "active_focus": {
     "primary_workstream": "Property Execution Fabric",
