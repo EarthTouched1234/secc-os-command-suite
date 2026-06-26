@@ -3011,3 +3011,37 @@ button, input { font: inherit; }
 .mc-title-group { display: flex; align-items: center; gap: 10px; }
 .mc-data-badge { font-size: 9px; font-weight: 700; letter-spacing: 0.08em; color: #22c55e;
   border: 1px solid #22c55e44; background: #0c1a0f; border-radius: 4px; padding: 2px 7px; }
+
+/* ── ChatBridge full-screen reading view (P1 readability fix) ── */
+.cb-action-expand { font-weight: 600; }
+.cb-modal {
+  position: fixed; inset: 0; z-index: 1000;
+  background: rgba(5, 6, 8, 0.92);
+  -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
+  display: flex; justify-content: center;
+  overflow-y: auto; padding: 4vh 16px;
+}
+.cb-modal-inner {
+  width: min(900px, 94vw); height: fit-content; margin: auto 0;
+  background: var(--panel-2, #14161d);
+  border: 1px solid rgba(244, 201, 93, 0.28);
+  border-radius: 12px; box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+}
+.cb-modal-bar {
+  position: sticky; top: 0; z-index: 1;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 14px 20px; border-bottom: 1px solid rgba(255,255,255,0.08);
+  background: var(--panel-2, #14161d); border-radius: 12px 12px 0 0;
+}
+.cb-modal-title { font-family: var(--font-mono, monospace); font-size: 12px;
+  letter-spacing: 0.5px; color: var(--gold, #f4c95d); }
+.cb-modal-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.cb-modal-close { border-color: rgba(255,107,107,0.5) !important; color: #ff6b6b !important; }
+.cb-modal-body {
+  padding: 28px 32px; font-size: 16px; line-height: 1.7;
+  color: var(--text, #e8eaed); white-space: pre-wrap; word-break: break-word;
+}
+@media (max-width: 640px) {
+  .cb-modal-body { padding: 20px; font-size: 15px; }
+  .cb-modal-inner { width: 96vw; }
+}

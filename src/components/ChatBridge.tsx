@@ -184,6 +184,7 @@ export function ChatBridge() {
   const [sid] = useState(sessionId)
   const [mode, setMode] = useState<'standard' | 'lite'>('standard')
   const [copied, setCopied] = useState<number | null>(null)
+  const [expanded, setExpanded] = useState<Message | null>(null)
   const [elapsed, setElapsed] = useState(0)
   const elapsedRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const bottomRef = useRef<HTMLDivElement>(null)
@@ -222,6 +223,14 @@ export function ChatBridge() {
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages, thinking])
+
+  // Esc closes the full-screen reading view
+  useEffect(() => {
+    if (!expanded) return
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setExpanded(null) }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [expanded])
 
   // Real-time context detection as user types
   function onInputChange(text: string) {
@@ -457,6 +466,13 @@ export function ChatBridge() {
                     >
                       ⊕ save
                     </button>
+                    <button
+                      className="cb-action-btn cb-action-expand"
+                      onClick={e => { e.stopPropagation(); setExpanded(m) }}
+                      title="Expand to full screen (Esc to close)"
+                    >
+                      ⤢ expand
+                    </button>
                     {m.sla && (() => {
                       const { status, elapsedMs, targetMs } = m.sla
                       const color = status === 'met' ? '#30d158' : status === 'warning' ? '#ffb020' : '#ff453a'
@@ -500,6 +516,26 @@ export function ChatBridge() {
         )}
         <div ref={bottomRef} />
       </div>
+
+      {/* Full-screen reading view */}
+      {expanded && (
+        <div className="cb-modal" onClick={() => setExpanded(null)}>
+          <div className="cb-modal-inner" onClick={e => e.stopPropagation()}>
+            <div className="cb-modal-bar">
+              <span className="cb-modal-title">
+                {expanded.role === 'horhanis' ? `HORHANiS${expanded.turn ? ` #${expanded.turn}` : ''}` : expanded.role.toUpperCase()} · {fmt(expanded.ts)}
+              </span>
+              <div className="cb-modal-actions">
+                <button className="cb-action-btn" onClick={() => copyText(expanded.text, -1)}>{copied === -1 ? '✓ copied' : '⎘ copy'}</button>
+                <button className="cb-action-btn" onClick={() => saveToDoc(expanded.text, expanded.ts)}>⊕ save</button>
+                <button className="cb-action-btn" onClick={() => speak(expanded.text)}>▶ audio</button>
+                <button className="cb-action-btn cb-modal-close" onClick={() => setExpanded(null)}>✕ close</button>
+              </div>
+            </div>
+            <div className="cb-modal-body">{expanded.text}</div>
+          </div>
+        </div>
+      )}
 
       {/* Input bar */}
       <div className="cb-input-row" style={{ borderTopColor: displayCtx.color + '55', background: displayCtx.color + '06' }}>
