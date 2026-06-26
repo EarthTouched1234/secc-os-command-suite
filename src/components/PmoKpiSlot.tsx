@@ -77,6 +77,9 @@ export function PmoKpiSlot() {
   const badge = getTruthBadge(output.sourceState)
   const slots = resolveSlots(output)
   const m = output.metrics!
+  // Doctrine: KPIs render ONLY if the resolver earned a KPI_panel slot.
+  // INFERRED → resolver returns [] → no authority rendered (text-only).
+  const hasKpi = slots.some(s => s.type === 'KPI_panel')
 
   return (
     <div className="vss-slot" style={{ borderColor: badge.color + '44' }}>
@@ -90,15 +93,22 @@ export function PmoKpiSlot() {
           ● {badge.label} · {Math.round(output.confidence * 100)}%
         </span>
       </div>
-      <div className="vss-kpis">
-        <div className="vss-kpi"><div className="n">{m.programs}</div><div className="l">Programs</div></div>
-        <div className="vss-kpi"><div className="n">{m.avgHealth}</div><div className="l">Avg health</div></div>
-        <div className="vss-kpi"><div className="n" style={{ color: '#30d158' }}>{m.green}</div><div className="l">Green</div></div>
-        <div className="vss-kpi"><div className="n" style={{ color: '#ff453a' }}>{m.red}</div><div className="l">Red</div></div>
-        <div className="vss-kpi"><div className="n" style={{ color: '#ffb020' }}>{m.atRisk}</div><div className="l">At risk</div></div>
-      </div>
+      {hasKpi ? (
+        <div className="vss-kpis">
+          <div className="vss-kpi"><div className="n">{m.programs}</div><div className="l">Programs</div></div>
+          <div className="vss-kpi"><div className="n">{m.avgHealth}</div><div className="l">Avg health</div></div>
+          <div className="vss-kpi"><div className="n" style={{ color: '#30d158' }}>{m.green}</div><div className="l">Green</div></div>
+          <div className="vss-kpi"><div className="n" style={{ color: '#ff453a' }}>{m.red}</div><div className="l">Red</div></div>
+          <div className="vss-kpi"><div className="n" style={{ color: '#ffb020' }}>{m.atRisk}</div><div className="l">At risk</div></div>
+        </div>
+      ) : (
+        <div className="vss-textonly">
+          {m.programs} programs tracked, but health isn't scored yet — KPIs withheld.
+          The truth-layer won't render authority it can't source. Run the PMO RAG Scorer to populate health, then this panel earns its KPI slot.
+        </div>
+      )}
       <div className="vss-foot">
-        <span className="vss-slots">resolver → {slots.map(s => s.type).join(' · ') || 'text-only'}</span>
+        <span className="vss-slots">resolver → {slots.map(s => s.type).join(' · ') || 'text-only (INFERRED)'}</span>
         <span className="vss-note">{badge.note}</span>
       </div>
     </div>
