@@ -12,6 +12,9 @@ dist
 dist-ssr
 *.local
 
+# Claude Code local config (contains secrets like N8N_API_KEY — never commit on a public repo)
+.claude/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
