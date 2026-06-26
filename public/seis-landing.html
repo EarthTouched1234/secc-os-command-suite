@@ -156,8 +156,8 @@ a { color: var(--trajectory-blue); text-decoration: none; }
     <li><b>Audit every execution</b> with a 100% immutable ledger.</li>
   </ul>
   <div style="margin-top:28px;">
-    <a class="cta" href="#waitlist">Join early access</a>
-    <a class="cta secondary" href="#architecture">See the architecture</a>
+    <a class="cta" href="#demo">Book a Flight Deck demo</a>
+    <a class="cta secondary" href="#waitlist">Join early access</a>
   </div>
 </div>
 
@@ -285,25 +285,46 @@ a { color: var(--trajectory-blue); text-decoration: none; }
   <p class="muted">Pricing shown for planning. Early access is invite-based while the platform is hardened.</p>
 </div>
 
-<!-- WAITLIST / CTA -->
+<!-- DEMO + WAITLIST / CTA -->
 <div id="waitlist" class="section">
-  <h2>Start with controlled operations</h2>
-  <p class="lead">Move from manual status reporting to continuous operational intelligence. Join early access and we'll onboard you as the self-serve install ships.</p>
+  <h2>Take command</h2>
+  <p class="lead">Two ways in: book a Flight Deck demo to see it run against your programs, or join early access for the self-serve install.</p>
 
-  <div class="card form-card" style="margin-top:28px;">
-    <form id="wl-form">
-      <input id="wl-email" type="email" required placeholder="Work email *" />
-      <input id="wl-name" type="text" placeholder="Name" />
-      <select id="wl-tier">
-        <option value="Unsure">Which tier fits? (optional)</option>
-        <option value="Core">SEIS Core</option>
-        <option value="Ops">SEIS Ops</option>
-        <option value="Enterprise">Enterprise</option>
-      </select>
-      <textarea id="wl-use" rows="3" placeholder="What would you govern with SECC OS? (optional)"></textarea>
-      <button class="cta" type="submit" id="wl-btn" style="width:100%;">Join early access</button>
-    </form>
-    <p id="wl-msg" style="margin-top:12px;display:none;"></p>
+  <div class="cta-grid" style="margin-top:28px;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;">
+
+    <!-- DEMO CARD → Revenue Engine pipeline -->
+    <div class="card form-card" id="demo">
+      <h3 style="margin-top:0;">Book a Flight Deck demo</h3>
+      <p class="muted">For PMO and operations leaders evaluating GUARDiAN PMO Command. We map it to your programs and follow up directly.</p>
+      <form id="demo-form">
+        <input id="dm-name" type="text" required placeholder="Name *" />
+        <input id="dm-email" type="email" required placeholder="Work email *" />
+        <input id="dm-company" type="text" placeholder="Company / organization" />
+        <textarea id="dm-note" rows="3" placeholder="What would you put under command? (optional)"></textarea>
+        <button class="cta" type="submit" id="dm-btn" style="width:100%;">Book a Flight Deck demo</button>
+      </form>
+      <p id="dm-msg" style="margin-top:12px;display:none;"></p>
+    </div>
+
+    <!-- EARLY ACCESS CARD → waitlist -->
+    <div class="card form-card">
+      <h3 style="margin-top:0;">Join early access</h3>
+      <p class="muted">Get onboarded as the self-serve install ships.</p>
+      <form id="wl-form">
+        <input id="wl-email" type="email" required placeholder="Work email *" />
+        <input id="wl-name" type="text" placeholder="Name" />
+        <select id="wl-tier">
+          <option value="Unsure">Which tier fits? (optional)</option>
+          <option value="Core">SEIS Core</option>
+          <option value="Ops">SEIS Ops</option>
+          <option value="Enterprise">Enterprise</option>
+        </select>
+        <textarea id="wl-use" rows="3" placeholder="What would you govern with SECC OS? (optional)"></textarea>
+        <button class="cta" type="submit" id="wl-btn" style="width:100%;">Join early access</button>
+      </form>
+      <p id="wl-msg" style="margin-top:12px;display:none;"></p>
+    </div>
+
   </div>
 </div>
 
@@ -333,6 +354,42 @@ a { color: var(--trajectory-blue); text-decoration: none; }
         btn.disabled=false; btn.textContent='Join early access';
         msg.style.display='block'; msg.style.color='var(--signal-amber)';
         msg.textContent = "Couldn't submit — email admin@secc-os.com and we'll add you.";
+      });
+  });
+})();
+</script>
+
+<!-- DEMO FORM → Revenue Engine Lead Intake (full sales pipeline) -->
+<script>
+(function(){
+  var ENDPOINT = "https://sunnicommandcenter.app.n8n.cloud/webhook/revenue/lead-intake";
+  var f = document.getElementById('demo-form'), msg = document.getElementById('dm-msg'), btn = document.getElementById('dm-btn');
+  if(!f) return;
+  f.addEventListener('submit', function(e){
+    e.preventDefault();
+    var name = document.getElementById('dm-name').value.trim();
+    var email = document.getElementById('dm-email').value.trim();
+    if(!name || !email){ return; }
+    btn.disabled = true; btn.textContent = 'Sending…';
+    fetch(ENDPOINT, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        name: name,
+        email: email,
+        company: document.getElementById('dm-company').value.trim(),
+        industry: '',
+        source: 'SEIS Landing — Flight Deck Demo',
+        notes: document.getElementById('dm-note').value.trim() || 'Flight Deck demo request from SEIS landing page.'
+      })
+    }).then(function(r){ return r.json().catch(function(){ return {ok:r.ok}; }); })
+      .then(function(){
+        f.style.display='none'; msg.style.display='block'; msg.style.color='var(--signal-green)';
+        msg.textContent = "Request received. We'll reach out to schedule your Flight Deck demo.";
+      })
+      .catch(function(){
+        btn.disabled=false; btn.textContent='Book a Flight Deck demo';
+        msg.style.display='block'; msg.style.color='var(--signal-amber)';
+        msg.textContent = "Couldn't submit — email admin@secc-os.com and we'll set it up.";
       });
   });
 })();
