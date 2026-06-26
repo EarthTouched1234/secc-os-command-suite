@@ -1,7 +1,7 @@
 {
-  "timestamp": "2026-06-25T17:49:03.867Z",
-  "state_hash": "sha256:75611c0009b57624081a0f920d1ac19872e84562a361bcf41f91ede85d3a2f8a",
-  "commit": "2e4e462",
+  "timestamp": "2026-06-26T12:58:47.477Z",
+  "state_hash": "sha256:804de9020d46893ba9fd03c8606603b855f1fa0f5bbdf8a46175c47a19c192e6",
+  "commit": "7c456d2",
   "system_state": {
     "phase": "Decision Execution System",
     "intelligence_level": "Level 3 - Decision Support",
@@ -25,9 +25,10 @@
     "execution_outcome_binding": "modeled"
   },
   "recent_changes": [
+    "feat(seis-landing): add Book-a-Flight-Deck-Demo CTA → Revenue Engine pipeline",
+    "chore: gitignore .claude/ to prevent local secrets (N8N_API_KEY) leaking on public repo",
     "Add LinkedIn engagement to Launch KPI tab (manual weekly log)",
-    "docs: add CLAUDE.public.md (sanitized architecture + system context for agents)",
-    "Instrument site analytics: first-party beacon + Launch tab cards"
+    "docs: add CLAUDE.public.md (sanitized architecture + system context for agents)"
   ],
   "active_focus": {
     "primary_workstream": "Property Execution Fabric",
