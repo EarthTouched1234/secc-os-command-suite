@@ -1,7 +1,7 @@
 {
-  "timestamp": "2026-06-26T14:00:05.250Z",
-  "state_hash": "sha256:769ef9445f27db55f60ec1d0ee85095ca13b0750412803e7867882b99445b1a2",
-  "commit": "46d42b0",
+  "timestamp": "2026-06-26T14:16:30.121Z",
+  "state_hash": "sha256:4ab96e017e3858658727a8586a2f5823f7a05a3ef7adf662902bc8fae3ac305a",
+  "commit": "cebc68f",
   "system_state": {
     "phase": "Decision Execution System",
     "intelligence_level": "Level 3 - Decision Support",
@@ -25,10 +25,10 @@
     "execution_outcome_binding": "modeled"
   },
   "recent_changes": [
+    "fix(landing): correct 3 overclaims per claims audit",
     "feat(landing): reposition to Enterprise Intelligence Platform (flagship)",
     "feat(seis-landing): add Book-a-Flight-Deck-Demo CTA → Revenue Engine pipeline",
-    "chore: gitignore .claude/ to prevent local secrets (N8N_API_KEY) leaking on public repo",
-    "Add LinkedIn engagement to Launch KPI tab (manual weekly log)"
+    "chore: gitignore .claude/ to prevent local secrets (N8N_API_KEY) leaking on public repo"
   ],
   "active_focus": {
     "primary_workstream": "Property Execution Fabric",
