@@ -1,6 +1,6 @@
 # Council Memory — System State Log
 
-> CIRO snapshot · 2026-06-26T14:50:00.752Z · commit `3b9686a` · `sha256:df9eb9a7cb57b…`
+> CIRO snapshot · 2026-06-26T15:48:11.185Z · commit `ba9f081` · `sha256:0ca663f568d9d…`
 > _High-signal state of the platform now. CIRO records; it does not interpret._
 
 ## 1. Current System State
@@ -16,9 +16,9 @@ The platform is a **Decision Execution System** — Level 3 - Decision Support. 
 - `execution_outcome_binding` — **modeled**
 
 ## 3. Recently Shipped Capabilities
+- feat(vss): PMO KPI proving slice — truth-layer panel on live Portfolio API
 - feat(chatbridge): export-to-PDF in reader + document-feed message styling
 - feat(chatbridge): full-screen reading view for messages (P1 readability fix)
-- fix(landing): correct 3 overclaims per claims audit
 
 ## 4. System Loop Status
 ✅ signal  →  ✅ reasoning  →  ✅ decision  →  ✅ simulation  →  ⬜ execution  →  ⬜ feedback
