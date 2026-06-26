@@ -120,6 +120,36 @@ a { color: var(--trajectory-blue); text-decoration: none; }
 /* AI workforce agent tags */
 .agent-tag { display: block; font-family: var(--font-mono); font-size: 11px; color: var(--titanium);
   text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+
+/* Mission Control mock */
+.mc { background: var(--surface-elevated); border: 1px solid rgba(232,169,60,0.25); border-radius: var(--radius); padding: 24px; margin-top: 28px; }
+.mc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px,1fr)); gap: 12px; }
+.mc-kpi { background: var(--bg-midnight); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px; }
+.mc-kpi .n { font-family: var(--font-display); font-size: 26px; font-weight: 700; color: var(--solar-gold); }
+.mc-kpi .n.green { color: var(--signal-green); } .mc-kpi .n.blue { color: var(--trajectory-blue); } .mc-kpi .n.red { color: var(--signal-red); }
+.mc-kpi .l { font-size: 11px; color: var(--titanium); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; }
+.mc-heat { display: flex; gap: 5px; margin-top: 14px; flex-wrap: wrap; }
+.mc-cell { width: 22px; height: 22px; border-radius: 3px; }
+.mc-cap { font-family: var(--font-mono); font-size: 11px; color: var(--titanium); margin-top: 12px; }
+
+/* Checklist (PMO / Reports) */
+.check { list-style: none; padding: 0; margin: 24px 0 0; columns: 2; column-gap: 28px; }
+@media (max-width: 640px){ .check { columns: 1; } }
+.check li { break-inside: avoid; padding: 7px 0 7px 26px; position: relative; color: var(--text-secondary); }
+.check li::before { content: "✓"; position: absolute; left: 0; color: var(--signal-green); font-weight: 700; }
+
+/* Industry packs */
+.packs { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px,1fr)); gap: 12px; margin-top: 28px; }
+.pack { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px; }
+.pack.proof { border-color: rgba(232,169,60,0.4); }
+.pack .ico { font-size: 22px; } .pack h3 { font-size: 15px; margin: 8px 0 2px; }
+.pack .s { font-size: 11px; color: var(--titanium); font-family: var(--font-mono); }
+.pack.proof .s { color: var(--solar-gold); }
+
+/* Footer powered-by */
+.powered { display:flex; flex-wrap:wrap; gap:10px 18px; justify-content:center; margin-top:14px; }
+.powered span { font-family: var(--font-mono); font-size: 12px; color: var(--titanium); }
+.powered b { color: var(--solar-gold); font-weight: 600; }
 </style>
 </head>
 
@@ -130,11 +160,12 @@ a { color: var(--trajectory-blue); text-decoration: none; }
   <div class="container">
     <span class="wordmark">SECC <span class="os">OS</span></span>
     <div class="nav-links">
-      <a href="#architecture">Architecture</a>
+      <a href="#mission-control">Mission Control</a>
       <a href="#workforce">AI Workforce</a>
-      <a href="#domains">Domains</a>
-      <a href="#pricing">Pricing</a>
-      <a class="cta" href="#waitlist">Early access</a>
+      <a href="#pmo">Enterprise PMO</a>
+      <a href="#industries">Industries</a>
+      <a href="#architecture">Architecture</a>
+      <a class="cta" href="#demo">Book a demo</a>
     </div>
   </div>
 </div>
@@ -143,21 +174,73 @@ a { color: var(--trajectory-blue); text-decoration: none; }
 
 <!-- HERO -->
 <div class="section">
-  <span class="eyebrow">Enterprise Operating System · AI-Driven Execution</span>
-  <h1>Run your organization<br/>like an operating system.</h1>
+  <span class="eyebrow">Enterprise Intelligence Platform</span>
+  <h1>Transform every workflow<br/>into executive intelligence.</h1>
   <p class="lead">
-    <b style="color:var(--text-primary)">SECC OS is the enterprise operating system for AI-driven execution.</b>
-    We unify governance, decision intelligence, and orchestration into a single platform —
-    ensuring every automated action runs with verifiable control.
+    Not just automation. Not just AI. <b style="color:var(--text-primary)">A governed operating system that plans,
+    executes, verifies, reports, and continuously improves every business process</b> — built for enterprises
+    that require intelligence, accountability, and execution.
   </p>
   <ul class="hero-bullets">
-    <li><b>Govern AI safely</b> with pre-execution gating.</li>
-    <li><b>Run complex workflows</b> on a deterministic execution engine.</li>
-    <li><b>Audit every execution</b> with a 100% immutable ledger.</li>
+    <li><b>See your whole portfolio</b> — every project, agent, and KPI on one Mission Control screen.</li>
+    <li><b>Run an AI workforce</b> that's governed by default — nothing executes without clearing the gate.</li>
+    <li><b>Audit every execution</b> on a 100% immutable ledger. You keep the launch key.</li>
   </ul>
   <div style="margin-top:28px;">
-    <a class="cta" href="#demo">Book a Flight Deck demo</a>
-    <a class="cta secondary" href="#waitlist">Join early access</a>
+    <a class="cta" href="#demo">Book a demo</a>
+    <a class="cta secondary" href="#waitlist">Request early access</a>
+  </div>
+</div>
+
+<!-- THE EXECUTIVE PROBLEM -->
+<div class="section">
+  <h2>Data exists everywhere. Intelligence exists nowhere.</h2>
+  <p class="lead">Your work is fragmented across email, spreadsheets, CRMs, ERPs, PM tools, documents, meetings,
+    and tribal knowledge. Teams spend more time hunting for information than making decisions — and by the time
+    a number reaches someone who can act on it, it's already a week old and three guesses deep.</p>
+</div>
+
+<!-- ONE PLATFORM, MANY ENGINES -->
+<div class="section">
+  <h2>One platform. Many intelligence engines.</h2>
+  <p class="lead">Every layer of your organization, instrumented — and feeding the next. SEIS is the execution
+    engine underneath it all, not the product you buy.</p>
+  <div class="flow">
+    <div class="step"><span class="dot"></span><span class="label">Executive Command Center</span><span class="note">board &amp; leadership visibility</span></div>
+    <div class="step"><span class="dot"></span><span class="label">Portfolio Intelligence</span><span class="note">cross-program alignment</span></div>
+    <div class="step"><span class="dot"></span><span class="label">Program &amp; Project Intelligence</span><span class="note">delivery &amp; risk</span></div>
+    <div class="step"><span class="dot"></span><span class="label">Operational Intelligence</span><span class="note">day-to-day execution</span></div>
+    <div class="step mc"><span class="dot"></span><span class="label">AI Workforce · Mission Control · Analytics · Report Center</span><span class="note">always on</span></div>
+    <div class="step exec"><span class="dot"></span><span class="label">SEIS — Deterministic Execution Engine</span><span class="note">the engine</span></div>
+  </div>
+</div>
+
+<!-- MISSION CONTROL -->
+<div id="mission-control" class="section">
+  <h2>Mission Control</h2>
+  <p class="lead">One screen. Every portfolio, every project, every workflow, every AI agent, every KPI,
+    every exception — live. Stop logging into ten tools to answer one question.</p>
+  <div class="mc">
+    <div class="mc-grid">
+      <div class="mc-kpi"><div class="n">12</div><div class="l">Active programs</div></div>
+      <div class="mc-kpi"><div class="n green">94%</div><div class="l">Portfolio health</div></div>
+      <div class="mc-kpi"><div class="n blue">↑ +6/wk</div><div class="l">Trajectory</div></div>
+      <div class="mc-kpi"><div class="n red">3</div><div class="l">Risks escalated</div></div>
+      <div class="mc-kpi"><div class="n">100%</div><div class="l">Executions audited</div></div>
+    </div>
+    <div class="mc-heat">
+      <span class="mc-cell" style="background:var(--signal-green)"></span>
+      <span class="mc-cell" style="background:var(--signal-green)"></span>
+      <span class="mc-cell" style="background:var(--solar-gold)"></span>
+      <span class="mc-cell" style="background:var(--signal-green)"></span>
+      <span class="mc-cell" style="background:var(--signal-red)"></span>
+      <span class="mc-cell" style="background:var(--signal-green)"></span>
+      <span class="mc-cell" style="background:var(--solar-gold)"></span>
+      <span class="mc-cell" style="background:var(--signal-green)"></span>
+      <span class="mc-cell" style="background:var(--signal-green)"></span>
+      <span class="mc-cell" style="background:var(--trajectory-blue)"></span>
+    </div>
+    <div class="mc-cap">Portfolio health heat map — illustrative. Live dashboard shown in the demo.</div>
   </div>
 </div>
 
@@ -202,9 +285,10 @@ a { color: var(--trajectory-blue); text-decoration: none; }
 
 <!-- AI WORKFORCE -->
 <div id="workforce" class="section">
-  <h2>An AI workforce — governed by default.</h2>
-  <p class="lead">Specialized agents staff the pyramid. Every action passes through the GUARDiAN substrate
-    before it runs and lands in the immutable ledger after — so autonomy never means unaccountable.</p>
+  <h2>Your AI workforce — governed by default.</h2>
+  <p class="lead">A named council of specialized agents staffs every layer — intelligence &amp; routing (TRiO),
+    governance (GUARDiAN), integration &amp; outcomes (CiRO), and delivery (TiTO). Every action passes through
+    the GUARDiAN gate before it runs and lands in the immutable ledger after — so autonomy never means unaccountable.</p>
   <div class="grid grid-3">
     <div class="card"><span class="agent-tag">Strategic · Executive</span><h3>Executive Officer</h3><p>Watches cross-program health continuously and escalates stalling initiatives to leadership — every alert carrying the data trail that triggered it.</p></div>
     <div class="card"><span class="agent-tag">Strategic · Program</span><h3>Risk Analyst</h3><p>Simulates operational exposure and flags cascading risks before they hit quarterly execution, ranked by impact.</p></div>
@@ -215,6 +299,41 @@ a { color: var(--trajectory-blue); text-decoration: none; }
     <div class="card"><span class="agent-tag">Execution · 08 Outcome</span><h3>Verifier</h3><p>Confirms outcomes against expected results before anything is marked done — eliminating false-success signals.</p></div>
     <div class="card"><span class="agent-tag">Execution · 08 CIRO</span><h3>Knowledge Officer</h3><p>Captures every execution through CIRO, turning runtime data into durable institutional memory the whole system learns from.</p></div>
   </div>
+</div>
+
+<!-- ENTERPRISE PMO -->
+<div id="pmo" class="section">
+  <h2>Enterprise PMO — without the administration.</h2>
+  <p class="lead">The platform runs your portfolio office automatically — tracking execution, scoring health,
+    and producing the reports your PMO team builds by hand today. PMBOK® 8th Edition principle-based governance,
+    mapped gate by gate.</p>
+  <ul class="check">
+    <li>Tracks execution across every program</li>
+    <li>Scores portfolio &amp; program health (RAG)</li>
+    <li>Computes trajectory — velocity &amp; acceleration</li>
+    <li>Detects risk and auto-files the register</li>
+    <li>Monitors budget burn and escalates</li>
+    <li>Snapshots every gate, versioned &amp; auditable</li>
+    <li>Generates executive briefs on a schedule</li>
+    <li>Verifies completion before anything is marked done</li>
+  </ul>
+</div>
+
+<!-- REPORT CENTER -->
+<div class="section">
+  <h2>Executive Intelligence Reports — written for you.</h2>
+  <p class="lead">Reports assemble themselves straight from the immutable ledger — every figure traceable to the
+    run that produced it. No copy-paste, no spreadsheet herding, no waiting until Friday.</p>
+  <ul class="check">
+    <li>KPI dashboards</li>
+    <li>Portfolio health reports</li>
+    <li>Risk &amp; exception reports</li>
+    <li>Executive summaries</li>
+    <li>Operational analytics</li>
+    <li>Compliance &amp; audit trails</li>
+    <li>AI &amp; workforce performance</li>
+    <li>Daily activity reports</li>
+  </ul>
 </div>
 
 <!-- VALUE -->
@@ -230,20 +349,23 @@ a { color: var(--trajectory-blue); text-decoration: none; }
   </div>
 </div>
 
-<!-- DOMAINS -->
-<div id="domains" class="section">
-  <h2>Industry-agnostic by design</h2>
-  <p class="lead">One platform, many domains. Property Management is our live proof of capability — the reference
-    implementation that demonstrates the model — not the platform's identity.</p>
-  <div class="domains">
-    <span class="domain proof">Property Management · live proof</span>
-    <span class="domain">Construction</span>
-    <span class="domain">Healthcare</span>
-    <span class="domain">Manufacturing</span>
-    <span class="domain">Government</span>
-    <span class="domain">Finance</span>
-    <span class="domain">Technology</span>
+<!-- INDUSTRY INTELLIGENCE PACKS -->
+<div id="industries" class="section">
+  <h2>Industry Intelligence Packs</h2>
+  <p class="lead">One Enterprise Intelligence Engine, configured per domain. Property Management is our live proof
+    of capability — the reference implementation running on real operational data today — not the platform's identity.</p>
+  <div class="packs">
+    <div class="pack proof"><div class="ico">🏢</div><h3>Real Estate</h3><div class="s">Live proof</div></div>
+    <div class="pack"><div class="ico">🏥</div><h3>Healthcare</h3><div class="s">Pack</div></div>
+    <div class="pack"><div class="ico">🏗️</div><h3>Construction</h3><div class="s">Pack</div></div>
+    <div class="pack"><div class="ico">💻</div><h3>Information Technology</h3><div class="s">Pack</div></div>
+    <div class="pack"><div class="ico">🏛️</div><h3>Government</h3><div class="s">Pack</div></div>
+    <div class="pack"><div class="ico">🏭</div><h3>Manufacturing</h3><div class="s">Pack</div></div>
+    <div class="pack"><div class="ico">💰</div><h3>Finance</h3><div class="s">Pack</div></div>
+    <div class="pack"><div class="ico">🚚</div><h3>Logistics</h3><div class="s">Pack</div></div>
+    <div class="pack"><div class="ico">🏫</div><h3>Education</h3><div class="s">Pack</div></div>
   </div>
+  <p class="muted" style="margin-top:18px;">Each pack ships the same engine with domain metrics, thresholds, and governance. Real Estate is live; others are configured on engagement.</p>
 </div>
 
 <!-- HONESTY SPLIT -->
@@ -262,27 +384,16 @@ a { color: var(--trajectory-blue); text-decoration: none; }
   </div>
 </div>
 
-<!-- PRICING -->
+<!-- BOOK A DEMO / DISCOVERY -->
 <div id="pricing" class="section">
-  <h2>Pricing <span class="muted">— at general availability</span></h2>
-  <div class="grid grid-3">
-    <div class="card">
-      <h3>SEIS Core</h3>
-      <p class="k">$49–$149 / month</p>
-      <p>Execution + governance validation for connected workflows.</p>
-    </div>
-    <div class="card">
-      <h3>SEIS Ops</h3>
-      <p class="k">$299–$799 / month</p>
-      <p>Full workflow enforcement, verification, and audit system.</p>
-    </div>
-    <div class="card">
-      <h3>Enterprise</h3>
-      <p class="k">$1,500+ / month</p>
-      <p>Multi-system governance, analytics, and compliance-grade audit control.</p>
-    </div>
+  <h2>See it run on your operation.</h2>
+  <p class="lead">Pricing is scoped to your portfolio and systems — from team plans to compliance-grade enterprise.
+    The fastest way to a number is a 30-minute discovery call where we map the platform to your programs.</p>
+  <div style="margin-top:24px;">
+    <a class="cta" href="#demo">Book a demo</a>
+    <a class="cta secondary" href="#demo">Request pricing</a>
   </div>
-  <p class="muted">Pricing shown for planning. Early access is invite-based while the platform is hardened.</p>
+  <p class="muted" style="margin-top:14px;">Early access is invite-based while the platform is hardened.</p>
 </div>
 
 <!-- DEMO + WAITLIST / CTA -->
@@ -294,8 +405,8 @@ a { color: var(--trajectory-blue); text-decoration: none; }
 
     <!-- DEMO CARD → Revenue Engine pipeline -->
     <div class="card form-card" id="demo">
-      <h3 style="margin-top:0;">Book a Flight Deck demo</h3>
-      <p class="muted">For PMO and operations leaders evaluating GUARDiAN PMO Command. We map it to your programs and follow up directly.</p>
+      <h3 style="margin-top:0;">Book a demo</h3>
+      <p class="muted">For executives, PMO, and operations leaders evaluating the Enterprise Intelligence Platform. We map it to your programs and follow up directly.</p>
       <form id="demo-form">
         <input id="dm-name" type="text" required placeholder="Name *" />
         <input id="dm-email" type="email" required placeholder="Work email *" />
@@ -415,9 +526,16 @@ a { color: var(--trajectory-blue); text-decoration: none; }
 <!-- FOOTER -->
 <div class="section" style="text-align:center;">
   <span class="wordmark">SECC <span class="os">OS</span></span>
-  <p class="muted" style="margin-top:10px;">
-    Enterprise Intelligence Platform · Execution (SEIS) + Governance (GUARDiAN) · admin@secc-os.com
-  </p>
+  <p class="muted" style="margin-top:10px;">Enterprise Intelligence Platform · admin@secc-os.com</p>
+  <div class="powered">
+    <span>Powered by</span>
+    <span><b>SEIS</b> Execution Engine</span>
+    <span><b>GUARDiAN</b> Governance</span>
+    <span><b>Mission Control</b></span>
+    <span><b>TRiO</b> Intelligence</span>
+    <span><b>Enterprise PMO</b></span>
+    <span><b>AI Workforce</b></span>
+  </div>
 </div>
 
 </div>
