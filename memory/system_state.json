@@ -1,7 +1,7 @@
 {
-  "timestamp": "2026-06-26T14:44:03.113Z",
-  "state_hash": "sha256:fab98fd3771b44c6619553a8001f1c41c0bcf43a47e39c94451f6b716296fa3f",
-  "commit": "28f1fb3",
+  "timestamp": "2026-06-26T14:50:00.752Z",
+  "state_hash": "sha256:df9eb9a7cb57ba0048595870ec0053c9435e5f28e866dd3be7b37827ddc12626",
+  "commit": "3b9686a",
   "system_state": {
     "phase": "Decision Execution System",
     "intelligence_level": "Level 3 - Decision Support",
@@ -25,9 +25,9 @@
     "execution_outcome_binding": "modeled"
   },
   "recent_changes": [
+    "feat(chatbridge): export-to-PDF in reader + document-feed message styling",
     "feat(chatbridge): full-screen reading view for messages (P1 readability fix)",
-    "fix(landing): correct 3 overclaims per claims audit",
-    "feat(landing): reposition to Enterprise Intelligence Platform (flagship)"
+    "fix(landing): correct 3 overclaims per claims audit"
   ],
   "active_focus": {
     "primary_workstream": "Property Execution Fabric",
