@@ -5,6 +5,12 @@ import { chat, dispatch, type SLAResult } from '../api/n8n'
 type ContextKey = 'WORK' | 'SCHOOL' | 'COMMAND' | 'CONTENT' | 'LIFE'
 type ActionLevel = 'conversation' | 'guidance' | 'dispatch' | 'governance'
 type CouncilMember = 'HORHANiS' | 'TiTo' | 'TRiO' | 'CiRO' | 'SunNi'
+type SpecialistKey = 'finance' | 'legal'
+
+const SPECIALISTS: Record<SpecialistKey, { label: string; color: string; emoji: string; hint: string }> = {
+  finance: { label: 'Finance', color: '#22c55e', emoji: '💰', hint: 'Type @finance to route: cash flow, burn rate, subscriptions, revenue gap' },
+  legal:   { label: 'Legal',   color: '#f59e0b', emoji: '⚖️', hint: 'Type @legal to route: deadlines, evidence, compliance, court matters' },
+}
 
 interface ContextDef {
   emoji: string
@@ -421,6 +427,29 @@ export function ChatBridge() {
         })}
       </div>
 
+      {/* Specialist agents row */}
+      <div className="cb-specialists">
+        <span className="cb-specialist-label">Specialists:</span>
+        {(Object.keys(SPECIALISTS) as SpecialistKey[]).map(key => {
+          const s = SPECIALISTS[key]
+          return (
+            <button
+              key={key}
+              className="cb-specialist-btn"
+              style={{ color: s.color, borderColor: s.color + '55', background: s.color + '0f' }}
+              title={s.hint}
+              onClick={() => {
+                setInput(`@${key} `)
+                inputRef.current?.focus()
+              }}
+            >
+              {s.emoji} {s.label}
+            </button>
+          )
+        })}
+        <span className="cb-specialist-hint">or type @finance / @legal in any message</span>
+      </div>
+
       {/* Context strip */}
       <div className="ctx-strip" style={{ borderBottomColor: displayCtx.color + '44' }}>
         <span className="ctx-strip-name" style={{ color: displayCtx.color }}>
@@ -531,18 +560,24 @@ export function ChatBridge() {
             </div>
           )
         })}
-        {thinking && (
-          <div className="cb-line cb-horhanis cb-thinking">
-            <span className="cb-ts">[{fmt(new Date().toISOString())}]</span>
-            <span className="cb-who">
-              {CONTEXT_TO_AGENT[activeContext]?.toUpperCase() || 'HORHANiS'} &gt;
-            </span>
-            <span className="cb-text cb-blink">█</span>
-            <span className="cb-route-tag" style={{ color: ctx.color, borderColor: ctx.color+'55' }}>
-              {displayContext} · {mode === 'lite' ? 'mini' : '4.1'} · {elapsed}s{elapsed >= 15 ? ' — auto-retry if needed' : ''}
-            </span>
-          </div>
-        )}
+        {thinking && (() => {
+          const prefixMatch = input.match(/^@(\w+)\s*/i)
+          const specialistKey = prefixMatch ? prefixMatch[1].toLowerCase() as SpecialistKey : null
+          const isSpecialist = specialistKey && SPECIALISTS[specialistKey]
+          const thinkingAgent = isSpecialist ? specialistKey.toUpperCase() : (CONTEXT_TO_AGENT[activeContext]?.toUpperCase() || 'HORHANiS')
+          const thinkingColor = isSpecialist ? SPECIALISTS[specialistKey!].color : ctx.color
+          const thinkingLabel = isSpecialist ? `${SPECIALISTS[specialistKey!].emoji} ${SPECIALISTS[specialistKey!].label}` : displayContext
+          return (
+            <div className="cb-line cb-horhanis cb-thinking">
+              <span className="cb-ts">[{fmt(new Date().toISOString())}]</span>
+              <span className="cb-who">{thinkingAgent} &gt;</span>
+              <span className="cb-text cb-blink">█</span>
+              <span className="cb-route-tag" style={{ color: thinkingColor, borderColor: thinkingColor+'55' }}>
+                {thinkingLabel} · {mode === 'lite' ? 'mini' : '4.1'} · {elapsed}s{elapsed >= 15 ? ' — auto-retry if needed' : ''}
+              </span>
+            </div>
+          )
+        })()}
         <div ref={bottomRef} />
       </div>
 

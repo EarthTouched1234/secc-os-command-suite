@@ -39,6 +39,8 @@ const N8N = import.meta.env.PROD
 // All chat/dispatch routes through Agent Sandbox — single proven endpoint, all 6 agents, CORS open.
 // /webhook/horhanis-conversation kept as fallback only (HORHANiS-only, no multi-agent support).
 const AGENT_SANDBOX_URL = 'https://sunnicommandcenter.app.n8n.cloud/webhook/secc-os/agent'
+const FINANCE_AGENT_URL = 'https://sunnicommandcenter.app.n8n.cloud/webhook/secc-os/agent/finance'
+const LEGAL_AGENT_URL   = 'https://sunnicommandcenter.app.n8n.cloud/webhook/secc-os/agent/legal'
 const DISPATCH_URL = '/dispatch/webhook/horhanis/dispatch' // dev only
 
 // Map context to agent for Agent Sandbox routing
@@ -48,6 +50,12 @@ const CONTEXT_TO_AGENT: Record<string, string> = {
   WORK:    'horhanis',
   SCHOOL:  'ciro',
   CONTENT: 'tito',
+}
+
+// Specialist agents with dedicated webhooks (not routed through Agent Sandbox)
+const SPECIALIST_URLS: Record<string, string> = {
+  finance: FINANCE_AGENT_URL,
+  legal:   LEGAL_AGENT_URL,
 }
 
 // Fetch with timeout + 1 auto-retry on network/timeout failure.
@@ -173,6 +181,8 @@ export const SLA_TARGETS: Record<string, { standard: number; lite: number }> = {
   sunni:     { standard: 60_000, lite: 25_000 },
   guardian:  { standard: 30_000, lite: 15_000 },
   triage:    { standard: 60_000, lite: 25_000 },
+  finance:   { standard: 60_000, lite: 25_000 },
+  legal:     { standard: 60_000, lite: 25_000 },
 }
 
 export interface SLAResult {
@@ -457,12 +467,38 @@ export async function chat(
   mode: 'standard' | 'lite' = 'standard',
 ): Promise<{ reply: string; replyFull?: string; sessionId: string; turnNumber: number; sla: SLAResult }> {
   const sendAt = Date.now()
+
+  // Parse @prefix to detect specialist agent override (e.g. "@finance what is my runway?")
+  const prefixMatch = message.match(/^@(\w+)\s+/i)
+  const prefixAgent = prefixMatch ? prefixMatch[1].toLowerCase() : null
+  const cleanMessage = prefixAgent ? message.slice(prefixMatch![0].length) : message
+
   if (import.meta.env.PROD) {
-    const agent = CONTEXT_TO_AGENT[context || 'LIFE'] || 'horhanis'
+    // Specialist agents (Finance, Legal) have dedicated webhooks
+    if (prefixAgent && SPECIALIST_URLS[prefixAgent]) {
+      const url = SPECIALIST_URLS[prefixAgent]
+      const res = await fetchWithRetry(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: cleanMessage, agent: prefixAgent, sessionId, operator: 'SunNi', mode }),
+      })
+      if (!res.ok) throw new Error(`${prefixAgent} agent failed: ${res.status}`)
+      const data = await res.json()
+      return {
+        reply: data.replyFull || data.reply || data.response || data.message || JSON.stringify(data),
+        sessionId: data.sessionId || sessionId,
+        turnNumber: data.turnNumber || 1,
+        sla: computeSLA(sendAt, prefixAgent, mode),
+      }
+    }
+
+    // Context-based routing via Agent Sandbox
+    const contextKey = (context || 'LIFE').replace('@', '').toUpperCase()
+    const agent = CONTEXT_TO_AGENT[contextKey] || 'horhanis'
     const res = await fetchWithRetry(AGENT_SANDBOX_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message, agent, sessionId, operator: 'SunNi', mode }),
+      body: JSON.stringify({ message: cleanMessage, agent, sessionId, operator: 'SunNi', mode }),
     })
     if (!res.ok) throw new Error(`Agent ${agent} failed: ${res.status}`)
     const data = await res.json()
