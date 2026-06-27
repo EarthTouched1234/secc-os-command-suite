@@ -218,6 +218,7 @@ export function ChatBridge() {
   const [actionLevel, setActionLevel] = useState<ActionLevel>('dispatch')
   const [sid] = useState(sessionId)
   const [mode, setMode] = useState<'standard' | 'lite'>('standard')
+  const [thinkingMeta, setThinkingMeta] = useState<{ agent: string; color: string; label: string } | null>(null)
   const [copied, setCopied] = useState<number | null>(null)
   const [expanded, setExpanded] = useState<Message | null>(null)
   const [elapsed, setElapsed] = useState(0)
@@ -310,6 +311,16 @@ export function ChatBridge() {
     }
 
     const ctx = CONTEXTS[sendContext]
+
+    // Resolve thinking display once at send-time — avoids re-running regex on every keystroke during thinking.
+    const prefixMatch = text.match(/^@(\w+)\s+/i)
+    const prefixAgent = prefixMatch ? prefixMatch[1].toLowerCase() as SpecialistKey : null
+    const specialist = prefixAgent ? SPECIALISTS[prefixAgent] : null
+    setThinkingMeta(specialist
+      ? { agent: prefixAgent!.toUpperCase(), color: specialist.color, label: `${specialist.emoji} ${specialist.label}` }
+      : { agent: CONTEXT_TO_AGENT[sendContext]?.toUpperCase() || 'HORHANiS', color: ctx.color, label: sendContext }
+    )
+
     setMessages(prev => [...prev, {
       role: 'user',
       text,
@@ -368,6 +379,7 @@ export function ChatBridge() {
     } finally {
       if (elapsedRef.current) clearInterval(elapsedRef.current)
       setThinking(false)
+      setThinkingMeta(null)
       setElapsed(0)
       inputRef.current?.focus()
     }
@@ -560,24 +572,16 @@ export function ChatBridge() {
             </div>
           )
         })}
-        {thinking && (() => {
-          const prefixMatch = input.match(/^@(\w+)\s*/i)
-          const specialistKey = prefixMatch ? prefixMatch[1].toLowerCase() as SpecialistKey : null
-          const isSpecialist = specialistKey && SPECIALISTS[specialistKey]
-          const thinkingAgent = isSpecialist ? specialistKey.toUpperCase() : (CONTEXT_TO_AGENT[activeContext]?.toUpperCase() || 'HORHANiS')
-          const thinkingColor = isSpecialist ? SPECIALISTS[specialistKey!].color : ctx.color
-          const thinkingLabel = isSpecialist ? `${SPECIALISTS[specialistKey!].emoji} ${SPECIALISTS[specialistKey!].label}` : displayContext
-          return (
-            <div className="cb-line cb-horhanis cb-thinking">
-              <span className="cb-ts">[{fmt(new Date().toISOString())}]</span>
-              <span className="cb-who">{thinkingAgent} &gt;</span>
-              <span className="cb-text cb-blink">█</span>
-              <span className="cb-route-tag" style={{ color: thinkingColor, borderColor: thinkingColor+'55' }}>
-                {thinkingLabel} · {mode === 'lite' ? 'mini' : '4.1'} · {elapsed}s{elapsed >= 15 ? ' — auto-retry if needed' : ''}
-              </span>
-            </div>
-          )
-        })()}
+        {thinking && thinkingMeta && (
+          <div className="cb-line cb-horhanis cb-thinking">
+            <span className="cb-ts">[{fmt(new Date().toISOString())}]</span>
+            <span className="cb-who">{thinkingMeta.agent} &gt;</span>
+            <span className="cb-text cb-blink">█</span>
+            <span className="cb-route-tag" style={{ color: thinkingMeta.color, borderColor: thinkingMeta.color+'55' }}>
+              {thinkingMeta.label} · {mode === 'lite' ? 'mini' : '4.1'} · {elapsed}s{elapsed >= 15 ? ' — auto-retry if needed' : ''}
+            </span>
+          </div>
+        )}
         <div ref={bottomRef} />
       </div>
 
