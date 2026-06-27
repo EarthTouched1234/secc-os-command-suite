@@ -1,7 +1,7 @@
 {
-  "timestamp": "2026-06-27T23:14:53.187Z",
-  "state_hash": "sha256:34ac2157d5a97a414be8ebf9a636a58a2e692f998df9d8b47c64f32b05b829d9",
-  "commit": "f3f6603",
+  "timestamp": "2026-06-27T23:45:47.250Z",
+  "state_hash": "sha256:f7df9df9db14e2a037ac64b7772336245d251f6d6dc01051239de01e0cead6ff",
+  "commit": "c8b0a24",
   "system_state": {
     "phase": "Decision Execution System",
     "intelligence_level": "Level 3 - Decision Support",
@@ -25,9 +25,9 @@
     "execution_outcome_binding": "modeled"
   },
   "recent_changes": [
+    "feat: per-agent voice personalities and fix choppy audio",
     "refactor: simplify specialist agent routing in ChatBridge",
-    "feat: add Finance + Legal specialist agents to ChatBridge",
-    "fix(vss): honor resolver — INFERRED renders text-only, no zero-KPI authority"
+    "feat: add Finance + Legal specialist agents to ChatBridge"
   ],
   "active_focus": {
     "primary_workstream": "Property Execution Fabric",
