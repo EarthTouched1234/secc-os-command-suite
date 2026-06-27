@@ -1,6 +1,6 @@
 # Council Memory — System State Log
 
-> CIRO snapshot · 2026-06-27T10:20:59.763Z · commit `dbafdd0` · `sha256:a9177a1431f09…`
+> CIRO snapshot · 2026-06-27T23:14:53.187Z · commit `f3f6603` · `sha256:34ac2157d5a97…`
 > _High-signal state of the platform now. CIRO records; it does not interpret._
 
 ## 1. Current System State
@@ -16,9 +16,9 @@ The platform is a **Decision Execution System** — Level 3 - Decision Support. 
 - `execution_outcome_binding` — **modeled**
 
 ## 3. Recently Shipped Capabilities
+- refactor: simplify specialist agent routing in ChatBridge
 - feat: add Finance + Legal specialist agents to ChatBridge
 - fix(vss): honor resolver — INFERRED renders text-only, no zero-KPI authority
-- feat(vss): PMO KPI proving slice — truth-layer panel on live Portfolio API
 
 ## 4. System Loop Status
 ✅ signal  →  ✅ reasoning  →  ✅ decision  →  ✅ simulation  →  ⬜ execution  →  ⬜ feedback

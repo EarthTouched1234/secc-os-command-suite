@@ -1,7 +1,7 @@
 {
-  "timestamp": "2026-06-27T10:20:59.763Z",
-  "state_hash": "sha256:a9177a1431f09679c51a856e9e6cb92ecc87f194073c0e473844136c8d4a206e",
-  "commit": "dbafdd0",
+  "timestamp": "2026-06-27T23:14:53.187Z",
+  "state_hash": "sha256:34ac2157d5a97a414be8ebf9a636a58a2e692f998df9d8b47c64f32b05b829d9",
+  "commit": "f3f6603",
   "system_state": {
     "phase": "Decision Execution System",
     "intelligence_level": "Level 3 - Decision Support",
@@ -25,9 +25,9 @@
     "execution_outcome_binding": "modeled"
   },
   "recent_changes": [
+    "refactor: simplify specialist agent routing in ChatBridge",
     "feat: add Finance + Legal specialist agents to ChatBridge",
-    "fix(vss): honor resolver — INFERRED renders text-only, no zero-KPI authority",
-    "feat(vss): PMO KPI proving slice — truth-layer panel on live Portfolio API"
+    "fix(vss): honor resolver — INFERRED renders text-only, no zero-KPI authority"
   ],
   "active_focus": {
     "primary_workstream": "Property Execution Fabric",
