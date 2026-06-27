@@ -113,6 +113,7 @@ interface Message {
   context?: ContextKey
   council?: CouncilMember[]
   sla?: SLAResult
+  agent?: string  // lowercase agent key — horhanis / trio / tito / ciro / sunni / guardian / finance / legal
 }
 
 interface DispatchResult {
@@ -162,16 +163,45 @@ function extractRouteKey(raw: DispatchResult): string | undefined {
   return raw.properties?.['Pattern Type']?.rich_text?.[0]?.plain_text
 }
 
-function speak(text: string) {
+// Per-agent voice personality profiles
+const VOICE_PROFILES: Record<string, { rate: number; pitch: number; voicePattern: RegExp }> = {
+  horhanis: { rate: 0.85, pitch: 0.80, voicePattern: /Daniel|Alex|David|Google UK English Male/i },
+  trio:     { rate: 0.92, pitch: 0.90, voicePattern: /Daniel|Google UK English Male|UK English Male/i },
+  tito:     { rate: 1.00, pitch: 1.08, voicePattern: /Samantha|Zoe|Google US English/i },
+  ciro:     { rate: 1.05, pitch: 0.93, voicePattern: /Google UK English Male|Daniel|Fred|Reed/i },
+  sunni:    { rate: 0.82, pitch: 1.12, voicePattern: /Karen|Samantha|Google US English Female/i },
+  guardian: { rate: 0.78, pitch: 0.72, voicePattern: /Alex|Daniel|Google UK English Male/i },
+  triage:   { rate: 1.00, pitch: 0.88, voicePattern: /Daniel|Google UK English Male/i },
+  finance:  { rate: 0.90, pitch: 0.92, voicePattern: /Google US English|Samantha|Daniel/i },
+  legal:    { rate: 0.87, pitch: 0.83, voicePattern: /Daniel|Alex|Google UK English Male/i },
+}
+
+// Fixes Chrome's ~15s speech synthesis cutoff: split into sentence chunks, chain via onend
+function speak(text: string, agent = 'horhanis') {
   if (!window.speechSynthesis) return
   window.speechSynthesis.cancel()
-  const utt = new SpeechSynthesisUtterance(text)
-  utt.rate = 0.92; utt.pitch = 0.88; utt.volume = 1
-  const voices = window.speechSynthesis.getVoices()
-  const preferred = voices.find(v => /Samantha|Alex|Daniel|Google UK English Male|Microsoft David/i.test(v.name))
-    || voices.find(v => v.lang.startsWith('en'))
-  if (preferred) utt.voice = preferred
-  window.speechSynthesis.speak(utt)
+
+  const profile = VOICE_PROFILES[agent.toLowerCase()] ?? VOICE_PROFILES.horhanis
+  const allVoices = window.speechSynthesis.getVoices()
+  const voice = allVoices.find(v => profile.voicePattern.test(v.name) && v.lang.startsWith('en'))
+    ?? allVoices.find(v => v.lang.startsWith('en-'))
+    ?? allVoices[0]
+
+  const chunks = (text.match(/[^.!?\n]+[.!?\n]*/g) ?? [text])
+    .map(s => s.trim()).filter(Boolean)
+
+  let idx = 0
+  const next = () => {
+    if (idx >= chunks.length) return
+    const utt = new SpeechSynthesisUtterance(chunks[idx++])
+    utt.rate = profile.rate
+    utt.pitch = profile.pitch
+    utt.volume = 1
+    if (voice) utt.voice = voice
+    utt.onend = next
+    window.speechSynthesis.speak(utt)
+  }
+  next()
 }
 
 function escapeHtml(s: string): string {
@@ -335,6 +365,7 @@ export function ChatBridge() {
       if (actionLevel === 'conversation' || ctx.defaultAction === 'conversation') {
         // Unified: routes through Agent Sandbox with correct agent per context
         const res = await chat(text, sid, sendContext, mode)
+        const respondingAgent = prefixAgent ?? CONTEXT_TO_AGENT[sendContext]?.toLowerCase() ?? 'horhanis'
         setMessages(prev => [...prev, {
           role: 'horhanis',
           text: res.reply,
@@ -343,8 +374,9 @@ export function ChatBridge() {
           context: sendContext,
           council: ctx.council,
           sla: res.sla,
+          agent: respondingAgent,
         }])
-        if (voiceOn) speak(res.reply)
+        if (voiceOn) speak(res.reply, respondingAgent)
       } else {
         const raw = await dispatch(text, ctx.primaryRoute, sendContext, ctx.council, sid, mode) as DispatchResult
         const replyText = extractDispatchText(raw)
@@ -356,6 +388,7 @@ export function ChatBridge() {
           setActionLevel(CONTEXTS[confirmedContext].defaultAction)
         }
 
+        const dispatchAgent = CONTEXT_TO_AGENT[confirmedContext]?.toLowerCase() ?? 'horhanis'
         setMessages(prev => [...prev, {
           role: 'horhanis',
           text: replyText,
@@ -363,8 +396,9 @@ export function ChatBridge() {
           routeKey: extractRouteKey(raw) || ctx.primaryRoute,
           context: confirmedContext,
           council: ctx.council,
+          agent: dispatchAgent,
         }])
-        if (voiceOn) speak(replyText)
+        if (voiceOn) speak(replyText, dispatchAgent)
       }
     } catch (err) {
       const isTimeout = err instanceof Error && err.message.includes('AbortError')
@@ -524,7 +558,7 @@ export function ChatBridge() {
                     </button>
                     <button
                       className="cb-action-btn"
-                      onClick={e => { e.stopPropagation(); speak(m.text) }}
+                      onClick={e => { e.stopPropagation(); speak(m.text, m.agent) }}
                       title="Read aloud"
                     >
                       ▶ audio
@@ -596,7 +630,7 @@ export function ChatBridge() {
               <div className="cb-modal-actions">
                 <button className="cb-action-btn" onClick={() => copyText(expanded.text, -1)}>{copied === -1 ? '✓ copied' : '⎘ copy'}</button>
                 <button className="cb-action-btn" onClick={() => saveToDoc(expanded.text, expanded.ts)}>⊕ save</button>
-                <button className="cb-action-btn" onClick={() => speak(expanded.text)}>▶ audio</button>
+                <button className="cb-action-btn" onClick={() => speak(expanded.text, expanded.agent)}>▶ audio</button>
                 <button className="cb-action-btn" onClick={() => exportMessagePdf(expanded.role, expanded.turn, expanded.text, expanded.ts)} title="Export as PDF (browser print → Save as PDF)">⤓ PDF</button>
                 <button className="cb-action-btn cb-modal-close" onClick={() => setExpanded(null)}>✕ close</button>
               </div>
