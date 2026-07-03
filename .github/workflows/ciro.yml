@@ -1,5 +1,12 @@
 name: CIRO System State
+- name: Install dependencies
+  run: npm ci
 
+- name: TypeScript build check
+  run: npx tsc -b
+
+- name: Vite build check
+  run: npm run build
 # Runs after any code push to main, regenerates the system-state record, and
 # commits it back. Guarded against loops: the bot commit uses [skip ci] and
 # memory/** is path-ignored so CIRO never retriggers itself.
