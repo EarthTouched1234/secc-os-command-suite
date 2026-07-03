@@ -39,7 +39,7 @@ jobs:
       - name: Run CIRO
         run: node ciro/ciro.mjs
 
-            - name: Commit system state
+              - name: Commit system state
         run: |
           git config user.name "CIRO"
           git config user.email "ciro@secc-os.local"
@@ -53,8 +53,13 @@ jobs:
 
           git commit -m "ciro: system state snapshot [ciro-only]"
 
-          echo "🔄 syncing with remote before push..."
-          git pull --rebase origin main || true
+          echo "🔄 force syncing with remote state..."
+          git fetch origin main
 
-          echo "📤 pushing..."
-          git push
+          git reset --hard origin/main
+
+          git add memory/system_state.json memory/COUNCIL_MEMORY.md
+
+          git commit -m "ciro: system state snapshot [ciro-only]" || echo "nothing new"
+
+          git push origin main
