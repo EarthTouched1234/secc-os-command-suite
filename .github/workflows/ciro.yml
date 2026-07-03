@@ -43,14 +43,11 @@ jobs:
         run: |
           git config user.name "CIRO"
           git config user.email "ciro@secc-os.local"
+
           git add memory/system_state.json memory/COUNCIL_MEMORY.md
 
           if git diff --staged --quiet; then
             echo "No system-state change."
-          else
-            git commit -m "ciro: system state snapshot [ciro-only]"
-            git push
-          fi
           else
             git commit -m "ciro: system state snapshot [ciro-only]"
             git push
