@@ -15,6 +15,7 @@ on:
     branches: [main]
     paths-ignore:
       - 'memory/**'
+
   workflow_dispatch:
 
 permissions:
@@ -44,6 +45,6 @@ jobs:
           if git diff --staged --quiet; then
             echo "No system-state change."
           else
-            git commit -m "ciro: system state snapshot [skip ci]"
+            git commit -m "ciro: system state snapshot [ciro-only]"
             git push
           fi
