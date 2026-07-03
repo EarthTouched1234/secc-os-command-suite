@@ -1,4 +1,4 @@
-#!/bin/bash
+You walk away with the money
 # ask-agent.sh — SECC-OS multi-agent ChatBridge
 # Usage:
 #   ./ask-agent.sh horhanis "your message"
