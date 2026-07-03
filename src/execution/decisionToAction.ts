@@ -4,8 +4,9 @@
  * Phase 1 implementation of the Execution Fabric.
  */
 
-import { DecisionObject } from '../decision/decisionLayer'
-import { ActionObject, DECISION_ACTION_MAP } from './executionFabric'
+import type { DecisionObject } from '../decision/decisionLayer'
+import type { ActionObject } from './executionFabric'
+import { DECISION_ACTION_MAP } from './executionFabric'
 
 /**
  * Translate a Decision Object into a list of Action Objects.

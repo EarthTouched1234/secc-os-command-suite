@@ -3,7 +3,7 @@
  * Executes Action Objects against target systems with audit persistence and recovery.
  */
 
-import { ActionObject } from './executionFabric'
+import type { ActionObject } from './executionFabric'
 import { triggerConnector, CONNECTORS } from '../api/notion'
 
 export interface ExecutionResult {
