@@ -15,7 +15,7 @@ on:
     branches: [main]
     paths-ignore:
       - 'memory/**'
-
+      - '**/*.md'
   workflow_dispatch:
 
 permissions:
@@ -42,9 +42,7 @@ jobs:
           git config user.name "CIRO"
           git config user.email "ciro@secc-os.local"
           git add memory/system_state.json memory/COUNCIL_MEMORY.md
-          if git diff --staged --quiet; then
-            echo "No system-state change."
-          else
-            git commit -m "ciro: system state snapshot [ciro-only]"
-            git push
-          fi
+          if git diff --staged | grep -E "src/|package.json|tsconfig"; then
+  echo "❌ CIRO BLOCKED: illegal write detected"
+  exit 1
+fi
