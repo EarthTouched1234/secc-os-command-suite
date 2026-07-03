@@ -1,6 +1,6 @@
 # Council Memory — System State Log
 
-> CIRO snapshot · 2026-07-02T15:24:46.138Z · commit `7b74746` · `sha256:70a57c03b6e82…`
+> CIRO snapshot · 2026-07-03T03:11:55.107Z · commit `15b3527` · `sha256:9822f2c70dae9…`
 > _High-signal state of the platform now. CIRO records; it does not interpret._
 
 ## 1. Current System State
@@ -16,10 +16,10 @@ The platform is a **Decision Execution System** — Level 3 - Decision Support. 
 - `execution_outcome_binding` — **modeled**
 
 ## 3. Recently Shipped Capabilities
+- Fix TS build pipeline (types + tsconfig + CI stability)
 - Merge pull request #1 from EarthTouched1234/fix/execution-fabric-backend-actions
 - fix(execution): implement execution fabric with verification loop and backend actions
 - feat: per-agent voice personalities and fix choppy audio
-- refactor: simplify specialist agent routing in ChatBridge
 
 ## 4. System Loop Status
 ✅ signal  →  ✅ reasoning  →  ✅ decision  →  ✅ simulation  →  ⬜ execution  →  ⬜ feedback

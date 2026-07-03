@@ -1,7 +1,7 @@
 {
-  "timestamp": "2026-07-02T15:24:46.138Z",
-  "state_hash": "sha256:70a57c03b6e82f9a68b16b01fa99cfc396c0b939ca68daa73b31d2504d92d273",
-  "commit": "7b74746",
+  "timestamp": "2026-07-03T03:11:55.107Z",
+  "state_hash": "sha256:9822f2c70dae908dc112361e06388abc9997fc0fa8c06bc9351266b1c0aff5da",
+  "commit": "15b3527",
   "system_state": {
     "phase": "Decision Execution System",
     "intelligence_level": "Level 3 - Decision Support",
@@ -25,10 +25,10 @@
     "execution_outcome_binding": "modeled"
   },
   "recent_changes": [
+    "Fix TS build pipeline (types + tsconfig + CI stability)",
     "Merge pull request #1 from EarthTouched1234/fix/execution-fabric-backend-actions",
     "fix(execution): implement execution fabric with verification loop and backend actions",
-    "feat: per-agent voice personalities and fix choppy audio",
-    "refactor: simplify specialist agent routing in ChatBridge"
+    "feat: per-agent voice personalities and fix choppy audio"
   ],
   "active_focus": {
     "primary_workstream": "Property Execution Fabric",
