@@ -39,7 +39,7 @@ jobs:
       - name: Run CIRO
         run: node ciro/ciro.mjs
 
-      - name: Commit system state
+            - name: Commit system state
         run: |
           git config user.name "CIRO"
           git config user.email "ciro@secc-os.local"
@@ -48,7 +48,13 @@ jobs:
 
           if git diff --staged --quiet; then
             echo "No system-state change."
-          else
-            git commit -m "ciro: system state snapshot [ciro-only]"
-            git push
+            exit 0
           fi
+
+          git commit -m "ciro: system state snapshot [ciro-only]"
+
+          echo "🔄 syncing with remote before push..."
+          git pull --rebase origin main || true
+
+          echo "📤 pushing..."
+          git push
