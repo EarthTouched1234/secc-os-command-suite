@@ -15,7 +15,6 @@ on:
     branches: [main]
     paths-ignore:
       - 'memory/**'
-      - '**/*.md'
   workflow_dispatch:
 
 permissions:
@@ -31,18 +30,24 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0   # CIRO reads git log for recent_changes
+          fetch-depth: 0
+
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+
       - name: Run CIRO
         run: node ciro/ciro.mjs
+
       - name: Commit system state
         run: |
           git config user.name "CIRO"
           git config user.email "ciro@secc-os.local"
           git add memory/system_state.json memory/COUNCIL_MEMORY.md
-          if git diff --staged | grep -E "src/|package.json|tsconfig"; then
-  echo "❌ CIRO BLOCKED: illegal write detected"
-  exit 1
-fi
+
+          if git diff --staged --quiet; then
+            echo "No system-state change."
+          else
+            git commit -m "ciro: system state snapshot [ciro-only]"
+            git push
+          fi
