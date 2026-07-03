@@ -1,15 +1,5 @@
 name: CIRO System State
-- name: Install dependencies
-  run: npm ci
 
-- name: TypeScript build check
-  run: npx tsc -b
-
-- name: Vite build check
-  run: npm run build
-# Runs after any code push to main, regenerates the system-state record, and
-# commits it back. Guarded against loops: the bot commit uses [skip ci] and
-# memory/** is path-ignored so CIRO never retriggers itself.
 on:
   push:
     branches: [main]
@@ -27,6 +17,7 @@ concurrency:
 jobs:
   ciro:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
         with:
@@ -35,6 +26,15 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: TypeScript build check
+        run: npx tsc -b
+
+      - name: Vite build check
+        run: npm run build
 
       - name: Run CIRO
         run: node ciro/ciro.mjs
@@ -47,6 +47,10 @@ jobs:
 
           if git diff --staged --quiet; then
             echo "No system-state change."
+          else
+            git commit -m "ciro: system state snapshot [ciro-only]"
+            git push
+          fi
           else
             git commit -m "ciro: system state snapshot [ciro-only]"
             git push
