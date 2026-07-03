@@ -1,6 +1,6 @@
 # Council Memory — System State Log
 
-> CIRO snapshot · 2026-07-03T05:43:44.544Z · commit `a561ae5` · `sha256:28755443ef1ff…`
+> CIRO snapshot · 2026-07-03T05:50:56.975Z · commit `d092056` · `sha256:e611d6152879f…`
 > _High-signal state of the platform now. CIRO records; it does not interpret._
 
 ## 1. Current System State
@@ -16,11 +16,10 @@ The platform is a **Decision Execution System** — Level 3 - Decision Support. 
 - `execution_outcome_binding` — **modeled**
 
 ## 3. Recently Shipped Capabilities
+- fix CIRO workflow shell syntax error in commit step
 - Update ciro.yml
 - test: CIRO behavior validation
 - optimize CIRO for production: simplify workflow and remove guard overhead
-- update CIRO workflow guard rules
-- fix CIRO workflow trigger structure
 
 ## 4. System Loop Status
 ✅ signal  →  ✅ reasoning  →  ✅ decision  →  ✅ simulation  →  ⬜ execution  →  ⬜ feedback
