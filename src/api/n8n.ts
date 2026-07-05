@@ -551,3 +551,17 @@ export async function dispatch(
   if (!res.ok) throw new Error(`Dispatch failed: ${res.status}`)
   return res.json()
 }
+
+// Connector Webhooks wired July 5 2026 all confirmed 200 OK
+export const HORHANIS_DISPATCH_URL     = 'https://sunnicommandcenter.app.n8n.cloud/webhook/horhanis/dispatch'
+export const HORHANIS_CONVERSATION_URL = 'https://sunnicommandcenter.app.n8n.cloud/webhook/horhanis-conversation'
+export const REVENUE_PRE_CALL_URL      = 'https://sunnicommandcenter.app.n8n.cloud/webhook/revenue/pre-call-brief'
+export const CIE_SCORE_URL             = 'https://sunnicommandcenter.app.n8n.cloud/webhook/cie/score-update'
+export const CIE_REPORT_URL            = 'https://sunnicommandcenter.app.n8n.cloud/webhook/cie/report-intake'
+export const LIE_PMO_PROMOTE_URL       = 'https://sunnicommandcenter.app.n8n.cloud/webhook/connector/promote'
+export const LIE_DAR_PROMOTE_URL       = 'https://sunnicommandcenter.app.n8n.cloud/webhook/connector/promote-dar'
+export const LIE_DASHBOARD_URL         = 'https://sunnicommandcenter.app.n8n.cloud/webhook/lie/dashboard-refresh'
+export const LIE_FOLLOWUP_GAP_URL      = 'https://sunnicommandcenter.app.n8n.cloud/webhook/lie/followup-gap-check'
+export const LIE_TRIO_REASONING_URL    = 'https://sunnicommandcenter.app.n8n.cloud/webhook/lie/trio-reasoning'
+export const LIE_DAR_GENERATE_URL      = 'https://sunnicommandcenter.app.n8n.cloud/webhook/lie/dar-generate'
+export const REVENUE_LEAD_INTAKE_URL   = 'https://sunnicommandcenter.app.n8n.cloud/webhook/revenue/lead-intake'
