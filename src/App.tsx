@@ -73,6 +73,16 @@ export default function App() {
         </div>
       </header>
 
+            <div style={{background:"linear-gradient(90deg,#060f06,#0d1f0d)",borderBottom:"2px solid #ffd700",padding:"7px 20px",display:"flex",alignItems:"center",gap:"14px",flexWrap:"wrap"}}>
+        <span style={{fontSize:"18px"}}>&#x1F3C6;</span>
+        <span style={{color:"#ffd700",fontWeight:700,fontSize:"13px",letterSpacing:"0.06em",textTransform:"uppercase"}}>SECC-OS 10/10 — Fully Operational</span>
+        <span style={{flex:1}} />
+        <span style={{color:"#7fff7f",fontSize:"11px",fontFamily:"monospace"}}>12/12 Webhooks ✔</span>
+        <span style={{color:"#555"}}>&#x2022;</span>
+        <span style={{color:"#7fff7f",fontSize:"11px",fontFamily:"monospace"}}>59 Workflows Active</span>
+        <span style={{color:"#555"}}>&#x2022;</span>
+        <span style={{color:"#aaa",fontSize:"11px",fontFamily:"monospace"}}>6915e99 — July 5 2026</span>
+      </div>
       <nav className="cc-tabs" aria-label="Commander Console sections">
         {navTabs.map((item) => (
           <button key={item} className={item === activeTab ? 'active' : ''} onClick={() => setActiveTab(item)}>{labelFor(item, edition)}</button>
