@@ -114,6 +114,7 @@ interface Message {
   council?: CouncilMember[]
   sla?: SLAResult
   agent?: string  // lowercase agent key — horhanis / trio / tito / ciro / sunni / guardian / finance / legal
+  attachments?: Array<{ name: string; type: string; data: string; url?: string }>
 }
 
 interface DispatchResult {
@@ -278,10 +279,30 @@ export function ChatBridge() {
   const [thinkingMeta, setThinkingMeta] = useState<{ agent: string; color: string; label: string } | null>(null)
   const [copied, setCopied] = useState<number | null>(null)
   const [expanded, setExpanded] = useState<Message | null>(null)
+  const [attachedFiles, setAttachedFiles] = useState<Array<{ name: string; type: string; data: string; url?: string }>>([])
   const [elapsed, setElapsed] = useState(0)
   const elapsedRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const bottomRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
+  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const files = Array.from(e.target.files || [])
+    files.forEach(file => {
+      const reader = new FileReader()
+      reader.onload = () => {
+        const data = reader.result as string
+        setAttachedFiles(prev => [...prev, {
+          name: file.name,
+          type: file.type,
+          data,
+          url: file.type.startsWith('image/') ? data : undefined,
+        }])
+      }
+      reader.readAsDataURL(file)
+    })
+    if (fileInputRef.current) fileInputRef.current.value = ''
+  }
 
   function copyText(text: string, idx: number) {
     navigator.clipboard.writeText(text).then(() => {
@@ -356,7 +377,7 @@ export function ChatBridge() {
 
   const send = useCallback(async () => {
     const text = input.trim()
-    if (!text || thinking) return
+    if ((!text && attachedFiles.length === 0) || thinking) return
     setInput('')
     setSuggestedContext(null)
 
@@ -383,7 +404,9 @@ export function ChatBridge() {
       text,
       ts: new Date().toISOString(),
       context: sendContext,
+      attachments: attachedFiles.length > 0 ? [...attachedFiles] : undefined,
     }])
+    setAttachedFiles([])
     setThinking(true)
     setElapsed(0)
     elapsedRef.current = setInterval(() => setElapsed(s => s + 1), 1000)
@@ -444,7 +467,7 @@ export function ChatBridge() {
       setElapsed(0)
       inputRef.current?.focus()
     }
-  }, [input, thinking, sid, voiceOn, activeContext, suggestedContext, actionLevel])
+  }, [input, thinking, sid, voiceOn, activeContext, suggestedContext, actionLevel, attachedFiles])
 
   function fmt(iso: string) {
     return new Date(iso).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })
@@ -639,6 +662,20 @@ export function ChatBridge() {
               ) : (
                 <>
                   <span className="cb-text">{m.text}</span>
+                  {m.role === 'user' && m.attachments && m.attachments.length > 0 && (
+                    <div style={{display:'flex',flexWrap:'wrap',gap:'5px',marginTop:'5px'}}>
+                      {m.attachments.map((a, ai) => (
+                        <span key={ai} style={{display:'inline-flex',alignItems:'center',
+                          gap:'4px',background:'#1a1a1a',border:'1px solid #2a2a2a',
+                          borderRadius:'4px',padding:'2px 6px'}}>
+                          {a.url
+                            ? <img src={a.url} alt={a.name} style={{width:'40px',height:'40px',objectFit:'cover',borderRadius:'3px'}} />
+                            : <span style={{fontSize:'12px'}}>{'📄'}</span>}
+                          <span style={{fontSize:'10px',color:'#888',fontFamily:'monospace'}}>{a.name}</span>
+                        </span>
+                      ))}
+                    </div>
+                  )}
                   {m.routeKey && (
                     <span className="cb-route-tag" style={mc ? { color: mc.color, borderColor: mc.color+'55', background: mc.color+'11' } : undefined}>
                       {m.routeKey}
@@ -683,7 +720,34 @@ export function ChatBridge() {
         </div>
       )}
 
+      {/* File preview strip */}
+      {attachedFiles.length > 0 && (
+        <div style={{display:'flex',flexWrap:'wrap',gap:'6px',padding:'6px 12px',
+          borderTop:'1px solid #2a2a2a',background:'#0d0d0d'}}>
+          {attachedFiles.map((a, i) => (
+            <div key={i} style={{display:'flex',alignItems:'center',gap:'5px',
+              background:'#1a1a1a',border:'1px solid #333',borderRadius:'4px',padding:'3px 7px'}}>
+              {a.url
+                ? <img src={a.url} alt={a.name} style={{width:'32px',height:'32px',objectFit:'cover',borderRadius:'3px'}} />
+                : <span style={{fontSize:'14px'}}>{'📄'}</span>}
+              <span style={{fontSize:'10px',color:'#aaa',maxWidth:'90px',overflow:'hidden',
+                textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{a.name}</span>
+              <button onClick={() => setAttachedFiles(prev => prev.filter((_,j) => j !== i))}
+                style={{background:'none',border:'none',color:'#666',cursor:'pointer',
+                  fontSize:'12px',lineHeight:1,padding:'0 2px'}}>x</button>
+            </div>
+          ))}
+        </div>
+      )}
       {/* Input bar */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*,.pdf,.doc,.docx,.txt,.csv,.xlsx,.pptx"
+        multiple
+        style={{display:'none'}}
+        onChange={handleFileChange}
+      />
       <div className="cb-input-row" style={{ borderTopColor: displayCtx.color + '55', background: displayCtx.color + '06' }}>
         <span className="cb-prompt" style={{ color: displayCtx.color }}>SunNi &gt;</span>
         <input
@@ -699,9 +763,19 @@ export function ChatBridge() {
           style={{ caretColor: displayCtx.color }}
         />
         <button
+          style={{background:'none',border:'1px solid #333',color:'#888',
+            padding:'4px 9px',cursor:'pointer',borderRadius:'3px',fontSize:'14px',
+            marginRight:'4px',flexShrink:0}}
+          title="Attach photo or document"
+          onClick={() => fileInputRef.current?.click()}
+          disabled={thinking}
+        >
+          {attachedFiles.length > 0 ? `[+] ${attachedFiles.length}` : '[+]'}
+        </button>
+        <button
           className="cb-send"
           onClick={send}
-          disabled={!input.trim() || thinking}
+          disabled={(!input.trim() && attachedFiles.length === 0) || thinking}
           style={input.trim() && !thinking ? { borderColor: displayCtx.color+'88', color: displayCtx.color } : undefined}
         >
           SEND
