@@ -138,6 +138,30 @@ export const CONNECTORS: Connector[] = [
     method: 'POST',
     category: 'system',
   },
+  {
+    id: 'horhanis-conversation',
+    name: 'HORHANiS Conversation',
+    description: 'Start or continue a conversation with HORHANiS',
+    webhook: `${N8N_BASE}/webhook/horhanis-conversation`,
+    method: 'POST' as const,
+    category: 'intelligence' as const,
+  },
+  {
+    id: 'lie-pmo-promote',
+    name: 'LIE PMO Promotion',
+    description: 'Promote a leasing activity into the PMO pipeline',
+    webhook: `${N8N_BASE}/webhook/connector/promote`,
+    method: 'POST' as const,
+    category: 'leasing' as const,
+  },
+  {
+    id: 'lie-dar-promote',
+    name: 'LIE DAR Promote',
+    description: 'Promote a DAR entry to the PMO project board',
+    webhook: `${N8N_BASE}/webhook/connector/promote-dar`,
+    method: 'POST' as const,
+    category: 'leasing' as const,
+  },
 ]
 
 export async function triggerConnector(
