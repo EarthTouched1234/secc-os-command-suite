@@ -177,6 +177,33 @@ const VOICE_PROFILES: Record<string, { rate: number; pitch: number; voicePattern
 }
 
 // Fixes Chrome's ~15s speech synthesis cutoff: split into sentence chunks, chain via onend
+async function speakElevenLabs(text: string): Promise<boolean> {
+  const apiKey  = localStorage.getItem('el_api_key') || ''
+  const voiceId = localStorage.getItem('el_voice_id') || ''
+  if (!apiKey || !voiceId) return false
+  try {
+    const res = await fetch(
+      `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}/stream`,
+      {
+        method: 'POST',
+        headers: { 'xi-api-key': apiKey, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          text,
+          model_id: 'eleven_turbo_v2',
+          voice_settings: { stability: 0.5, similarity_boost: 0.85 },
+        }),
+      }
+    )
+    if (!res.ok) return false
+    const blob = await res.blob()
+    const url  = URL.createObjectURL(blob)
+    const audio = new Audio(url)
+    audio.onended = () => URL.revokeObjectURL(url)
+    await audio.play()
+    return true
+  } catch { return false }
+}
+
 function speak(text: string, agent = 'horhanis') {
   if (!window.speechSynthesis) return
   window.speechSynthesis.cancel()
@@ -376,7 +403,7 @@ export function ChatBridge() {
           sla: res.sla,
           agent: respondingAgent,
         }])
-        if (voiceOn) speak(res.reply, respondingAgent)
+        if (voiceOn) speakElevenLabs(res.reply).then(ok => { if (!ok) speak(res.reply, respondingAgent) })
       } else {
         const raw = await dispatch(text, ctx.primaryRoute, sendContext, ctx.council, sid, mode) as DispatchResult
         const replyText = extractDispatchText(raw)
@@ -398,7 +425,7 @@ export function ChatBridge() {
           council: ctx.council,
           agent: dispatchAgent,
         }])
-        if (voiceOn) speak(replyText, dispatchAgent)
+        if (voiceOn) speakElevenLabs(replyText).then(ok => { if (!ok) speak(replyText, dispatchAgent) })
       }
     } catch (err) {
       const isTimeout = err instanceof Error && err.message.includes('AbortError')
@@ -438,6 +465,22 @@ export function ChatBridge() {
           onClick={() => { if (voiceOn) window.speechSynthesis?.cancel(); setVoiceOn(v => !v) }}
         >
           {voiceOn ? '🔊' : '🔇'}
+
+        <button
+          style={{fontSize:'10px',border:'1px solid #ffd70066',background:'#ffd70011',
+            color:'#ffd700',padding:'2px 8px',cursor:'pointer',fontWeight:700,
+            letterSpacing:'.06em',fontFamily:'inherit',borderRadius:'3px',marginLeft:'4px'}}
+          title="Set ElevenLabs API Key + Voice ID for personal voice"
+          onClick={() => {
+            const k = prompt('ElevenLabs API Key:', localStorage.getItem('el_api_key') || '')
+            if (k !== null) localStorage.setItem('el_api_key', k)
+            const v = prompt('ElevenLabs Voice ID:', localStorage.getItem('el_voice_id') || '')
+            if (v !== null) localStorage.setItem('el_voice_id', v)
+            if (k && v) alert('Personal voice saved! Hit audio on any response to hear it.')
+          }}
+        >
+          [VOICE SETUP]
+        </button>
         </button>
         <button
           className={`cb-mode-toggle ${mode === 'lite' ? 'cb-mode-lite' : 'cb-mode-std'}`}
@@ -558,7 +601,7 @@ export function ChatBridge() {
                     </button>
                     <button
                       className="cb-action-btn"
-                      onClick={e => { e.stopPropagation(); speak(m.text, m.agent) }}
+                      onClick={e => { e.stopPropagation(); speakElevenLabs(m.text).then(ok => { if(!ok) speak(m.text, m.agent) }) }}
                       title="Read aloud"
                     >
                       ▶ audio
@@ -630,7 +673,7 @@ export function ChatBridge() {
               <div className="cb-modal-actions">
                 <button className="cb-action-btn" onClick={() => copyText(expanded.text, -1)}>{copied === -1 ? '✓ copied' : '⎘ copy'}</button>
                 <button className="cb-action-btn" onClick={() => saveToDoc(expanded.text, expanded.ts)}>⊕ save</button>
-                <button className="cb-action-btn" onClick={() => speak(expanded.text, expanded.agent)}>▶ audio</button>
+                <button className="cb-action-btn" onClick={() => speakElevenLabs(expanded.text).then(ok => { if(!ok) speak(expanded.text, expanded.agent) })}>▶ audio</button>
                 <button className="cb-action-btn" onClick={() => exportMessagePdf(expanded.role, expanded.turn, expanded.text, expanded.ts)} title="Export as PDF (browser print → Save as PDF)">⤓ PDF</button>
                 <button className="cb-action-btn cb-modal-close" onClick={() => setExpanded(null)}>✕ close</button>
               </div>
