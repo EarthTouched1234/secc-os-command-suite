@@ -565,3 +565,5 @@ export const LIE_FOLLOWUP_GAP_URL      = 'https://sunnicommandcenter.app.n8n.clo
 export const LIE_TRIO_REASONING_URL    = 'https://sunnicommandcenter.app.n8n.cloud/webhook/lie/trio-reasoning'
 export const LIE_DAR_GENERATE_URL      = 'https://sunnicommandcenter.app.n8n.cloud/webhook/lie/dar-generate'
 export const REVENUE_LEAD_INTAKE_URL   = 'https://sunnicommandcenter.app.n8n.cloud/webhook/revenue/lead-intake'
+export const CONNECTORS: Connector[] = [
+  
