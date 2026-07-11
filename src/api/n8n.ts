@@ -1,3 +1,14 @@
+const N8N_BASE = import.meta.env.VITE_N8N_BASE_URL || 'https://sunnicommandcenter.app.n8n.cloud'
+
+export interface Connector {
+  id: string
+  name: string
+  description: string
+  webhook: string
+  method: 'POST' | 'GET'
+  payload?: Record<string, unknown>
+  category: 'leasing' | 'revenue' | 'content' | 'intelligence' | 'system'
+}
 export interface ExecutionSummary {
   id: string
   status: 'success' | 'error' | 'running' | 'waiting'
@@ -566,4 +577,14 @@ export const LIE_TRIO_REASONING_URL    = 'https://sunnicommandcenter.app.n8n.clo
 export const LIE_DAR_GENERATE_URL      = 'https://sunnicommandcenter.app.n8n.cloud/webhook/lie/dar-generate'
 export const REVENUE_LEAD_INTAKE_URL   = 'https://sunnicommandcenter.app.n8n.cloud/webhook/revenue/lead-intake'
 export const CONNECTORS: Connector[] = [
+  {
+    id: 'hov-member-intake',
+    name: 'HOV Member Intake',
+    description: 'Creates a new HOV member record',
+    webhook: `${N8N_BASE}/webhook/hov/member-intake`,
+    method: 'POST',
+    category: 'system',
+  },
+]
+
   
