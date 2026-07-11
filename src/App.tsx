@@ -1,3 +1,5 @@
+import { HOVMemberIntake } from './hov/components/HOVMemberIntake'
+
 import { useState } from 'react'
 import { useFeed } from './hooks/useFeed'
 import { TheCouncil } from './components/TheCouncil'
@@ -31,8 +33,8 @@ import { computeMissionStatus } from './hooks/useFeed'
 import sunniLogo from './assets/sunni-pulse-mark.svg'
 import './App.css'
 
-type Tab = 'MissionControl' | 'Launch' | 'Dashboard' | 'Execute' | 'Approve' | 'Critical' | 'Agents' | 'ChatBridge' | 'Documents' | 'Projects' | 'Tasks' | 'Connectors' | 'Inbox' | 'PMO' | 'GUARDiAN' | 'Timeline' | 'GTM' | 'Editions' | 'Platform' | 'Decisions' | 'Fabric' | 'Outcomes'
-const TABS: Tab[] = ['MissionControl', 'Launch', 'Dashboard', 'PMO', 'Platform', 'Decisions', 'Fabric', 'Outcomes', 'Timeline', 'GUARDiAN', 'GTM', 'ChatBridge', 'Documents', 'Projects', 'Tasks', 'Connectors', 'Execute', 'Approve', 'Critical', 'Agents', 'Inbox', 'Editions']
+type Tab = 'MissionControl' | 'Launch' | 'Dashboard' | 'Execute' | 'Approve' | 'Critical' | 'Agents' | 'ChatBridge' | 'Documents' | 'Projects' | 'Tasks' | 'Connectors' | 'Inbox' | 'PMO' | 'GUARDiAN' | 'Timeline' | 'GTM' | 'Editions' | 'Platform' | 'Decisions' | 'Fabric' | 'Outcomes' | 'HOV'
+const TABS: Tab[] = ['MissionControl', 'Launch', 'Dashboard', 'PMO', 'Platform', 'Decisions', 'Fabric', 'Outcomes', 'Timeline', 'GUARDiAN', 'GTM', 'ChatBridge', 'Documents', 'Projects', 'Tasks', 'Connectors', 'Execute', 'Approve', 'Critical', 'Agents', 'Inbox', 'Editions',| 'HOV' ]
 
 export default function App() {
   const { feed, systemExecs, loading, error, lastUpdated, refresh } = useFeed()
@@ -189,7 +191,11 @@ export default function App() {
         {activeTab === 'Projects' && <div className="cc-full-stack"><Projects /></div>}
         {activeTab === 'Tasks' && <div className="cc-full-stack"><Tasks /></div>}
         {activeTab === 'Connectors' && <div className="cc-full-stack"><Connectors /></div>}
-        {activeTab === 'Inbox' && (
+{activeTab === 'HOV' && (
+  <div className="cc-full-stack">
+    <HOVMemberIntake />
+  </div>
+)}
           <div className="cc-full-stack cc-stub">
             <div className="stub-label">Inbox</div>
             <div className="stub-sub">Coming online — Inbox module in development.</div>
