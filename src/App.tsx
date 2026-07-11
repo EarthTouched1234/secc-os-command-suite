@@ -34,7 +34,7 @@ import sunniLogo from './assets/sunni-pulse-mark.svg'
 import './App.css'
 
 type Tab = 'MissionControl' | 'Launch' | 'Dashboard' | 'Execute' | 'Approve' | 'Critical' | 'Agents' | 'ChatBridge' | 'Documents' | 'Projects' | 'Tasks' | 'Connectors' | 'Inbox' | 'PMO' | 'GUARDiAN' | 'Timeline' | 'GTM' | 'Editions' | 'Platform' | 'Decisions' | 'Fabric' | 'Outcomes' | 'HOV'
-const TABS: Tab[] = ['MissionControl', 'Launch', 'Dashboard', 'PMO', 'Platform', 'Decisions', 'Fabric', 'Outcomes', 'Timeline', 'GUARDiAN', 'GTM', 'ChatBridge', 'Documents', 'Projects', 'Tasks', 'Connectors', 'Execute', 'Approve', 'Critical', 'Agents', 'Inbox', 'Editions',| 'HOV' ]
+const TABS: Tab[] = ['MissionControl', 'Launch', 'Dashboard', 'PMO', 'Platform', 'Decisions', 'Fabric', 'Outcomes', 'Timeline', 'GUARDiAN', 'GTM', 'ChatBridge', 'Documents', 'Projects', 'Tasks', 'Connectors', 'Execute', 'Approve', 'Critical', 'Agents', 'Inbox', 'Editions','HOV' ]
 
 export default function App() {
   const { feed, systemExecs, loading, error, lastUpdated, refresh } = useFeed()
@@ -196,12 +196,12 @@ export default function App() {
     <HOVMemberIntake />
   </div>
 )}
+        {activeTab === 'Inbox' && (
           <div className="cc-full-stack cc-stub">
             <div className="stub-label">Inbox</div>
             <div className="stub-sub">Coming online — Inbox module in development.</div>
           </div>
-        )}
-      </div>
+        )}      </div>
 
       {activeTab === 'Dashboard' && (
         <div className="cc-voice">
