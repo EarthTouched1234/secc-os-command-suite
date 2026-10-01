@@ -1,8 +1,11 @@
-name: Deploy to GitHub Pages
+name: Legacy Mission Commander — GitHub Pages
+
+# LEGACY DEPLOYMENT ONLY.
+# The current Commander Console target is the custom-domain environment.
+# This workflow is intentionally manual so pushes to main do not publish the
+# current product into the historical GitHub Pages/Mission Commander surface.
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -11,7 +14,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages
+  group: legacy-github-pages
   cancel-in-progress: false
 
 jobs:
@@ -27,6 +30,7 @@ jobs:
       - run: npm run build
         env:
           NODE_ENV: production
+          VITE_DEPLOY_TARGET: legacy-pages
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
