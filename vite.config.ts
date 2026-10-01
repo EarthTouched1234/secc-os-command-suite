@@ -3,10 +3,16 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
+  const deployTarget = env.VITE_DEPLOY_TARGET || 'custom-domain'
+  const base = mode !== 'production'
+    ? '/'
+    : deployTarget === 'legacy-pages'
+      ? '/secc-os-command-suite/'
+      : '/'
 
   return {
     plugins: [react()],
-    base: mode === 'production' ? '/secc-os-command-suite/' : '/',
+    base,
     server: {
       host: '127.0.0.1',
       port: 5173,
