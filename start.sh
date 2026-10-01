@@ -1,9 +1,13 @@
 #!/bin/bash
 # Start Commander Console dev server + Cloudflare Tunnel
+# Required locally: export TUNNEL_TOKEN=<Cloudflare tunnel token>
+# Never commit tunnel credentials to source control.
 
-TUNNEL_TOKEN="eyJhIjoiY2Y3Mjc3NTIyMGRlMGY5ODExYmQ4ZjRmNTExYWZhYjUiLCJzIjoiTVRBeFpHUm1ZVFl0TVRoaVlpMDBPR1JrTFRoaVpEUXRPVGt5TVdFME5UUXhZalZrIiwidCI6ImIxNzFlNzMwLWFlNDQtNDNiNS1iYzY2LWUxM2VmMDljYzA3MyJ9"
+set -euo pipefail
 
-trap 'kill $(jobs -p) 2>/dev/null' EXIT
+: "${TUNNEL_TOKEN:?TUNNEL_TOKEN must be set in the environment}"
+
+trap 'kill $(jobs -p) 2>/dev/null || true' EXIT
 
 echo "Building Commander Console..."
 npm run build
