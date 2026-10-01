@@ -150,10 +150,110 @@ a { color: var(--trajectory-blue); text-decoration: none; }
 .powered { display:flex; flex-wrap:wrap; gap:10px 18px; justify-content:center; margin-top:14px; }
 .powered span { font-family: var(--font-mono); font-size: 12px; color: var(--titanium); }
 .powered b { color: var(--solar-gold); font-weight: 600; }
+
+/* === Product Experience Layer — presentation only, no architecture logic === */
+html { scroll-behavior:smooth; }
+body { position:relative; overflow-x:hidden; background:#07080d; }
+body::selection { background:rgba(232,169,60,.28); color:#fff; }
+.ambient { position:fixed; inset:0; pointer-events:none; overflow:hidden; z-index:-1; }
+.grid-field { position:absolute; inset:0; opacity:.17; background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px); background-size:54px 54px; mask-image:linear-gradient(to bottom,#000 0%,transparent 78%); }
+.orb { position:absolute; border-radius:50%; filter:blur(90px); opacity:.18; }
+.orb-a { width:520px;height:520px;right:-140px;top:80px;background:var(--trajectory-blue); }
+.orb-b { width:430px;height:430px;left:-180px;top:620px;background:var(--solar-gold);opacity:.11; }
+.orb-c { width:360px;height:360px;right:10%;top:1500px;background:#7c3aed;opacity:.08; }
+.container { max-width:1180px; }
+.section { position:relative; padding:96px 0; }
+.section > h2 { max-width:780px; font-size:clamp(30px,4vw,48px); letter-spacing:-.035em; }
+.lead { font-size:18px; line-height:1.75; }
+.nav { box-shadow:0 10px 35px rgba(0,0,0,.22); }
+.wordmark { font-size:20px; }
+.nav .cta { padding:10px 16px; }
+.cta { position:relative; overflow:hidden; box-shadow:0 10px 28px rgba(232,169,60,.14); transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease; }
+.cta:hover { transform:translateY(-2px); box-shadow:0 14px 36px rgba(232,169,60,.24); }
+.cta.secondary { box-shadow:none; }
+.card,.pack,.flow,.mc { box-shadow:0 18px 50px rgba(0,0,0,.18); transition:transform .25s ease,border-color .25s ease,background .25s ease; }
+.card:hover,.pack:hover { transform:translateY(-4px); border-color:#3b3b49; background:#181821; }
+.card.spotlight { box-shadow:inset 0 0 0 1px rgba(232,169,60,.08),0 20px 60px rgba(232,169,60,.06); }
+
+/* Hero */
+.hero { min-height:720px; display:grid; grid-template-columns:minmax(0,1.02fr) minmax(480px,.98fr); align-items:center; gap:64px; padding-top:90px; }
+.hero::after { content:""; position:absolute; width:500px;height:500px;right:-90px;top:80px;border:1px solid rgba(232,169,60,.08);border-radius:50%;box-shadow:0 0 0 80px rgba(232,169,60,.018),0 0 0 160px rgba(59,130,246,.012);pointer-events:none; }
+.hero-copy { position:relative; z-index:2; }
+.hero h1 { font-size:clamp(48px,6.2vw,78px); line-height:1.02; letter-spacing:-.055em; max-width:760px; margin-bottom:24px; }
+.gradient-text { color:transparent; background:linear-gradient(95deg,var(--solar-gold-bright),#f4d38c 38%,#8fb9ff 82%); -webkit-background-clip:text; background-clip:text; }
+.hero .lead { max-width:680px; font-size:19px; }
+.live-dot { display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--signal-green);box-shadow:0 0 0 5px rgba(52,211,153,.1),0 0 14px rgba(52,211,153,.7);margin-right:7px;animation:livePulse 2s infinite; }
+.hero-actions { display:flex; gap:10px; flex-wrap:wrap; margin-top:30px; }
+.hero-actions .secondary { margin-left:0; }
+.trust-row { display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:32px;color:var(--titanium);font:11px var(--font-mono);text-transform:uppercase;letter-spacing:.08em; }
+.trust-row b { color:var(--text-secondary);font-weight:500; }
+.trust-row i { width:3px;height:3px;border-radius:50%;background:#494954; }
+
+.hero-visual { position:relative; z-index:2; border:1px solid #32323e; border-radius:18px; background:linear-gradient(145deg,rgba(28,28,38,.95),rgba(10,10,15,.92)); box-shadow:0 40px 100px rgba(0,0,0,.5),0 0 80px rgba(59,130,246,.06); overflow:hidden; transform:perspective(1200px) rotateY(-3deg) rotateX(1deg); }
+.hero-visual::before { content:"";position:absolute;inset:0;background:linear-gradient(120deg,rgba(255,255,255,.035),transparent 24%,transparent 75%,rgba(232,169,60,.025));pointer-events:none; }
+.visual-chrome { height:42px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px;padding:0 14px;color:var(--titanium);font:9px var(--font-mono);letter-spacing:.12em; }
+.visual-chrome span { width:7px;height:7px;border-radius:50%;background:#383842; }
+.visual-chrome span:first-child { background:var(--signal-red);opacity:.65; }.visual-chrome span:nth-child(2){background:var(--signal-amber);opacity:.65}.visual-chrome span:nth-child(3){background:var(--signal-green);opacity:.65}
+.visual-chrome b { margin-left:auto;font-weight:500; }
+.signal-panel { margin:18px;border:1px solid var(--border);border-radius:10px;padding:16px;background:rgba(7,8,13,.72); }
+.signal-head { display:flex;justify-content:space-between;font:9px var(--font-mono);letter-spacing:.12em;color:var(--titanium); }
+.status-live { color:var(--signal-green); }
+.signal-metric { display:grid;grid-template-columns:auto 1fr auto;align-items:end;gap:12px;margin-top:10px; }
+.signal-metric strong { font:700 34px var(--font-display);color:#fff; }
+.signal-metric span { color:var(--text-secondary);font-size:12px;padding-bottom:6px; }
+.signal-metric em { color:var(--signal-green);font:11px var(--font-mono);font-style:normal;padding-bottom:7px; }
+.spark { height:54px;display:flex;align-items:flex-end;gap:6px;margin-top:12px; }
+.spark i { flex:1;min-width:5px;background:linear-gradient(to top,rgba(59,130,246,.18),var(--trajectory-blue));border-radius:3px 3px 0 0;opacity:.7; }
+.spine { display:flex;align-items:center;padding:12px 18px 26px; }
+.spine-node { min-width:56px;text-align:center;position:relative; }
+.spine-node span { width:32px;height:32px;border:1px solid #3a3a47;border-radius:9px;display:grid;place-items:center;margin:0 auto 8px;background:#111118;color:var(--titanium);font:9px var(--font-mono); }
+.spine-node b { display:block;color:var(--text-primary);font-size:10px; }.spine-node small{color:var(--titanium);font:8px var(--font-mono);}
+.spine-node.active span { border-color:var(--solar-gold);color:var(--solar-gold);box-shadow:0 0 24px rgba(232,169,60,.18); }
+.spine-line { height:1px;flex:1;background:linear-gradient(90deg,#33333e,rgba(232,169,60,.55),#33333e);margin-top:-28px;position:relative;overflow:hidden; }
+.spine-line::after { content:"";position:absolute;width:24px;height:1px;background:#fff;animation:flowLine 2.4s linear infinite;box-shadow:0 0 8px #fff; }
+.visual-foot { border-top:1px solid var(--border);padding:11px 16px;display:flex;justify-content:space-between;color:var(--titanium);font:8px var(--font-mono);letter-spacing:.1em; }
+.visual-foot b { color:var(--signal-green);font-weight:500; }
+
+/* stronger section composition */
+#mission-control .mc { position:relative; overflow:hidden; padding:28px; background:linear-gradient(145deg,#171720,#0c0d12); }
+#mission-control .mc::after { content:"MISSION CONTROL";position:absolute;right:20px;bottom:-12px;color:rgba(255,255,255,.018);font:700 72px var(--font-display);white-space:nowrap;pointer-events:none; }
+.mc-kpi { min-height:100px;display:flex;flex-direction:column;justify-content:center; }
+.mc-kpi .n { font-size:32px; }
+.flow { background:linear-gradient(145deg,rgba(20,20,27,.95),rgba(10,10,15,.95)); }
+.flow .step { min-height:54px;border-bottom:1px solid rgba(42,42,53,.7); }
+.flow .step:last-child { border-bottom:0; }
+.flow .dot { box-shadow:0 0 0 5px rgba(139,139,150,.06); }
+.flow .step.exec .dot,.flow .step.gov .dot,.flow .step.mc .dot { box-shadow:0 0 0 5px rgba(232,169,60,.08),0 0 14px rgba(232,169,60,.18); }
+.substrate { position:relative;overflow:hidden; }
+.substrate::after { content:"GOVERNANCE";position:absolute;right:14px;top:50%;transform:translateY(-50%);font:700 34px var(--font-display);color:rgba(232,169,60,.035); }
+.pack .ico { display:grid;place-items:center;width:42px;height:42px;border:1px solid var(--border);border-radius:10px;background:#0e0f14; }
+.form-card { background:linear-gradient(145deg,var(--surface-elevated),var(--surface)); }
+
+/* scroll reveal, gracefully visible without JS */
+.reveal { opacity:0; transform:translateY(18px); transition:opacity .65s ease,transform .65s ease; }
+.reveal.in { opacity:1;transform:none; }
+@keyframes livePulse { 50%{opacity:.5;box-shadow:0 0 0 8px rgba(52,211,153,0),0 0 18px rgba(52,211,153,.35)} }
+@keyframes flowLine { from{left:-30px} to{left:100%} }
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation:none!important;transition:none!important}.hero-visual{transform:none}}
+@media (max-width:960px){
+  .hero { grid-template-columns:1fr;min-height:auto;gap:42px;padding-top:72px; }
+  .hero-visual { transform:none;max-width:700px; }
+  .hero::after { display:none; }
+}
+@media (max-width:640px){
+  .section{padding:68px 0}.container{padding:0 18px}.nav .container{padding:13px 18px}
+  .hero h1{font-size:44px}.hero .lead{font-size:17px}.hero-actions .cta{width:100%;text-align:center}
+  .trust-row{gap:9px}.hero-visual{border-radius:12px}.signal-metric{grid-template-columns:1fr auto}.signal-metric span{grid-column:1/-1;grid-row:2}.spine{overflow-x:auto;gap:2px}.spine-line{min-width:18px}.spine-node{min-width:50px}.visual-foot{gap:8px;flex-wrap:wrap}
+}
+
 </style>
 </head>
 
 <body>
+<div class="ambient" aria-hidden="true">
+  <div class="orb orb-a"></div><div class="orb orb-b"></div><div class="orb orb-c"></div>
+  <div class="grid-field"></div>
+</div>
 
 <!-- NAV -->
 <div class="nav">
@@ -173,24 +273,45 @@ a { color: var(--trajectory-blue); text-decoration: none; }
 <div class="container">
 
 <!-- HERO -->
-<div class="section">
-  <span class="eyebrow">Enterprise Intelligence Platform</span>
-  <h1>Transform every workflow<br/>into executive intelligence.</h1>
-  <p class="lead">
-    Not just automation. Not just AI. <b style="color:var(--text-primary)">A governed operating system that plans,
-    executes, verifies, reports, and continuously improves every business process</b> — built for enterprises
-    that require intelligence, accountability, and execution.
-  </p>
-  <ul class="hero-bullets">
-    <li><b>See your whole portfolio</b> — every project, agent, and KPI on one Mission Control screen.</li>
-    <li><b>Run an AI workforce</b> that's governed by default — nothing executes without clearing the gate.</li>
-    <li><b>Audit every execution</b> on a complete, traceable ledger. You keep the launch key.</li>
-  </ul>
-  <div style="margin-top:28px;">
-    <a class="cta" href="#demo">Book a demo</a>
-    <a class="cta secondary" href="#waitlist">Request early access</a>
+<section class="section hero">
+  <div class="hero-copy">
+    <span class="eyebrow"><span class="live-dot"></span> Enterprise Intelligence Platform</span>
+    <h1>Command the enterprise.<br/><span class="gradient-text">Intelligence in motion.</span></h1>
+    <p class="lead">
+      SECC OS turns fragmented operational signals into governed decisions, deterministic execution,
+      verified outcomes, and executive visibility — across one connected operating spine.
+    </p>
+    <div class="hero-actions">
+      <a class="cta" href="#demo">Book a Flight Deck demo <span>↗</span></a>
+      <a class="cta secondary" href="#architecture">Explore the platform</a>
+    </div>
+    <div class="trust-row">
+      <span><b>GUARDiAN</b> governed</span><i></i>
+      <span><b>SEIS</b> deterministic</span><i></i>
+      <span><b>CIRO</b> attributable</span>
+    </div>
   </div>
-</div>
+  <div class="hero-visual" aria-label="SECC OS execution intelligence flow">
+    <div class="visual-chrome"><span></span><span></span><span></span><b>MISSION CONTROL // LIVE MODEL</b></div>
+    <div class="signal-panel">
+      <div class="signal-head"><span>ENTERPRISE SIGNAL</span><span class="status-live">● LIVE</span></div>
+      <div class="signal-metric"><strong>94.2%</strong><span>Portfolio health</span><em>↗ +3.8%</em></div>
+      <div class="spark"><i style="height:34%"></i><i style="height:52%"></i><i style="height:44%"></i><i style="height:68%"></i><i style="height:61%"></i><i style="height:82%"></i><i style="height:94%"></i></div>
+    </div>
+    <div class="spine">
+      <div class="spine-node"><span>01</span><b>Signal</b><small>Observe</small></div>
+      <div class="spine-line"></div>
+      <div class="spine-node"><span>02</span><b>Reason</b><small>Analyze</small></div>
+      <div class="spine-line"></div>
+      <div class="spine-node active"><span>03</span><b>Decide</b><small>Govern</small></div>
+      <div class="spine-line"></div>
+      <div class="spine-node"><span>04</span><b>Execute</b><small>SEIS</small></div>
+      <div class="spine-line"></div>
+      <div class="spine-node"><span>05</span><b>Verify</b><small>CIRO</small></div>
+    </div>
+    <div class="visual-foot"><span>GUARDiAN GATE</span><b>POLICY CLEARED</b><span>AUDIT LEDGER ↗</span></div>
+  </div>
+</section>
 
 <!-- THE EXECUTIVE PROBLEM -->
 <div class="section">
@@ -520,6 +641,18 @@ a { color: var(--trajectory-blue); text-decoration: none; }
       body: JSON.stringify({ type: 'pageview', path: location.pathname, referrer: document.referrer || 'direct', session: sid })
     }).catch(function(){});
   } catch (e) {}
+})();
+</script>
+
+<script>
+(function(){
+  var targets = document.querySelectorAll('.section:not(.hero) > h2, .section:not(.hero) > .lead, .card, .pack, .flow, .mc, .substrate');
+  targets.forEach(function(el){ el.classList.add('reveal'); });
+  if (!('IntersectionObserver' in window)) { targets.forEach(function(el){ el.classList.add('in'); }); return; }
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, {threshold:.08, rootMargin:'0px 0px -35px 0px'});
+  targets.forEach(function(el){ io.observe(el); });
 })();
 </script>
 
