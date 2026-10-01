@@ -37,7 +37,7 @@ const SERVICE_BRANDS = [
 
 const SERVICE_CARDS = [
   { n: '1', title: 'Mission Control Console', body: 'See every project, every milestone, every risk — live. Your entire PMO, visualized and prioritized in one command-grade dashboard.' },
-  { n: '2', title: 'Status Scribe (Autonomous Status Engine)', body: 'No more waiting for updates or chasing teams. GUARDiAN pulls live data, assembles status reports, and notifies you — before you ever ask.' },
+  { n: '2', title: 'Status Scribe (Autonomous Status Engine)', body: 'Connected and validated inputs can be transformed into governed status reporting and alerts, reducing manual status assembly while preserving source and approval boundaries.' },
   { n: '3', title: 'Financial Sentinel', body: '24/7 burn rate surveillance and risk escalation. GUARDiAN scans for hidden issues, flags anomalies, and surfaces critical threats the instant they emerge — and auto-files them to the Risk Register.' },
   { n: '4', title: 'Trajectory Control', body: 'Forecasts, momentum intelligence, and velocity + acceleration on every program — automatically computed from live execution data. Know if you’re winning or drifting before the gate.' },
   { n: '5', title: 'Zero-Trust Ops', body: 'AI executes the machinery. You hold the launch key. Every protected action — financial, architectural, security — requires your authorization token before it runs. The answer to enterprise’s #1 AI fear.' },
@@ -258,13 +258,13 @@ export function GTM() {
               <div className="gtm-panel-header">HERO SECTION</div>
               <div className="gtm-pad">
                 <h2 className="gtm-hero-headline">Status Writes Itself.<br />You Command the Mission.</h2>
-                <p className="gtm-hero-sub">The world's first autonomous PMO command platform. Real-time project clarity, risk detection, and executive reporting — without the grind. Step onto the Flight Deck and take control.</p>
+                <p className="gtm-hero-sub">An Enterprise Intelligence Platform for governed project clarity, risk detection, executive reporting, and deterministic execution. Step onto the Flight Deck and take control.</p>
                 <div className="gtm-cta-row">
                   <span className="gtm-cta-primary">Activate Command Now</span>
                   <span className="gtm-cta-secondary">Book a Flight Deck Demo</span>
                   <span className="gtm-cta-secondary">Talk to the Council</span>
                 </div>
-                <CopyBtn text={'Status Writes Itself. You Command the Mission.\n\nThe world’s first autonomous PMO command platform. Real-time project clarity, risk detection, and executive reporting — without the grind. Step onto the Flight Deck and take control.\n\n[Activate Command Now]'} label="Copy hero" />
+                <CopyBtn text={'Status Writes Itself. You Command the Mission.\n\nAn Enterprise Intelligence Platform for governed project clarity, risk detection, executive reporting, and deterministic execution. Step onto the Flight Deck and take control.\n\n[Activate Command Now]'} label="Copy hero" />
               </div>
             </div>
 
