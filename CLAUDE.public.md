@@ -36,7 +36,7 @@ Each layer is a capability of the same platform, sharing one governance substrat
 
 - **SEIS** — deterministic execution layer (developer-facing). Validation enforced before execution; no silent failures; immutable audit ledger of every run.
 - **GUARDiAN PMO Command** — enterprise governance engine: portfolio register, RAG scoring, gate snapshots, predictive trajectory (velocity + acceleration), financial sentinel, PMBOK® 8th gate mapping.
-- **Command Suite** — Mission Control web app (React/Vite → GitHub Pages): dashboards, ChatBridge, PMO, GUARDiAN, Launch KPIs, and more.
+- **Command Suite** — Mission Control web app (React/Vite) served through the governed custom-domain environment: dashboards, ChatBridge, PMO, GUARDiAN, Launch KPIs, and more.
 - **Agent Sandbox** — multi-agent conversation engine with session memory and a governance/quality gate.
 - **Revenue Engine** — lead intake → qualification → proposal → close → nurture pipeline.
 - **Intelligence engines** — domain modules (e.g., leasing, social content, credit, beats/creative) following the same capture → classify → route → execute → track → report pattern.
@@ -73,10 +73,14 @@ Executive Strategy · Intelligence & Analytics · Brand Studio · Marketing Oper
 
 ## Tech stack (non-sensitive)
 
-n8n (workflow orchestration) · Notion (data + knowledge base) · React + Vite → GitHub Pages (Command Suite + landing) · Cloudflare Worker (API proxy) · Railway (browser-automation service) · latest Claude + OpenAI models.
+n8n (workflow orchestration) · Notion (data + knowledge base) · React + Vite (Command Suite + landing) · Cloudflare Tunnel/Worker (custom-domain delivery + API proxy) · Railway (browser-automation service) · latest Claude + OpenAI models.
 
-- Command Suite: `https://earthtouched1234.github.io/secc-os-command-suite/`
-- Landing: `https://earthtouched1234.github.io/secc-os-command-suite/seis-landing.html`
+### Deployment targets
+
+- **Canonical Commander Console target:** `https://console.secc-os.com/` — custom-domain environment declared by `start.sh`. Runtime availability must be verified before presenting it as live.
+- **Historical GitHub Pages surface:** `https://earthtouched1234.github.io/secc-os-command-suite/` — legacy Mission Commander. It is not the canonical current product target.
+- GitHub Pages deployment is manual-only. Normal pushes to `main` must not publish the current product into the legacy surface.
+- Production Vite builds default to root base `/`; the historical Pages base is enabled only with `VITE_DEPLOY_TARGET=legacy-pages`.
 
 ## Naming conventions
 
