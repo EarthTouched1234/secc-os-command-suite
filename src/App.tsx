@@ -73,15 +73,16 @@ export default function App() {
         </div>
       </header>
 
-            <div style={{background:"linear-gradient(90deg,#060f06,#0d1f0d)",borderBottom:"2px solid #ffd700",padding:"7px 20px",display:"flex",alignItems:"center",gap:"14px",flexWrap:"wrap"}}>
-        <span style={{fontSize:"18px"}}>&#x1F3C6;</span>
-        <span style={{color:"#ffd700",fontWeight:700,fontSize:"13px",letterSpacing:"0.06em",textTransform:"uppercase"}}>SECC-OS 10/10 — Fully Operational</span>
+      <div style={{background:"linear-gradient(90deg,#060f06,#0d1f0d)",borderBottom:"1px solid #2a332a",padding:"7px 20px",display:"flex",alignItems:"center",gap:"14px",flexWrap:"wrap"}}>
+        <span style={{fontSize:"15px"}} aria-hidden="true">&#x25C9;</span>
+        <span style={{color:"#d8b85a",fontWeight:700,fontSize:"12px",letterSpacing:"0.06em",textTransform:"uppercase"}}>SECC OS — Governed Operations</span>
+        <span style={{color:"#8a8a8a",fontSize:"10px",fontFamily:"monospace"}}>FEED-DERIVED STATUS</span>
         <span style={{flex:1}} />
-        <span style={{color:"#7fff7f",fontSize:"11px",fontFamily:"monospace"}}>12/12 Webhooks ✔</span>
+        <span style={{color: systemExecs.length > 0 && successRate >= 90 ? "#7fff7f" : "#ffcf66",fontSize:"11px",fontFamily:"monospace"}}>{systemExecs.length > 0 ? `${successRate}% execution success` : "Execution feed pending"}</span>
         <span style={{color:"#555"}}>&#x2022;</span>
-        <span style={{color:"#7fff7f",fontSize:"11px",fontFamily:"monospace"}}>59 Workflows Active</span>
+        <span style={{color: recentErrors === 0 ? "#7fff7f" : "#ff8a80",fontSize:"11px",fontFamily:"monospace"}}>{recentErrors} recent errors</span>
         <span style={{color:"#555"}}>&#x2022;</span>
-        <span style={{color:"#aaa",fontSize:"11px",fontFamily:"monospace"}}>6915e99 — July 5 2026</span>
+        <span style={{color:"#aaa",fontSize:"11px",fontFamily:"monospace"}}>Sync {syncLabel}</span>
       </div>
       <nav className="cc-tabs" aria-label="Commander Console sections">
         {navTabs.map((item) => (
