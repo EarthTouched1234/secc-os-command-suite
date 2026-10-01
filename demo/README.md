@@ -32,7 +32,12 @@ contract gate → promotion. Bad data cannot silently corrupt the system of reco
 | `01_DAR-sample-report.md` | A finished Daily Activity Report they'd recognize — real numbers | Property ops / regional manager |
 | `02_governed-promotion.md` | How a raw export becomes a trusted record — the governance differentiator | Ops + IT / risk |
 | `03_PMO-and-scale.md` | The portfolio view + how the same engine scales to other verticals | Executive / buyer |
-| `04_demo-script.md` | A 10-minute click-through narrative | You, presenting |
+| `04_demo-script.md` | Original 10-minute click-through narrative | You, presenting |
+| `FLIGHT-DECK-RUNBOOK.md` | Canonical buyer demo path + truth matrix + operator QA | Sales/demo operator |
+
+## Canonical demo path
+
+Use `FLIGHT-DECK-RUNBOOK.md` for buyer-facing demonstrations. It preserves the useful proof assets in this folder while separating deployed behavior, reference data, and roadmap capability.
 
 ## Data basis (honesty note for internal use)
 
