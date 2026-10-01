@@ -8,7 +8,9 @@ SECC OS connects executive command, intelligence, governed automation, and outco
 
 ## Start here
 
-- **Live product experience:** `public/seis-landing.html`
+- **Canonical Commander Console target:** `https://console.secc-os.com/` (custom-domain runtime; verify availability before claiming live)
+- **Product landing source:** `public/seis-landing.html`
+- **Legacy Mission Commander:** historical GitHub Pages surface; manual deployment only
 - **Command Suite application:** `src/`
 - **Canonical architecture:** `ARCHITECTURE.md`
 - **Architecture decisions:** `DECISIONS.md`
@@ -109,6 +111,12 @@ npm run ciro
 ├── DEPLOYMENT.md           Deployment architecture
 └── PRODUCTION-READINESS-CHECKLIST.md
 ```
+
+## Deployment boundary
+
+The current production build is configured for a root-mounted custom domain. `VITE_DEPLOY_TARGET=legacy-pages` is reserved only for manually rebuilding the historical GitHub Pages/Mission Commander surface. Pushes to `main` do not automatically publish to that legacy environment.
+
+See `DEPLOYMENT.md` for the authoritative target map.
 
 ## Production boundary
 
