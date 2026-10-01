@@ -6,6 +6,25 @@ This is the **most living** of the three docs — it tracks reality, not intent.
 
 ---
 
+## Canonical Web Deployment Targets — 2026-10-01
+
+| Target | Role | Deployment mode | Authority |
+|---|---|---|---|
+| `https://console.secc-os.com/` | Current Commander Console target | React/Vite build served at domain root through the custom-domain environment declared by `start.sh` | **Canonical target; runtime availability must be verified** |
+| `https://earthtouched1234.github.io/secc-os-command-suite/` | Historical Mission Commander | GitHub Pages, `VITE_DEPLOY_TARGET=legacy-pages` | **Legacy only; manual workflow** |
+
+### Deployment invariants
+
+1. A successful GitHub Pages workflow proves only the legacy Pages deployment; it does **not** prove the current Commander Console is deployed.
+2. Normal production builds use Vite base `/` for the custom-domain environment.
+3. The historical `/secc-os-command-suite/` base is available only when `VITE_DEPLOY_TARGET=legacy-pages` is explicitly set.
+4. GitHub Pages publishing is `workflow_dispatch` only; pushes to `main` must not update the legacy Mission Commander automatically.
+5. Cloudflare tunnel credentials must never be committed. `start.sh` requires `TUNNEL_TOKEN` from the runtime environment.
+6. The previously exposed tunnel credential must be rotated/revoked outside GitHub before the custom-domain runtime is trusted.
+7. “Current,” “live,” or “production-ready” may be used for the custom-domain Commander Console only after an actual runtime health/render check succeeds.
+
+---
+
 ## Executive Status (as of 2026-06-23)
 
 | Phase | Status | Confidence |
