@@ -47,7 +47,10 @@ export default function App() {
   const missionStatus = computeMissionStatus(feed)
   const recentErrors = systemExecs.filter((e) => e.status === 'error').length
   const successes = systemExecs.filter((e) => e.status === 'success').length
-  const successRate = systemExecs.length > 0 ? Math.round((successes / systemExecs.length) * 100) : 100
+  // No executions means no data, not 100% health: the n8n source was retired
+  // on 2026-10-07, so an empty feed must read as offline, never as green.
+  const feedOnline = systemExecs.length > 0 && !error
+  const successRate = systemExecs.length > 0 ? Math.round((successes / systemExecs.length) * 100) : null
   const approvals = feed.filter((e) => e.requiresApproval || e.missionStatus === 'PENDING_APPROVAL').length
   const escalations = feed.filter((e) => e.escalate || e.missionStatus === 'ESCALATE').length
   const latestSignal = feed[0]
@@ -64,7 +67,11 @@ export default function App() {
           <span className="cc-name">{edition.productName}</span>
         </div>
         <div className="cc-meta">
-          <span className="cc-pill good">Workflows Green</span>
+          {!feedOnline
+            ? <span className="cc-pill warn" title="Workflow feed unavailable: the n8n source is retired">Workflow data offline</span>
+            : recentErrors === 0
+              ? <span className="cc-pill good">Workflows Green</span>
+              : <span className="cc-pill warn">{recentErrors} workflow errors</span>}
           <span className="cc-pill">SunNi</span>
           <span className="cc-pill">Sync {syncLabel}</span>
           {loading && <span className="cc-loading"> ⟳</span>}
@@ -78,7 +85,7 @@ export default function App() {
         <span style={{color:"#d8b85a",fontWeight:700,fontSize:"12px",letterSpacing:"0.06em",textTransform:"uppercase"}}>SECC OS — Governed Operations</span>
         <span style={{color:"#8a8a8a",fontSize:"10px",fontFamily:"monospace"}}>FEED-DERIVED STATUS</span>
         <span style={{flex:1}} />
-        <span style={{color: systemExecs.length > 0 && successRate >= 90 ? "#7fff7f" : "#ffcf66",fontSize:"11px",fontFamily:"monospace"}}>{systemExecs.length > 0 ? `${successRate}% execution success` : "Execution feed pending"}</span>
+        <span style={{color: successRate !== null && successRate >= 90 ? "#7fff7f" : "#ffcf66",fontSize:"11px",fontFamily:"monospace"}}>{systemExecs.length > 0 ? `${successRate}% execution success` : "Execution feed pending"}</span>
         <span style={{color:"#555"}}>&#x2022;</span>
         <span style={{color: recentErrors === 0 ? "#7fff7f" : "#ff8a80",fontSize:"11px",fontFamily:"monospace"}}>{recentErrors} recent errors</span>
         <span style={{color:"#555"}}>&#x2022;</span>
@@ -149,8 +156,8 @@ export default function App() {
         </div>
         <div className="kpi-card">
           <span>Workflow Health</span>
-          <strong>{successRate}%</strong>
-          <small>{recentErrors} recent errors</small>
+          <strong>{successRate === null ? '—' : `${successRate}%`}</strong>
+          <small>{successRate === null ? 'No execution feed' : `${recentErrors} recent errors`}</small>
         </div>
         <div className="kpi-card">
           <span>Dispatch Events</span>

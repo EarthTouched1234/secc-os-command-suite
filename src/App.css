@@ -117,6 +117,11 @@ button, input { font: inherit; }
   border-color: rgba(48, 209, 88, 0.42);
 }
 
+.cc-pill.warn {
+  color: var(--amber);
+  border-color: rgba(255, 159, 10, 0.42);
+}
+
 .cc-loading { color: var(--amber); }
 .cc-error { color: var(--red); font-size: 11px; }
 
@@ -3047,6 +3052,7 @@ button, input { font: inherit; }
 .mc-title-group { display: flex; align-items: center; gap: 10px; }
 .mc-data-badge { font-size: 9px; font-weight: 700; letter-spacing: 0.08em; color: #22c55e;
   border: 1px solid #22c55e44; background: #0c1a0f; border-radius: 4px; padding: 2px 7px; }
+.mc-data-badge.offline { color: #f59e0b; border-color: #f59e0b44; background: #1a140c; }
 
 /* ── ChatBridge full-screen reading view (P1 readability fix) ── */
 .cb-action-expand { font-weight: 600; }

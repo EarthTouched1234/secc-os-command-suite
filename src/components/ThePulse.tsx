@@ -57,7 +57,8 @@ export function ThePulse({ feed, systemExecs, lastUpdated }: Props) {
             <span className="ps-label">EXECUTIONS</span>
           </div>
           <div className="pulse-stat">
-            <span className="ps-value" style={{ color: successRate < 80 ? '#ef4444' : '#22c55e' }}>{successRate}%</span>
+            {/* An empty feed has no success rate; showing 100% green would claim health. */}
+            <span className="ps-value" style={{ color: total === 0 ? '#8a8a8a' : successRate < 80 ? '#ef4444' : '#22c55e' }}>{total === 0 ? '—' : `${successRate}%`}</span>
             <span className="ps-label">SUCCESS RATE</span>
           </div>
           <div className="pulse-stat">

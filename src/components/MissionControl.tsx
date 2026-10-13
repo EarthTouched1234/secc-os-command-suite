@@ -127,7 +127,7 @@ export function MissionControl({ active, feed, systemExecs, lastUpdated, onRefre
     const guardianPulse: Pulse = guardianOk === null ? 'amber' : guardianOk ? 'green' : 'red'
     const feedPulse: Pulse = feed.length > 0 ? 'green' : 'amber'
     return [
-      { name: 'n8n', pulse: n8nPulse, note: `${m.successRate}% success · ${m.errors} errors` },
+      { name: 'n8n', pulse: n8nPulse, note: systemExecs.length ? `${m.successRate}% success · ${m.errors} errors` : 'no execution feed' },
       { name: 'PMO API', pulse: pmoPulse, note: portfolioOk ? `${m.programs} programs` : 'no data' },
       { name: 'GUARDiAN', pulse: guardianPulse, note: `${risks.length} risk entries` },
       { name: 'Notion', pulse: pmoPulse, note: 'via PMO/Risk feeds' },
@@ -160,7 +160,9 @@ export function MissionControl({ active, feed, systemExecs, lastUpdated, onRefre
       <div className="mc-header">
         <div className="mc-title-group">
           <span className="mc-title">Mission Control</span>
-          <span className="mc-data-badge" title="sys_014 — all metrics on this screen are LIVE: PMO Portfolio API, GUARDiAN Risk Register, dispatch feed, n8n executions. No simulated values.">● LIVE</span>
+          {portfolioOk
+            ? <span className="mc-data-badge" title="sys_014 — metrics on this screen come from the PMO Portfolio API, GUARDiAN Risk Register, dispatch feed and n8n executions. No simulated values.">● LIVE</span>
+            : <span className="mc-data-badge offline" title="The PMO Portfolio and GUARDiAN feeds returned no data (n8n source retired 2026-10-07). Zeros below mean no data, not a healthy system.">● NO DATA SOURCE</span>}
         </div>
         <div className="mc-header-meta">
           <span className="mc-sync">{lastFetch ? `Portfolio ${relTime(lastFetch.toISOString())}` : loading ? 'Loading…' : 'pending'}</span>
